@@ -1,0 +1,22 @@
+.collapsible-group {
+    position: relative;
+}
+
+.collapsible-group::before {
+    background: #0003;
+    content: '';
+    height: 100%;
+    position: absolute;
+    top: -10px;
+    width: 1px;
+    z-index: -1;
+    /* Default LTR value */
+    left: 20px;
+    right: auto;
+}
+
+[dir="rtl"] .collapsible-group::before {
+    /* RTL override */
+    left: auto;
+    right: 20px;
+}
