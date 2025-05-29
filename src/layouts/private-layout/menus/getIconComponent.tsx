@@ -6,6 +6,22 @@ import {
   FaChartBar,
   FaFileAlt,
   FaQuestionCircle,
+  FaHome,
+  FaUserGraduate,
+  FaAngleDoubleRight,
+  FaWallet,
+  FaRegCalendarAlt,
+  FaMoneyBillAlt,
+  FaListAlt,
+  FaGraduationCap,
+  FaUsersCog,
+  FaCommentDots,
+  FaQuestion,
+  FaRegHandshake,
+  FaReceipt,
+  FaBookReader,
+  FaRegIdCard,
+  FaCog,
 } from "react-icons/fa";
 import {
   FiBell,
@@ -15,7 +31,6 @@ import {
 } from "react-icons/fi";
 import { MdDashboard } from "react-icons/md";
 import { IoMdHelpCircle } from "react-icons/io";
-
 import { AiOutlineAppstore } from "react-icons/ai";
 
 const GetIconComponent = (iconName: string) => {
@@ -46,6 +61,38 @@ const GetIconComponent = (iconName: string) => {
       return MdDashboard;
     case "IoMdHelpCircle":
       return IoMdHelpCircle;
+    case "FaHome":
+      return FaHome;
+    case "FaUserGraduate":
+      return FaUserGraduate;
+    case "FaAngleDoubleRight":
+      return FaAngleDoubleRight;
+    case "FaWallet":
+      return FaWallet;
+    case "FaRegCalendarAlt":
+      return FaRegCalendarAlt;
+    case "FaMoneyBillAlt":
+      return FaMoneyBillAlt;
+    case "FaListAlt":
+      return FaListAlt;
+    case "FaGraduationCap":
+      return FaGraduationCap;
+    case "FaUsersCog":
+      return FaUsersCog;
+    case "FaCommentDots":
+      return FaCommentDots;
+    case "FaQuestion":
+      return FaQuestion;
+    case "FaRegHandshake":
+      return FaRegHandshake;
+    case "FaReceipt":
+      return FaReceipt;
+    case "FaBookReader":
+      return FaBookReader;
+    case "FaRegIdCard":
+      return FaRegIdCard;
+    case "FaCog":
+      return FaCog;
     default:
       return AiOutlineAppstore;
   }
