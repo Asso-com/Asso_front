@@ -35,3 +35,20 @@
 #sidebar_menus.hidden_sidebar {
   width: 0;
 }
+
+::-webkit-scrollbar {
+  width: 5px !important;
+  border-right: 5px;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb {
+  background: gray;
+  z-index: 99999999999 !important;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  z-index: 99999999999 !important;
+}

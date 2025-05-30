@@ -12,7 +12,7 @@ const theme = extendTheme({
             200: "#93d7e8",
             300: "#69c8df",
             400: "#3fb8d5",
-            500: "#55B2C9", // main brand color
+            500: "#55B2C9", 
             600: "#3791a4",
             700: "#2b6e7d",
             800: "#1f4a55",
@@ -24,7 +24,7 @@ const theme = extendTheme({
             200: "#9fb0cd",
             300: "#7b93ba",
             400: "#5776a7",
-            500: "#335a94", // main secondary color
+            500: "#335a94", 
             600: "#284776",
             700: "#1e3559",
             800: "#14233b",

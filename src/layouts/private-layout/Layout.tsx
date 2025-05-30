@@ -12,8 +12,6 @@ type LayoutProps = {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
-  //const [test,setTest] = useState<String | null>(null)
-
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   const toggleSidebar = () => {

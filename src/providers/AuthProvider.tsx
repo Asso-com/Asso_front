@@ -5,6 +5,7 @@ import React, {
   useMemo,
   type ReactNode,
 } from "react";
+import AppLoader from "@components/shared/loader/Loader.";
 import { useDispatch, useSelector } from "react-redux";
 import { axiosInstance } from "../services/api-services/axiosInstance";
 import AuthServiceApi from "../services/api-services/AuthServiceApi";
@@ -133,7 +134,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     [accessToken]
   );
 
-  if (loading) return <h2>Loading...</h2>;
+  if (loading) return <AppLoader />;
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

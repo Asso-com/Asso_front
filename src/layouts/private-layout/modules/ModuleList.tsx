@@ -17,26 +17,27 @@ import {
   FaThLarge,
 } from "react-icons/fa";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
 
 import GenericIconButtonWithTooltip from "../../../components/shared/icons-buttons/GenericIconButtonWithTooltip";
-import type { ModuleItem } from "./types/Module";
-import { fakeModules } from "./data/fakeModules";
+import { useDispatch, useSelector } from "react-redux";
+import { setFilterData } from "@store/menuSlice";
+import type { RootState } from "@store/index";
+import type { ModuleItem } from "@/types/menuItem";
 
 const ModuleListScroller: React.FC = () => {
-  const navigate = useNavigate();
-  const modules: ModuleItem[] = fakeModules;
+  const dispatch = useDispatch();
 
-  const [currentModule, setCurrentModule] = useState<string>("DASHBOARD");
+  const { modulesList: modules = [], currentModule } = useSelector(
+    (state: RootState) => state.menuSlice
+  );
 
   const handleChangeModule = (module: ModuleItem) => {
-    setCurrentModule(module.MODULE);
-    // Optional: navigate(`/modules/${module.MODULE.toLowerCase()}`);
+    dispatch(setFilterData(module.MODULE));
   };
 
   // Updated icons based on Smart School App modules
   const moduleIcons: Record<string, React.ElementType> = {
-    DASHBOARD: FaThLarge,
+    ALL: FaThLarge,
     ENROLLMENT: FaUserGraduate,
     HUMAN_RESOURCES: FaChalkboardTeacher,
     ATTENDANCE: FaClipboardList,

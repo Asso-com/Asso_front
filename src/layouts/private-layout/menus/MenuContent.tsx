@@ -8,17 +8,21 @@ import NavItem from "./NavItem";
 import "./menus_styles.css";
 
 import type { MenuItem } from "../../../types/menuItem";
-import fakeMenuItems from "./data/fakeMenuItems";
+import { useSelector } from "react-redux";
+import type { RootState } from "@store/index";
+import { useDirection } from "@hooks/useDirection";
 
 const MotionBox = motion(Box);
 
 const SidebarContent: React.FC = () => {
-  const menuItems = fakeMenuItems;
+  const menuItems = useSelector(
+    (state: RootState) => state.menuSlice.menuDataFilter
+  );
   const [activeGroup, setActiveGroup] = useState<number | null>(null);
   const location = useLocation();
 
-  // Assume these come from context or i18n hooks
-  const isRTL = false;
+  const { isRTL } = useDirection();
+
   const t = (text: string) => text;
 
   useEffect(() => {
@@ -39,7 +43,7 @@ const SidebarContent: React.FC = () => {
 
   return (
     <Box p={2}>
-      {menuItems.map((item, index) => {
+      {menuItems.map((item) => {
         const IconComponent = GetIconComponent(item.icon);
         const hasChildren = item.children && item.children.length > 0;
         const isActiveGroup = item.MENU_ID === activeGroup;

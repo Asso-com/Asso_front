@@ -24,7 +24,7 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
       as="nav"
       h="100%"
       w={isOpen ? "260px" : "0px"}
-      overflow="hidden"
+      overflow="scroll"
       overflowX="hidden"
       boxShadow="lg"
       borderRadius="sm"

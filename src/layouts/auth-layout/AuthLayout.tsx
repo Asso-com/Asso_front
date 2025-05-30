@@ -1,7 +1,7 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { Navigate, Outlet } from "react-router-dom";
 
-import background_login from "../../assets/images/test.png";
+import background_login from "../../assets/images/login_backgroud.png";
 
 import { useSelector } from "react-redux";
 import { type RootState } from "../../store";

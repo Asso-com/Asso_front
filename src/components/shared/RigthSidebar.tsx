@@ -13,6 +13,7 @@ import {
 import { CloseIcon } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
 import React from "react";
+import { useDirection } from "@hooks/useDirection";
 
 interface RightSidebarProps {
   isOpen: boolean;
@@ -31,8 +32,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const isRTL = false;
-  const direction = isRTL ? "rtl" : "ltr";
+  const { direction } = useDirection();
 
   return (
     <Drawer

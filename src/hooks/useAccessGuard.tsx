@@ -1,6 +1,7 @@
 import { useLocation, Navigate, matchPath } from "react-router-dom";
 import { useAuth } from "./useAuth";
 import React from "react";
+import useFetchMenuData from "./useFetchMenuData";
 
 // Define the list of static routes
 const staticRoutes: string[] = ["/test"];
@@ -15,6 +16,8 @@ const matchRoute = (allowedRoutes: string[], pathname: string): boolean => {
 function useAccessGuard(): React.ReactElement | null {
   const { accessToken } = useAuth();
   const location = useLocation();
+
+  useFetchMenuData();
 
   // Redirect to login if no access token is found
   if (!accessToken) {

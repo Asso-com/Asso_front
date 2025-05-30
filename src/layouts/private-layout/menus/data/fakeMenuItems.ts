@@ -1,5 +1,22 @@
 import type { MenuItem } from "../../../../types/menuItem";
+/**
+ * 
+ * 
+ * 
+ * export const fakeModules: ModuleItem[] = [
+     { ID: 1, MODULE: "ENROLLMENT", MENU_DESCRIPTION: "Enrollment" },
+     { ID: 2, MODULE: "FINANCE", MENU_DESCRIPTION: "Finance" },
+     { ID: 3, MODULE: "EDUCATION", MENU_DESCRIPTION: "Education" },
+     { ID: 4, MODULE: "HUMAN_RESOURCES", MENU_DESCRIPTION: "Human resources" },
+     { ID: 5, MODULE: "COMMUNICATION", MENU_DESCRIPTION: "Communication" },
+     { ID: 6, MODULE: "PARTNER", MENU_DESCRIPTION: "Partner" },
+     { ID: 7, MODULE: "LIBRARY", MENU_DESCRIPTION: "Library" },
+     { ID: 8, MODULE: "SETTINGS", MENU_DESCRIPTION: "Settings" },
+     { ID: 9, MODULE: "ALL", MENU_DESCRIPTION: "All" },
+ ];
 
+
+ */
 const fakeMenuItems: MenuItem[] = [
     {
         MENU_ID: 1,
@@ -13,7 +30,8 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Student Information",
         icon: "FaUserGraduate",
         NAVLINK: "",
-        module_id:1,
+        MODULE_CODE:"ENROLLMENT",
+        // MODULE: "ENROLLMENT"
         children: [
             {
                 MENU_ID: 41,
@@ -53,7 +71,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Finance",
         icon: "FaMoneyBillWave",
         NAVLINK: "",
-        module_id: 2,
+        MODULE_CODE: "FINANCE",
         children: [
             {
                 MENU_ID: 50,
@@ -104,11 +122,11 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Sessions",
         icon: "FaRegCalendarAlt",
         NAVLINK: "",
-        module_id:3,
+        MODULE_CODE:"EDUCATION",
         children: [
             {
                 MENU_ID: 61,
-                MENU_DESCRIPTION: "module_id:3",
+                MENU_DESCRIPTION: "MODULE_CODE: List Sessions",
                 NAVLINK: "/Sessions/listSessions",
                 icon: "FaAngleDoubleRight",
             },
@@ -155,7 +173,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Lesson Plan",
         icon: "FaListAlt",
         NAVLINK: "",
-        module_id:3,
+        MODULE_CODE:"EDUCATION",
         children: [
             {
                 MENU_ID: 71,
@@ -176,7 +194,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Academics",
         icon: "FaGraduationCap",
         NAVLINK: "",
-        module_id:3,
+        MODULE_CODE:"EDUCATION",
         children: [
             {
                 MENU_ID: 81,
@@ -221,7 +239,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Human Resource",
         icon: "FaUsersCog",
         NAVLINK: "",
-        module_id:4,
+        MODULE_CODE:"HUMAN_RESOURCES",
         children: [
             {
                 MENU_ID: 91,
@@ -254,7 +272,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Communicate",
         icon: "FaCommentDots",
         NAVLINK: "",
-        module_id:5,
+        MODULE_CODE:"COMMUNICATION",
         children: [
             {
                 MENU_ID: 101,
@@ -281,7 +299,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Quiz",
         icon: "FaQuestion",
         NAVLINK: "",
-        module_id:3,
+        MODULE_CODE:"EDUCATION",
         children: [
             {
                 MENU_ID: 111,
@@ -302,7 +320,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Partner",
         icon: "FaRegHandshake",
         NAVLINK: "",
-        module_id:6,
+        MODULE_CODE:"PARTNER",
         children: [
             {
                 MENU_ID: 121,
@@ -323,7 +341,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Library",
         icon: "FaBookReader",
         NAVLINK: "",
-        module_id:7,
+        MODULE_CODE:"LIBRARY",
         children: [
             {
                 MENU_ID: 131,
@@ -344,7 +362,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Events",
         icon: "FaRegCalendarCheck",
         NAVLINK: "",
-        module_id:5,
+        MODULE_CODE:"COMMUNICATION",
         children: [
             {
                 MENU_ID: 141,
@@ -365,7 +383,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "System Settings",
         icon: "FaCog",
         NAVLINK: "",
-        module_id:8,
+        MODULE_CODE:"SETTINGS",
         children: [
             {
                 MENU_ID: 151,

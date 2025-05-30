@@ -7,7 +7,6 @@ import GenericIconButtonWithTooltip from "./icons-buttons/GenericIconButtonWithT
 function ClearFilter({ gridRef }: any) {
   const [isFilterActive, setIsFilterActive] = useState(false);
 
-  console.log(isFilterActive);
   const checkFilterStatus = () => {
     if (gridRef.current?.api) {
       const isActive = gridRef.current.api.isAnyFilterPresent();

@@ -7,7 +7,7 @@ import storage from 'redux-persist/lib/storage';  // Default storage (localStora
 const persistConfig = {
   key: 'app-keys',
   storage,
-  whitelist: ['authSlice'],
+  whitelist: ['authSlice','menuSlice'],
 };
 
 // Wrap the rootReducer with persistReducer to handle persistence

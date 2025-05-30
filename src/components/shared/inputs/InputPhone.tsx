@@ -11,6 +11,7 @@ import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { useTranslation } from "react-i18next";
 import { type FieldInputProps } from "formik";
+import { useDirection } from "@hooks/useDirection";
 
 interface InputPhoneProps extends Omit<FormControlProps, "onChange"> {
   label?: string;
@@ -43,7 +44,8 @@ const InputPhone: React.FC<InputPhoneProps> = ({
   ...inputProps
 }) => {
   const { t } = useTranslation();
-  const isRTL = false;
+  
+    const { isRTL } = useDirection();
 
   return (
     <FormControl isInvalid={isInvalid} isRequired={isRequired} {...inputProps}>
