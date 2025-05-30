@@ -12,6 +12,8 @@ import {
   FaBell,
   FaCogs,
   FaLaptop,
+  FaComments,
+  FaHandshake,
   FaThLarge,
 } from "react-icons/fa";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
@@ -35,19 +37,20 @@ const ModuleListScroller: React.FC = () => {
   // Updated icons based on Smart School App modules
   const moduleIcons: Record<string, React.ElementType> = {
     DASHBOARD: FaThLarge,
-    STUDENT_MANAGEMENT: FaUserGraduate,
-    TEACHER_MANAGEMENT: FaChalkboardTeacher,
+    ENROLLMENT: FaUserGraduate,
+    HUMAN_RESOURCES: FaChalkboardTeacher,
     ATTENDANCE: FaClipboardList,
     TIMETABLE: FaCalendarAlt,
-    EXAMS: FaBookOpen,
+    EDUCATION: FaBookOpen,
     GRADES: FaClipboardList,
     LIBRARY: FaBookOpen,
-    FEE_MANAGEMENT: FaMoneyCheckAlt,
+    FINANCE: FaMoneyCheckAlt,
     TRANSPORT: FaBusAlt,
     NOTIFICATIONS: FaBell,
-    PARENTS_PORTAL: FaUserGraduate,
-    EVENTS_CALENDAR: FaCalendarAlt,
+    PARTNER: FaHandshake,
+    EVENTS: FaCalendarAlt,
     ONLINE_CLASSES: FaLaptop,
+    COMMUNICATION: FaComments,
     SETTINGS: FaCogs,
   };
 

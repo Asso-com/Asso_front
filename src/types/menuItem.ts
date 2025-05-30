@@ -5,4 +5,5 @@ export interface MenuItem {
   icon: string;
   children?: MenuItem[];
   EDITABLE?: number;
+  module_id?: number;
 }
