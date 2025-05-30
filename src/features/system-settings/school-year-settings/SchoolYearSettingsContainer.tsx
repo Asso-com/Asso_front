@@ -1,7 +1,14 @@
-import React from "react";
+import SchoolYearPresenter from "./SchoolYearPresenter";
+import useFetchAcademicPeriods from "./hooks/useFetchAcademicPeriods";
 
 const SchoolYearSettingsContainer = () => {
-  return <div>SchoolYearSettingsContainer</div>;
+  const { data, isLoading, error } = useFetchAcademicPeriods();
+
+  return (
+    <>
+      <SchoolYearPresenter rows={data} total={data?.length} />
+    </>
+  );
 };
 
 export default SchoolYearSettingsContainer;
