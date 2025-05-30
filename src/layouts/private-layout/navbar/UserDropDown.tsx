@@ -12,10 +12,15 @@ import {
 
 import { FiUser, FiLogOut } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
-
+import { useAuth } from "@hooks/useAuth";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store";
 const UserDropDown = () => {
-  const name: string = "Mohamed Ali";
-  const email: string = "dalihelal@gmail.com";
+  const { logout } = useAuth();
+
+  const userData = useSelector((state: RootState) => state.authSlice.userData);
+  const userName: string = userData?.email?.split("@")[0] || "";
+  const email: string = userData?.email || "";
 
   const { t } = useTranslation();
 
@@ -24,8 +29,8 @@ const UserDropDown = () => {
       <MenuButton>
         <Avatar
           size="sm"
-          name={name}
-          bg="primary.500"
+          name={userName}
+          bg="secondary.500"
           color="white"
           cursor="pointer"
           _hover={{ transform: "scale(1.05)" }}
@@ -42,10 +47,10 @@ const UserDropDown = () => {
       >
         <Box p={4}>
           <Flex align="center" gap={3}>
-            <Avatar name={name} size="md" bg="primary.500" />
+            <Avatar name={userName} size="sm" bg="secondary.500" />
             <Box>
               <Text fontWeight="bold" color="gray.700">
-                {name}
+                {userName}
               </Text>
               <Text fontSize="sm" color="gray.700">
                 {email}
@@ -64,6 +69,7 @@ const UserDropDown = () => {
             color="red.500"
             py={3}
             borderRadius="md"
+            onClick={logout}
           >
             {t("Logout")}
           </MenuItem>

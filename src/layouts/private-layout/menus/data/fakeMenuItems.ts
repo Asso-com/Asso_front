@@ -96,14 +96,14 @@ const fakeMenuItems: MenuItem[] = [
             },
         ],
     },
-  
+
     {
         MENU_ID: 6,
         MENU_DESCRIPTION: "Lesson Plan",
         icon: "FaListAlt",
         NAVLINK: "",
         children: [
-          
+
             {
                 MENU_ID: 61,
                 MENU_DESCRIPTION: "Lesson",
@@ -180,7 +180,7 @@ const fakeMenuItems: MenuItem[] = [
                 NAVLINK: "/HumanResource/addStaff",
                 icon: "FaAngleDoubleRight",
             },
-          
+
             {
                 MENU_ID: 83,
                 MENU_DESCRIPTION: "Department",
@@ -261,7 +261,7 @@ const fakeMenuItems: MenuItem[] = [
             },
         ],
     },
-   
+
     {
         MENU_ID: 102,
         MENU_DESCRIPTION: "Library",

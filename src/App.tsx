@@ -8,21 +8,30 @@ import i18n from "./services/i18n";
 import ChakraUiProvider from "./theme/ChakraUiProvider";
 import AuthProvider from "./providers/AuthProvider";
 
+// Redux imports for state management
+import { Provider } from "react-redux"; // Provides Redux store to the app
+import { store, persistor } from './store/index'; // Redux store and persistor
+import { PersistGate } from "redux-persist/integration/react"; // PersistGate for persisting Redux state
+
 const queryClient = new QueryClient();
 
 const App: React.FC = () => {
   return (
-    <I18nextProvider i18n={i18n}>
-      <ChakraUiProvider>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <Suspense fallback={<h2>Loading...</h2>}>
-              <RouterProvider router={AppRoutes} />
-            </Suspense>
-          </AuthProvider>
-        </QueryClientProvider>
-      </ChakraUiProvider>
-    </I18nextProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <I18nextProvider i18n={i18n}>
+          <ChakraUiProvider>
+            <QueryClientProvider client={queryClient}>
+              <AuthProvider>
+                <Suspense fallback={<h2>Loading...</h2>}>
+                  <RouterProvider router={AppRoutes} />
+                </Suspense>
+              </AuthProvider>
+            </QueryClientProvider>
+          </ChakraUiProvider>
+        </I18nextProvider>
+      </PersistGate>
+    </Provider>
   );
 };
 

@@ -1,11 +1,15 @@
 import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, type ReactNode } from "react";
 import Navbar from "./navbar/Navbar";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./menus";
 import Module from "./modules";
 
-const PrivateLayout: React.FC = () => {
+type LayoutProps = {
+  children?: ReactNode;
+};
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(true);
 
   //const [test,setTest] = useState<String | null>(null)
@@ -42,4 +46,4 @@ const PrivateLayout: React.FC = () => {
   );
 };
 
-export default PrivateLayout;
+export default Layout;
