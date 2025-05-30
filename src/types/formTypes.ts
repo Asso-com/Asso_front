@@ -25,7 +25,7 @@ export interface ValidationRules {
     matchesField?: MatchFieldRule;
     isAfter?: CompareDateRule;
     isBefore?: CompareDateRule;
-    email?: boolean;    
+    email?: boolean;
 }
 
 export type FieldType =
@@ -35,7 +35,11 @@ export type FieldType =
     | 'phone'
     | 'file'
     | 'password'
-    | 'date';
+    | 'date'
+    | 'textarea'
+    | 'select'
+    | 'radio'
+    | 'checkbox';
 
 export interface Field {
     name: string;
