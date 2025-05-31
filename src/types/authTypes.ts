@@ -15,6 +15,7 @@ export interface UserData {
 export interface AuthResponse {
     accessToken: string;
     userData: UserData;
+    associationId: number;
 }
 
 export interface RefreshTokenResponse {

@@ -43,38 +43,51 @@ const QuickFilter: React.FC<QuickFilterProps> = ({
       onFilterTextBoxChanged();
     }
   };
+
   const inputBg = useColorModeValue("white", "gray.700");
   const inputHoverBg = useColorModeValue("gray.50", "gray.600");
+  const inputFocusShadow = useColorModeValue(
+    "0 0 0 2px rgba(66, 153, 225, 0.6)",
+    "0 0 0 2px rgba(66, 153, 225, 0.4)"
+  );
 
   return (
     <Flex w="100%" justify="center" px={4}>
       <Box w={{ base: "100%", sm: "300px", md: "25vw" }}>
         <InputGroup size="md">
           <InputLeftElement pointerEvents="none">
-            <Icon as={FaSearch} color="gray.400" />
+            <Icon as={FaSearch} color="gray.400" boxSize={4} />
           </InputLeftElement>
           <Input
             ref={inputRef}
             type="text"
             placeholder={t(placeholder)}
-            focusBorderColor="blue.500"
             onChange={onFilterTextBoxChanged}
             fontSize="sm"
             bg={inputBg}
             _hover={{ bg: inputHoverBg }}
-            _focus={{ bg: inputHoverBg }}
+            _focus={{
+              bg: inputHoverBg,
+              boxShadow: inputFocusShadow,
+              borderColor: "blue.400",
+            }}
             pl="40px"
             pr="40px"
             borderRadius="full"
+            transition="all 0.2s ease-in-out"
           />
           <InputRightElement>
             <Icon
               as={FaTimes}
               color="gray.500"
               cursor="pointer"
-              _hover={{ color: "red.500", transform: "scale(1.2)" }}
-              transition="all 0.2s"
+              _hover={{
+                color: "red.500",
+                transform: "scale(1.2)",
+              }}
+              transition="all 0.2s ease"
               onClick={handleClearIconClick}
+              boxSize={4}
             />
           </InputRightElement>
         </InputGroup>

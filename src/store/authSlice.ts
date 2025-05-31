@@ -1,26 +1,23 @@
 // Redux Imports
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-// import { AuthResponse } from "@/types/authTypes";
-export type Role = 'ADMIN' | 'USER' | 'MODERATOR';
-
-// Define user data type
-interface UserData {
-    email: string;
-    role: Role;
-    id: string;
-    isFirstLogin: boolean;
-}
+import type { UserData } from "@/types/authTypes";
 
 // Define the state shape
 interface AuthState {
     userData: UserData | null;
     isUserLoggedIn: boolean;
+    associationId: number
+}
+interface InitialStatePayload {
+    userData: UserData;
+    associationId: number
 }
 
 // Initial state
 const initialState: AuthState = {
     userData: null,
     isUserLoggedIn: false,
+    associationId: 0
 };
 
 // Create the authentication slice
@@ -36,17 +33,21 @@ export const authSlice = createSlice({
             }
         },
         handleLogout: (state) => {
-            Object.assign(state, initialState); 
+            Object.assign(state, initialState);
         },
-        setUserData: (state, action: PayloadAction<UserData>) => {
-            state.userData = action.payload;
+        setAssociationId: (state, action: PayloadAction<number>) => {
+            state.associationId = action.payload
+        },
+        setInitialState: (state, action: PayloadAction<InitialStatePayload>) => {
+            state.userData = action.payload.userData;
             state.isUserLoggedIn = true;
+            state.associationId = action.payload.associationId
         },
     },
 });
 
 // Export individual action creators
-export const { setIsUserLoggedIn, setUserData,handleLogout } = authSlice.actions;
+export const { setIsUserLoggedIn, setInitialState, handleLogout, setAssociationId } = authSlice.actions;
 
 // Export the reducer function
 export default authSlice.reducer;

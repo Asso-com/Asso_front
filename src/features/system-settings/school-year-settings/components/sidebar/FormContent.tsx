@@ -13,6 +13,8 @@ import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder
 import AcademicPeriodFields from "../../constants/AcademicPeriodFields";
 import createValidationSchema from "@utils/createValidationSchema";
 import type { Field } from "@/types/formTypes";
+import { useSelector } from "react-redux";
+import type { RootState } from "@store/index";
 
 // Define the shape of your form values dynamically from Field[]
 type FormValues = {
@@ -27,17 +29,22 @@ export type FormContentRef = {
 const FormContent = forwardRef<FormContentRef>((_, ref) => {
   const [initialValues, setInitialValues] = useState<FormValues>({});
   const formikRef = useRef<FormikProps<FormValues>>(null);
+  const associationId = useSelector(
+    (state: RootState) => state.authSlice.associationId
+  );
 
   useEffect(() => {
-    const values = AcademicPeriodFields.reduce(
+    const defaultValues = AcademicPeriodFields.reduce(
       (acc: FormValues, field: Field) => {
-        acc[field.name] = field.type === "checkbox" ? true : "";
+        acc[field.name] = "";
         return acc;
       },
       {}
     );
-    setInitialValues(values);
-  }, [AcademicPeriodFields]);
+    setInitialValues({
+      ...defaultValues,
+    });
+  }, []);
 
   const validationSchema = useMemo(
     () => createValidationSchema(AcademicPeriodFields),
@@ -50,7 +57,10 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
       try {
         formikRef.current.handleSubmit();
         if (formikRef.current.isValid) {
-          return formikRef.current.values;
+          return {
+            ...formikRef.current.values,
+            associationId: associationId,
+          };
         }
       } catch (error) {
         console.error("Form submission failed:", error);

@@ -64,6 +64,7 @@ function ClearFilter({ gridRef }: any) {
           label={"Clear filter"}
           ariaLabel={"Clear filter"}
           onClick={handleClearFilter}
+          variant={"outline"}
           size="md"
         />
         {isFilterActive && (

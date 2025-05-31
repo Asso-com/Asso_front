@@ -398,13 +398,19 @@ const fakeMenuItems: MenuItem[] = [
                 icon: "FaAngleDoubleRight",
             },
             {
-                MENU_ID: 153,
+                MENU_ID: 152,
+                MENU_DESCRIPTION: "Academic Period Weeks",
+                NAVLINK: "/Settings/AcademicPeriodWeeks",
+                icon: "FaAngleDoubleRight",
+            },
+            {
+                MENU_ID: 154,
                 MENU_DESCRIPTION: "Email Setting",
                 NAVLINK: "/Settings/EmailSettings",
                 icon: "FaAngleDoubleRight",
             },
             {
-                MENU_ID: 154,
+                MENU_ID: 155,
                 MENU_DESCRIPTION: "Attendance Type",
                 NAVLINK: "/Settings/listAttendanceType",
                 icon: "FaAngleDoubleRight",

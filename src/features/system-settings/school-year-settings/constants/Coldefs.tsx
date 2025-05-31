@@ -1,6 +1,6 @@
 import { type ColDef } from "ag-grid-community";
-import { format } from "date-fns"; // if you use date formatting
-
+import { format } from "date-fns";
+import { Badge } from "@chakra-ui/react";
 const academicYearColumnDefs: ColDef[] = [
   {
     headerName: "Code",
@@ -8,6 +8,8 @@ const academicYearColumnDefs: ColDef[] = [
     sortable: true,
     filter: "agTextColumnFilter",
     resizable: true,
+    minWidth: 120,
+    flex: 1,
   },
   {
     headerName: "Description",
@@ -15,20 +17,43 @@ const academicYearColumnDefs: ColDef[] = [
     sortable: true,
     filter: "agTextColumnFilter",
     resizable: true,
+    minWidth: 250,
+    flex: 2,
   },
   {
     headerName: "Active",
     field: "active",
     sortable: true,
-    filter: "agTextColumnFilter",
     resizable: true,
+    minWidth: 100,
+    maxWidth: 120,
+    cellRenderer: ({ value }: any) => (
+      <Badge
+        colorScheme={value ? "green" : "red"}
+        px={2}
+        py={1}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        my={2}
+      >
+        {value ? "Yes" : "No"}
+      </Badge>
+    ),
+    cellStyle: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
   },
   {
     headerName: "Day of Week",
     field: "dayOfWeek",
     sortable: true,
-    filter: "agNumberColumnFilter",
+    filter: "agTextColumnFilter",
     resizable: true,
+    minWidth: 150,
+    flex: 1,
   },
   {
     headerName: "Start Date",
@@ -36,8 +61,11 @@ const academicYearColumnDefs: ColDef[] = [
     sortable: true,
     filter: "agDateColumnFilter",
     resizable: true,
+    minWidth: 150,
+    flex: 1,
     valueFormatter: ({ value }) =>
       value ? format(new Date(value), "yyyy-MM-dd") : "",
+    cellStyle: { textAlign: "center" },
   },
   {
     headerName: "End Date",
@@ -45,8 +73,11 @@ const academicYearColumnDefs: ColDef[] = [
     sortable: true,
     filter: "agDateColumnFilter",
     resizable: true,
+    minWidth: 150,
+    flex: 1,
     valueFormatter: ({ value }) =>
       value ? format(new Date(value), "yyyy-MM-dd") : "",
+    cellStyle: { textAlign: "center" },
   },
 ];
 

@@ -57,7 +57,6 @@ const CustomAgGrid = forwardRef<AgGridReactType, CustomAgGridProps>(
           defaultColDef={defaultColDef}
           rowHeight={40}
           enableRtl={isRTL}
-          pagination={false}
           paginationPageSize={paginationPageSize}
           paginationPageSizeSelector={paginationPageSizeSelector}
           {...props}

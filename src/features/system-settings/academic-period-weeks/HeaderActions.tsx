@@ -2,7 +2,6 @@ import { Box, Text, Flex, HStack, Icon } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import ClearFilter from "@components/shared/ClearFilter";
 import QuickFilter from "@components/shared/QuickFilter";
-import PeriodSidebar from "./sidebar/PeriodSidebar";
 import { FaRegCalendarAlt } from "react-icons/fa";
 
 const HeaderActions = ({ gridRef }: any) => {
@@ -31,7 +30,7 @@ const HeaderActions = ({ gridRef }: any) => {
             color="blue.700"
             letterSpacing="wide"
           >
-            {t("School Year List")}
+            {t("Academic Period Week List")}
           </Text>
         </HStack>
 
@@ -40,7 +39,6 @@ const HeaderActions = ({ gridRef }: any) => {
           <ClearFilter gridRef={gridRef} />
           <QuickFilter gridRef={gridRef} />
         </Flex>
-        <PeriodSidebar />
       </Flex>
     </Box>
   );

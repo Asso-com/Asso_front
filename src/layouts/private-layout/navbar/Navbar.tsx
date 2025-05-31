@@ -13,6 +13,7 @@ import appLogo from "../../../assets/logo/startnow.jpg";
 
 import UserDropDown from "./UserDropDown";
 import DropDownLanguage from "./DropDownLanguage";
+import AssociationList from "./AssociationList";
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -53,6 +54,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }) => {
             onClick={onToggleSidebar}
             variant="ghost"
           />
+          <AssociationList/>
         </Flex>
 
         <Flex gap={2} alignItems="center">

@@ -22,6 +22,7 @@ import ClassRoomContainer from "@features/Academics/Class-room/ClassRoomContaine
 import SubjectTypeContainer from "@features/Academics/subject-type/SubjectTypeContainer";
 import ListPartnerContainer from "@features/Partner/list-partner/ListPartnerContainer";
 import LocationContainer from "@features/Partner/location/LocationContainer";
+import AcademicPeriodWeeksContainer from "@features/system-settings/academic-period-weeks/AcademicPeriodWeeksContainer";
 
 const protectedRoutes = [
   {
@@ -29,11 +30,12 @@ const protectedRoutes = [
     children: [
       { path: "/dashboard", element: <DashboardPage /> },
       { path: "/Settings/SessionSetting", element: <SchoolYearSettingsContainer /> },
+      { path: "/Settings/AcademicPeriodWeeks",element:<AcademicPeriodWeeksContainer/>},
       { path: "/Student/StudentInformation", element: <StudentDetailsContainer /> },
       { path: "/Student/GeographicalLocationofStudentAddresses", element: <LocationOfStudentContainer /> },
       { path: "/Student/LinguisticLevelsRegistration", element: <LinguisticLevelsRegistrationContainer /> },
       { path: "/Student/StudentInformation", element: <StudentDetailsContainer /> },
-       { path: "/Student/Payments", element: <PaymentsContainer /> },
+      { path: "/Student/Payments", element: <PaymentsContainer /> },
       { path: "/Student/AddStudent", element: <StudentRegistrationContainer /> },
 
       { path: "/Sessions/listSessions", element: <ListSessionsContainer /> },

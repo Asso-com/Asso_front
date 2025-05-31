@@ -14,8 +14,8 @@ export const AcademicPeriodFields: Field[] = [
     {
         name: "dayOfWeek",
         type: "select",
-        label: "Start Date",
-        placeholder: "Start Date",
+        label: "Start Day",
+        placeholder: "Start Day",
         options: [
             { value: "MONDAY", label: "Monday" },
             { value: "TUESDAY", label: "Tuesday" },
@@ -49,15 +49,6 @@ export const AcademicPeriodFields: Field[] = [
                 field: "startDate",
                 message: "Ending date must be after starting date",
             },
-        },
-    },
-    {
-        name: "active",
-        type: "checkbox",
-        label: "Active",
-        placeholder: "Active",
-        validationRules: {
-            required: true,
         },
     },
 ];

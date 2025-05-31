@@ -12,7 +12,7 @@ import AuthServiceApi from "../services/api-services/AuthServiceApi";
 import type { RootState } from "../store";
 import type { LoginRequest, AuthResponse } from "../types/authTypes";
 
-import { setUserData, handleLogout } from "../store/authSlice";
+import { setInitialState, handleLogout } from "../store/authSlice";
 
 interface AuthContextType {
   accessToken: string | null;
@@ -103,7 +103,12 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const response: AuthResponse = await AuthServiceApi.userLogin(loginData);
       setAccessToken(response.accessToken);
-      dispatch(setUserData(response.userData));
+      dispatch(
+        setInitialState({
+          userData: response.userData,
+          associationId: response.associationId,
+        })
+      );
     } catch (err: any) {
       console.error("Login failed:", err);
       //throw new Error(err?.response?.data?.message || "Login failed");

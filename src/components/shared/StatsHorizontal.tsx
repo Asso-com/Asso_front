@@ -41,7 +41,7 @@ const StatsHorizontal: React.FC<StatsHorizontalProps> = ({
   return (
     <Box
       className={className}
-      borderWidth="1px"
+      //borderWidth="1px"
       borderRadius="md"
       boxShadow="md"
       width="100%"
