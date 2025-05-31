@@ -126,7 +126,7 @@ const fakeMenuItems: MenuItem[] = [
         children: [
             {
                 MENU_ID: 61,
-                MENU_DESCRIPTION: "MODULE_CODE: List Sessions",
+                MENU_DESCRIPTION: "List Sessions",
                 NAVLINK: "/Sessions/listSessions",
                 icon: "FaAngleDoubleRight",
             },
@@ -199,7 +199,7 @@ const fakeMenuItems: MenuItem[] = [
             {
                 MENU_ID: 81,
                 MENU_DESCRIPTION: "Level",
-                NAVLINK: "/Academics/listClass",
+                NAVLINK: "/Academics/listLevel",
                 icon: "FaAngleDoubleRight",
             },
             {
@@ -211,7 +211,7 @@ const fakeMenuItems: MenuItem[] = [
             {
                 MENU_ID: 83,
                 MENU_DESCRIPTION: "Subject Level",
-                NAVLINK: "/Academics/SubjectGroup",
+                NAVLINK: "/Academics/SubjectLevel",
                 icon: "FaAngleDoubleRight",
             },
             {
@@ -223,7 +223,7 @@ const fakeMenuItems: MenuItem[] = [
             {
                 MENU_ID: 85,
                 MENU_DESCRIPTION: "Room",
-                NAVLINK: "/Academics/roomAddress",
+                NAVLINK: "/Academics/ClassRoom",
                 icon: "FaAngleDoubleRight",
             },
             {
@@ -325,13 +325,13 @@ const fakeMenuItems: MenuItem[] = [
             {
                 MENU_ID: 121,
                 MENU_DESCRIPTION: "List of Partners",
-                NAVLINK: "/Partnerlocation/listPartner",
+                NAVLINK: "/Partner/listPartner",
                 icon: "FaAngleDoubleRight",
             },
             {
                 MENU_ID: 122,
                 MENU_DESCRIPTION: "Partner Location",
-                NAVLINK: "/Partnerlocation/location",
+                NAVLINK: "/Partner/location",
                 icon: "FaAngleDoubleRight",
             },
         ],
