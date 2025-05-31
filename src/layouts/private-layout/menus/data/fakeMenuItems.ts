@@ -30,7 +30,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Student Information",
         icon: "FaUserGraduate",
         NAVLINK: "",
-        MODULE_CODE:"ENROLLMENT",
+        MODULE_CODE: "ENROLLMENT",
         // MODULE: "ENROLLMENT"
         children: [
             {
@@ -38,7 +38,7 @@ const fakeMenuItems: MenuItem[] = [
                 MENU_DESCRIPTION: "Student Details",
                 NAVLINK: "/Student/StudentInformation",
                 icon: "FaAngleDoubleRight",
-                
+
             },
             {
                 MENU_ID: 42,
@@ -122,7 +122,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Sessions",
         icon: "FaRegCalendarAlt",
         NAVLINK: "",
-        MODULE_CODE:"EDUCATION",
+        MODULE_CODE: "EDUCATION",
         children: [
             {
                 MENU_ID: 61,
@@ -173,7 +173,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Lesson Plan",
         icon: "FaListAlt",
         NAVLINK: "",
-        MODULE_CODE:"EDUCATION",
+        MODULE_CODE: "EDUCATION",
         children: [
             {
                 MENU_ID: 71,
@@ -194,7 +194,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Academics",
         icon: "FaGraduationCap",
         NAVLINK: "",
-        MODULE_CODE:"EDUCATION",
+        MODULE_CODE: "EDUCATION",
         children: [
             {
                 MENU_ID: 81,
@@ -239,7 +239,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Human Resource",
         icon: "FaUsersCog",
         NAVLINK: "",
-        MODULE_CODE:"HUMAN_RESOURCES",
+        MODULE_CODE: "HUMAN_RESOURCES",
         children: [
             {
                 MENU_ID: 91,
@@ -272,7 +272,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Communicate",
         icon: "FaCommentDots",
         NAVLINK: "",
-        MODULE_CODE:"COMMUNICATION",
+        MODULE_CODE: "COMMUNICATION",
         children: [
             {
                 MENU_ID: 101,
@@ -299,7 +299,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Quiz",
         icon: "FaQuestion",
         NAVLINK: "",
-        MODULE_CODE:"EDUCATION",
+        MODULE_CODE: "EDUCATION",
         children: [
             {
                 MENU_ID: 111,
@@ -320,7 +320,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Partner",
         icon: "FaRegHandshake",
         NAVLINK: "",
-        MODULE_CODE:"PARTNER",
+        MODULE_CODE: "PARTNER",
         children: [
             {
                 MENU_ID: 121,
@@ -341,7 +341,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Library",
         icon: "FaBookReader",
         NAVLINK: "",
-        MODULE_CODE:"LIBRARY",
+        MODULE_CODE: "LIBRARY",
         children: [
             {
                 MENU_ID: 131,
@@ -362,7 +362,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "Events",
         icon: "FaRegCalendarCheck",
         NAVLINK: "",
-        MODULE_CODE:"COMMUNICATION",
+        MODULE_CODE: "COMMUNICATION",
         children: [
             {
                 MENU_ID: 141,
@@ -383,7 +383,7 @@ const fakeMenuItems: MenuItem[] = [
         MENU_DESCRIPTION: "System Settings",
         icon: "FaCog",
         NAVLINK: "",
-        MODULE_CODE:"SETTINGS",
+        MODULE_CODE: "SETTINGS",
         children: [
             {
                 MENU_ID: 151,

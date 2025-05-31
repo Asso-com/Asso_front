@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Text, HStack, Icon } from "@chakra-ui/react";
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 import { motion } from "framer-motion";
@@ -15,6 +15,7 @@ import { useDirection } from "@hooks/useDirection";
 const MotionBox = motion(Box);
 
 const SidebarContent: React.FC = () => {
+  const navigate = useNavigate();
   const menuItems = useSelector(
     (state: RootState) => state.menuSlice.menuDataFilter
   );
@@ -41,6 +42,10 @@ const SidebarContent: React.FC = () => {
     return children.some((child) => location.pathname === child.NAVLINK);
   };
 
+  const handleNavigate = (link: string) => {
+    navigate(link);
+  };
+
   return (
     <Box p={2}>
       {menuItems.map((item) => {
@@ -51,12 +56,19 @@ const SidebarContent: React.FC = () => {
         return (
           <Box key={item.MENU_ID} mb={2}>
             <Box
-              onClick={() => hasChildren && handleGroupClick(item.MENU_ID)}
+              //onClick={() => hasChildren && handleGroupClick(item.MENU_ID)}
+              onClick={() => {
+                if (hasChildren) {
+                  handleGroupClick(item.MENU_ID);
+                } else {
+                  handleNavigate(item.NAVLINK);
+                }
+              }}
               display="flex"
               alignItems="center"
               justifyContent="space-between"
               p={3}
-              cursor={hasChildren ? "pointer" : "default"}
+              cursor={"pointer"}
               borderRadius="lg"
               transition="all 0.2s"
               _hover={{
