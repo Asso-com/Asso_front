@@ -2,40 +2,31 @@ import type { AxiosError } from "axios";
 import { axiosInstance } from "../../../../services/api-services/axiosInstance";
 
 
-const YearSettingsServiceApi = {
+const DepartmentServiceApi = {
 
-    getAll: async (associationId: number): Promise<any> => {
+    getAll: async (associationId: number): Promise<unknown> => {
+        // eslint-disable-next-line no-useless-catch
         try {
-            const response = await axiosInstance.get<any>(
-                `/api/v1/academicPeriod/association/${associationId}`,
+            const response = await axiosInstance.get<unknown>(
+                `/api/v1/departements/associatio/${associationId}`,
             );
             return response.data;
         } catch (error) {
             throw error;
         }
     },
-    activateOrDeactivateAcademicPeriod: async (periodId: number, associationId: number): Promise<any> => {
+ 
+    create: async (data: unknown, associationId: number): Promise<unknown> => {
         try {
-            const response = await axiosInstance.put<any>(
-                `/api/v1/academicPeriod/${periodId}/activate/${associationId}`,
-                //'/api/v1/academicPeriod',
-            );
-            return response.data;
-        } catch (error) {https://typescript-eslint.io/rules/no-explicit-any
-            throw error;
-        }
-    },
-    create: async (data: any): Promise<any> => {
-        try {
-            const response = await axiosInstance.post<any>(
-                '/api/v1/academicPeriod',
+            const response = await axiosInstance.post<unknown>(
+                `/api/v1/departements/association/${associationId}`,
                 data
             );
             return response.data;
         } catch (err) {
             const error = err as AxiosError;
             if (error.response?.status === 400) {
-                const backendData = error.response.data as any;
+                const backendData = error.response.data as unknown;
                 if (backendData.errors && typeof backendData.errors === 'object') {
                     const validationErrors = backendData.errors as Record<string, string>;
                     const message = Object.values(validationErrors).join(', ');
@@ -52,4 +43,4 @@ const YearSettingsServiceApi = {
     },
 };
 
-export default YearSettingsServiceApi;
+export default DepartmentServiceApi;

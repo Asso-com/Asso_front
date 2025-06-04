@@ -196,42 +196,47 @@ const fakeMenuItems: MenuItem[] = [
         NAVLINK: "",
         MODULE_CODE: "EDUCATION",
         children: [
-            {
-                MENU_ID: 81,
-                MENU_DESCRIPTION: "Level",
-                NAVLINK: "/Academics/listLevel",
+
+               {
+                MENU_ID: 80,
+                MENU_DESCRIPTION: "Department",
+                NAVLINK: "/Academics/Department",
                 icon: "FaAngleDoubleRight",
             },
-            {
-                MENU_ID: 82,
+             {
+                MENU_ID: 81,
                 MENU_DESCRIPTION: "Subject",
                 NAVLINK: "/Academics/listSubject",
                 icon: "FaAngleDoubleRight",
             },
             {
+                MENU_ID: 82,
+                MENU_DESCRIPTION: "Categories of Levels",
+                NAVLINK: "/Academics/CategoriesLevels",
+                icon: "FaAngleDoubleRight",
+            },
+            {
                 MENU_ID: 83,
+                MENU_DESCRIPTION: "Level",
+                NAVLINK: "/Academics/listLevel",
+                icon: "FaAngleDoubleRight",
+            },
+           
+            {
+                MENU_ID: 84,
                 MENU_DESCRIPTION: "Subject Level",
                 NAVLINK: "/Academics/SubjectLevel",
                 icon: "FaAngleDoubleRight",
             },
-            {
-                MENU_ID: 84,
-                MENU_DESCRIPTION: "Linguistic Level",
-                NAVLINK: "/Academics/linguisticLevel",
-                icon: "FaAngleDoubleRight",
-            },
+          
             {
                 MENU_ID: 85,
-                MENU_DESCRIPTION: "Room",
+                MENU_DESCRIPTION: "Class Room",
                 NAVLINK: "/Academics/ClassRoom",
                 icon: "FaAngleDoubleRight",
             },
-            {
-                MENU_ID: 86,
-                MENU_DESCRIPTION: "Subject Type",
-                NAVLINK: "/Academics/subjectType",
-                icon: "FaAngleDoubleRight",
-            },
+            
+          
         ],
     },
     {
@@ -253,14 +258,9 @@ const fakeMenuItems: MenuItem[] = [
                 NAVLINK: "/HumanResource/addStaff",
                 icon: "FaAngleDoubleRight",
             },
+           
             {
                 MENU_ID: 93,
-                MENU_DESCRIPTION: "Department",
-                NAVLINK: "/HumanResource/ListDepartment",
-                icon: "FaAngleDoubleRight",
-            },
-            {
-                MENU_ID: 94,
                 MENU_DESCRIPTION: "Staff Attendance",
                 NAVLINK: "/HumanResource/StaffAttendance",
                 icon: "FaAngleDoubleRight",
@@ -409,12 +409,7 @@ const fakeMenuItems: MenuItem[] = [
                 NAVLINK: "/Settings/EmailSettings",
                 icon: "FaAngleDoubleRight",
             },
-            {
-                MENU_ID: 155,
-                MENU_DESCRIPTION: "Attendance Type",
-                NAVLINK: "/Settings/listAttendanceType",
-                icon: "FaAngleDoubleRight",
-            },
+            
         ],
     },
 ];

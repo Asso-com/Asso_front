@@ -17,12 +17,12 @@ import ListSessionsContainer from "@features/sessions/List-sessions/ListSessions
 import ListLevelContainer from "@features/Academics/list-level/ListLevelContainer";
 import ListSubjectContainer from "@features/Academics/list-subject.tsx/ListSubjectContainer";
 import SubjectLevelContainer from "@features/Academics/Subject-level/SubjectLevelContainer";
-import LinguisticLevelContainer from "@features/Academics/linguistic-level/LinguisticLevelContainer";
 import ClassRoomContainer from "@features/Academics/Class-room/ClassRoomContainer";
-import SubjectTypeContainer from "@features/Academics/subject-type/SubjectTypeContainer";
 import ListPartnerContainer from "@features/Partner/list-partner/ListPartnerContainer";
 import LocationContainer from "@features/Partner/location/LocationContainer";
 import AcademicPeriodWeeksContainer from "@features/system-settings/academic-period-weeks/AcademicPeriodWeeksContainer";
+import DepartmentContainer from "@features/Academics/department/DepartmentContainer";
+import CategoriesLevelsContainer from "@features/Academics/Categories-levels/CategoriesLevelsContainer";
 
 const protectedRoutes = [
   {
@@ -45,16 +45,16 @@ const protectedRoutes = [
       { path: "/Sessions/SessionsConsultation", element: <SessionsConsultationContainer /> },
       { path: "/Sessions/AttendanceTracking", element: <AttendanceTrackingContainer /> },
       { path: "/Sessions/SessionSchedule", element: <SessionScheduleContainer /> }, 
-      
+    
       { path: "/Partner/listPartner", element: <ListPartnerContainer /> },
       { path: "/Partner/location", element: <LocationContainer /> },
       
       { path: "/Academics/listLevel", element: <ListLevelContainer /> }, 
       { path: "/Academics/listSubject", element: <ListSubjectContainer /> },
       { path: "/Academics/SubjectLevel", element: <SubjectLevelContainer /> },
-      { path: "/Academics/linguisticLevel", element: <LinguisticLevelContainer /> },
       { path: "/Academics/ClassRoom", element: <ClassRoomContainer /> },
-      { path: "/Academics/subjectType", element: <SubjectTypeContainer /> },
+      { path: "/Academics/CategoriesLevels", element: <CategoriesLevelsContainer /> },
+      { path: "/Academics/Department", element: <DepartmentContainer /> },
      
      
     ],
