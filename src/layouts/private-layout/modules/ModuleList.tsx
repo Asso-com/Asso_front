@@ -1,5 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Flex, Box, useColorModeValue, Divider } from "@chakra-ui/react";
+import {
+  Flex,
+  Box,
+  useColorModeValue,
+  Divider,
+  IconButton,
+} from "@chakra-ui/react";
 
 import {
   FaUserGraduate,
@@ -59,61 +65,20 @@ const ModuleListScroller: React.FC = () => {
     return moduleIcons[moduleName] || FaThLarge;
   };
 
-  const inactiveColor = useColorModeValue("gray.500", "gray.300");
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [showVerticalButtons, setShowVerticalButtons] = useState(false);
-
-  const scrollUp = () => {
-    if (containerRef.current) {
-      containerRef.current.scrollBy({
-        top: -200,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  const scrollDown = () => {
-    if (containerRef.current) {
-      containerRef.current.scrollBy({
-        top: 250,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  useEffect(() => {
-    const updateScrollButtons = () => {
-      if (containerRef.current) {
-        const { scrollHeight, clientHeight } = containerRef.current;
-        setShowVerticalButtons(scrollHeight > clientHeight);
-      }
-    };
-
-    updateScrollButtons();
-    window.addEventListener("resize", updateScrollButtons);
-    return () => window.removeEventListener("resize", updateScrollButtons);
-  }, []);
-
   return (
-    <Flex height="100%" direction="column" gap={2} overflow="auto" p={2}>
-      {showVerticalButtons && (
-        <Box textAlign="center" mt={2}>
-          <GenericIconButtonWithTooltip
-            icon={<IoIosArrowUp />}
-            label="Scroll Up"
-            size="md"
-            onClick={scrollUp}
-          />
-          <Divider my={2} />
-        </Box>
-      )}
-
+    <Flex
+      height="100%"
+      direction="column"
+      gap={2}
+      overflow="auto"
+      pl={3}
+      py={4}
+    >
       <Flex
         direction="column"
         align="start"
         gap={2}
         overflow="hidden"
-        ref={containerRef}
         scrollBehavior="smooth"
       >
         {modules.map((module, index) => {
@@ -121,35 +86,65 @@ const ModuleListScroller: React.FC = () => {
           const isActive = module.MODULE === currentModule;
 
           return (
-            <Box key={index}>
-              <GenericIconButtonWithTooltip
+            <Box
+              key={index}
+              p={1}
+              bg={isActive ? "white" : "secondary.500"}
+              borderLeftRadius="3xl"
+              position="relative"
+              onClick={() => handleChangeModule(module)}
+              _before={
+                isActive
+                  ? {
+                      content: '""',
+                      position: "absolute",
+                      height: "50px",
+                      width: "50px",
+                      backgroundColor: "transparent",
+                      right: "0px",
+                      top: "-50px",
+                      borderRadius: "48%",
+                      boxShadow: "20px 20px white",
+                      zIndex: "2",
+                      pointerEvents: "none", // <-- prevent click interference
+                    }
+                  : {}
+              }
+              _after={
+                isActive
+                  ? {
+                      content: '""',
+                      position: "absolute",
+                      height: "50px",
+                      width: "50px",
+                      background: "transparent",
+                      right: "0px",
+                      bottom: "-50px",
+                      borderRadius: "48%",
+                      boxShadow: "20px -20px white",
+                      zIndex: "2",
+                      pointerEvents: "none", // <-- prevent click interference
+                    }
+                  : {}
+              }
+            >
+              <IconButton
                 icon={<Icon />}
-                placement="top"
-                ariaLabel={module.MODULE}
-                label={module.MENU_DESCRIPTION}
-                size="md"
-                variant={isActive ? "solid" : "outline"}
-                onClick={() => handleChangeModule(module)}
-                bgColor={isActive ? "secondary.400" : "white"}
-                color={isActive ? "white" : inactiveColor}
+                aria-label={module.MODULE}
+                variant="none"
+                size="lg"
+                color={isActive ? "secondary.500" : "white"}
+                // borderRadius="full"
+                _hover={{}}
+                _active={{
+                  color: isActive ? "secondary.500" : "white",
+                }}
+                _focus={{ boxShadow: "none" }}
               />
             </Box>
           );
         })}
       </Flex>
-
-      {showVerticalButtons && (
-        <Box textAlign="center" mt={2}>
-          <Divider my={2} />
-          <GenericIconButtonWithTooltip
-            icon={<IoIosArrowDown />}
-            label="Scroll Down"
-            ariaLabel="scroll_down"
-            size="md"
-            onClick={scrollDown}
-          />
-        </Box>
-      )}
     </Flex>
   );
 };

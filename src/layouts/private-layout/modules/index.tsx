@@ -7,11 +7,11 @@ function Module() {
       id="module_list"
       as="nav"
       h={`100%`}
-      boxShadow="lg"
-      borderWidth="1px"
+     // boxShadow="lg"
+     // borderWidth="1px"
       borderColor="gray.200"
-      bg="white"
-      borderRadius="md"
+      bg="secondary.500"
+      //borderRadius="md"
     >
       <ModuleList />
     </Box>
