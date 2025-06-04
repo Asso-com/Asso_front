@@ -1,12 +1,5 @@
-import React, { useRef, useState, useEffect } from "react";
-import {
-  Flex,
-  Box,
-  useColorModeValue,
-  Divider,
-  IconButton,
-} from "@chakra-ui/react";
-
+import React from "react";
+import { Flex, Box, IconButton, Tooltip } from "@chakra-ui/react";
 import {
   FaUserGraduate,
   FaChalkboardTeacher,
@@ -22,16 +15,15 @@ import {
   FaHandshake,
   FaThLarge,
 } from "react-icons/fa";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-
-import GenericIconButtonWithTooltip from "../../../components/shared/icons-buttons/GenericIconButtonWithTooltip";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilterData } from "@store/menuSlice";
 import type { RootState } from "@store/index";
 import type { ModuleItem } from "@/types/menuItem";
+import { useDirection } from "@hooks/useDirection";
 
 const ModuleListScroller: React.FC = () => {
   const dispatch = useDispatch();
+  const { isRTL } = useDirection();
 
   const { modulesList: modules = [], currentModule } = useSelector(
     (state: RootState) => state.menuSlice
@@ -41,7 +33,6 @@ const ModuleListScroller: React.FC = () => {
     dispatch(setFilterData(module.MODULE));
   };
 
-  // Updated icons based on Smart School App modules
   const moduleIcons: Record<string, React.ElementType> = {
     ALL: FaThLarge,
     ENROLLMENT: FaUserGraduate,
@@ -71,8 +62,9 @@ const ModuleListScroller: React.FC = () => {
       direction="column"
       gap={2}
       overflow="auto"
-      pl={3}
       py={4}
+      pl={isRTL ? 0 : 3}
+      pr={isRTL ? 3 : 0}
     >
       <Flex
         direction="column"
@@ -88,9 +80,10 @@ const ModuleListScroller: React.FC = () => {
           return (
             <Box
               key={index}
-              p={1}
+              p={2}
               bg={isActive ? "white" : "secondary.500"}
-              borderLeftRadius="3xl"
+              borderLeftRadius={isRTL ? "none" : "full"}
+              borderRightRadius={isRTL ? "full" : "none"}
               position="relative"
               onClick={() => handleChangeModule(module)}
               _before={
@@ -98,15 +91,17 @@ const ModuleListScroller: React.FC = () => {
                   ? {
                       content: '""',
                       position: "absolute",
-                      height: "50px",
-                      width: "50px",
+                      height: "35px",
+                      width: "35px",
                       backgroundColor: "transparent",
-                      right: "0px",
-                      top: "-50px",
-                      borderRadius: "48%",
-                      boxShadow: "20px 20px white",
+                      [isRTL ? "left" : "right"]: "0px",
+                      top: "-35px",
+                      borderRadius: "50%",
+                      boxShadow: isRTL
+                        ? "-20px 20px 0 0 white"
+                        : "20px 20px 0 0 white",
                       zIndex: "2",
-                      pointerEvents: "none", // <-- prevent click interference
+                      pointerEvents: "none",
                     }
                   : {}
               }
@@ -115,32 +110,44 @@ const ModuleListScroller: React.FC = () => {
                   ? {
                       content: '""',
                       position: "absolute",
-                      height: "50px",
-                      width: "50px",
+                      height: "35px",
+                      width: "35px",
                       background: "transparent",
-                      right: "0px",
-                      bottom: "-50px",
-                      borderRadius: "48%",
-                      boxShadow: "20px -20px white",
+                      [isRTL ? "left" : "right"]: "0px",
+                      bottom: "-35px",
+                      borderRadius: "50%",
+                      boxShadow: isRTL
+                        ? "-20px -20px 0 0 white"
+                        : "20px -20px 0 0 white",
                       zIndex: "2",
-                      pointerEvents: "none", // <-- prevent click interference
+                      pointerEvents: "none",
                     }
                   : {}
               }
             >
-              <IconButton
-                icon={<Icon />}
-                aria-label={module.MODULE}
-                variant="none"
-                size="lg"
-                color={isActive ? "secondary.500" : "white"}
-                // borderRadius="full"
-                _hover={{}}
-                _active={{
-                  color: isActive ? "secondary.500" : "white",
-                }}
-                _focus={{ boxShadow: "none" }}
-              />
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                bg="secondary.500"
+                borderRadius="50%"
+                zIndex="99999"
+              >
+                <Tooltip
+                  label={module.MENU_DESCRIPTION}
+                  placement={isRTL ? "left" : "right"}
+                >
+                  <IconButton
+                    icon={<Icon size={20} />}
+                    aria-label={module.MODULE}
+                    variant="none"
+                    size="lg"
+                    color="white"
+                    _hover={{}}
+                    _focus={{ boxShadow: "none" }}
+                  />
+                </Tooltip>
+              </Box>
             </Box>
           );
         })}

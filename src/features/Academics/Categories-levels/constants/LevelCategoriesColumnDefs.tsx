@@ -1,25 +1,24 @@
-import { type ColDef } from "ag-grid-community";
 import { Badge, Flex } from "@chakra-ui/react";
-import ActiveCellRender from "../components/column-actions/ActiveCellRender";
-const DepartmentColumnDefs: ColDef[] = [
+import { type ColDef } from "ag-grid-community";
+const LevelCategoriesColumnDefs: ColDef[] = [
   {
-    headerName: "Code",
-    field: "code",
-    sortable: true,
-    filter: "agTextColumnFilter",
-    resizable: true,
-    minWidth: 120,
-    flex: 1,
-    cellStyle: { textAlign: "left" },
-  },
-  {
-    headerName: "Department",
+    headerName: "name",
     field: "name",
     sortable: true,
     filter: "agTextColumnFilter",
     resizable: true,
     minWidth: 250,
-    flex: 2,
+    flex: 1,
+    cellStyle: { textAlign: "left" },
+  },
+  {
+    headerName: "description",
+    field: "description",
+    sortable: true,
+    filter: "agTextColumnFilter",
+    resizable: true,
+    minWidth: 120,
+    flex: 1,
     cellStyle: { textAlign: "left" },
   },
   {
@@ -57,31 +56,13 @@ const DepartmentColumnDefs: ColDef[] = [
     resizable: true,
     minWidth: 100,
     maxWidth: 120,
-    cellRenderer: ActiveCellRender,
+    // cellRenderer: ActiveCellRender,
     cellStyle: {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
     },
-    // cellRenderer: ({ value }: any) => (
-    //   <Badge
-    //     colorScheme={value ? "green" : "red"}
-    //     px={2}
-    //     py={1}
-    //     display="flex"
-    //     justifyContent="center"
-    //     alignItems="center"
-    //     my={2}
-    //   >
-    //     {value ? "Yes" : "No"}
-    //   </Badge>
-    // ),
-    // cellStyle: {
-    //   display: "flex",
-    //   justifyContent: "center",
-    //   alignItems: "center",
-    // },
   },
 ];
 
-export default DepartmentColumnDefs;
+export default LevelCategoriesColumnDefs;

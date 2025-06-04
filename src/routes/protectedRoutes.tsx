@@ -15,7 +15,7 @@ import AttendanceTrackingContainer from "@features/sessions/Attendance-tracking/
 import SessionScheduleContainer from "@features/sessions/Session-schedule/SessionScheduleContainer";
 import ListSessionsContainer from "@features/sessions/List-sessions/ListSessionsContainer";
 import ListLevelContainer from "@features/Academics/list-level/ListLevelContainer";
-import ListSubjectContainer from "@features/Academics/list-subject.tsx/ListSubjectContainer";
+import ListSubjectContainer from "@features/Academics/Subject/ListSubjectContainer";
 import SubjectLevelContainer from "@features/Academics/Subject-level/SubjectLevelContainer";
 import ClassRoomContainer from "@features/Academics/Class-room/ClassRoomContainer";
 import ListPartnerContainer from "@features/Partner/list-partner/ListPartnerContainer";

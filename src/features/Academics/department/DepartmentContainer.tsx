@@ -9,10 +9,10 @@ const DepartmentContainer = () => {
   );
   const { data = [] } = useFetchDepartment(associationId);
 
-  const activeDepartments =
-    data.filter((department: any) => department?.active)?.length || 0;
+  const unActiveDepartments =
+    data.filter((department: any) => !department?.active)?.length || 0;
 
-  return <DepartmentPresenter rows={data} total={data.length} activeDepartments={activeDepartments} />;
+  return <DepartmentPresenter rows={data} total={data.length} unActiveDepartments={unActiveDepartments} />;
 };
 
 export default DepartmentContainer;

@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import CustomAgGrid from "@components/shared/ag-grid/CustomAgGrid";
 import StatsHorizontal from "@components/shared/StatsHorizontal";
-import { FaHome } from "react-icons/fa";
+import { HiOutlineOfficeBuilding } from "react-icons/hi"; // Better for "Department"
+import { MdBlock } from "react-icons/md"; // Good for "Inactive"
 import type { AgGridReact as AgGridReactType } from "ag-grid-react";
 import DepartmentColumnDefs from "./constants/Coldefs";
 import HeaderActions from "./components/HeaderActions";
@@ -11,7 +12,7 @@ import ColumnAction from "./components/column-actions/ColumnAction";
 const DepartmentPresenter = ({
   rows = [],
   total = 0,
-  activeDepartments = 0,
+  unActiveDepartments = 0,
 }: any) => {
   const gridRef = useRef<AgGridReactType>(null);
   const [isGridInitialized, setIsGridInitialized] = useState(false);
@@ -26,22 +27,25 @@ const DepartmentPresenter = ({
     <Box height="100%" display="flex" flexDirection="column" gap={2} p={1}>
       <SimpleGrid columns={{ base: 1, sm: 2, md: 2 }} spacing={6}>
         <StatsHorizontal
-          icon={FaHome}
+          icon={HiOutlineOfficeBuilding}
           color="blue.500"
           stats={total.toString()}
-          statTitle="Total Department"
+          statTitle="Total Departments"
           borderLeft="6px solid"
-          borderColor={"blue.500"}
+          borderColor="blue.500"
         />
         <StatsHorizontal
-          color="teal.500"
-          stats={activeDepartments.toString()}
-          statTitle="Total Department"
+          icon={MdBlock}
+          color="orange.500"
+          stats={unActiveDepartments.toString()}
+          statTitle="Inactive Departments"
           borderLeft="6px solid"
-          borderColor={"blue.500"}
+          borderColor="orange.500"
         />
       </SimpleGrid>
+
       {isGridInitialized && <HeaderActions gridRef={gridRef} />}
+
       <CustomAgGrid
         ref={gridRef}
         rowData={rows}
@@ -53,6 +57,7 @@ const DepartmentPresenter = ({
             cellRenderer: ColumnAction,
             filter: false,
             sortable: false,
+            width: 120,
             pinned: "right",
           },
         ]}

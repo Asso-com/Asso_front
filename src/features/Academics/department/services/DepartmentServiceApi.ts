@@ -15,7 +15,18 @@ const DepartmentServiceApi = {
             throw error;
         }
     },
- 
+
+    toggelStatus: async (associationId: number, departementId: number): Promise<any> => {
+        try {
+            const response = await axiosInstance.put<any>(
+                `/api/v1/departements/association/${associationId}/department/${departementId}/toggle`,
+            );
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
     create: async (data: any, associationId: number): Promise<any> => {
         try {
             const response = await axiosInstance.post<unknown>(
