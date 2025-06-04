@@ -14,9 +14,9 @@ import createValidationSchema from "@utils/createValidationSchema";
 import type { Field } from "@/types/formTypes";
 import { useSelector } from "react-redux";
 import type { RootState } from "@store/index";
-import SubjectColDefs from "../../constants/LevelCategoriesFields";
+import LevelCategoriesFields from "../../constants/LevelCategoriesFields";
 
-// Define the shape of your form values dynamically from Field[]
+
 type FormValues = {
   [key: string]: any;
 };
@@ -34,7 +34,7 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
   );
 
   useEffect(() => {
-    const defaultValues = SubjectColDefs.reduce(
+    const defaultValues = LevelCategoriesFields.reduce(
       (acc: FormValues, field: Field) => {
         acc[field.name] = "";
         return acc;
@@ -43,23 +43,26 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
     );
     setInitialValues({
       ...defaultValues,
+      active: true,
     });
   }, []);
 
   const validationSchema = useMemo(
-    () => createValidationSchema(SubjectColDefs),
-    [SubjectColDefs]
+    () => createValidationSchema(LevelCategoriesFields), // ✅ corrigé ici aussi
+    []
   );
 
   useImperativeHandle(ref, () => ({
     submitForm: async () => {
-      if (!formikRef.current?.dirty) return null;
+      if (!formikRef.current) return null;
+
       try {
-        formikRef.current.handleSubmit();
+        await formikRef.current.submitForm();
+
         if (formikRef.current.isValid) {
           return {
             ...formikRef.current.values,
-            associationId: associationId,
+            associationId,
           };
         }
       } catch (error) {
@@ -69,7 +72,9 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
     },
     resetForm: () => {
       if (formikRef.current) {
-        formikRef.current.resetForm({ values: formikRef.current.values });
+        formikRef.current.resetForm({
+          values: initialValues,
+        });
       }
     },
   }));
@@ -79,11 +84,11 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
       innerRef={formikRef}
       initialValues={initialValues}
       validationSchema={validationSchema}
-      // enableReinitialize
+      enableReinitialize
       onSubmit={() => {}}
     >
       <Flex direction="column" gap={4}>
-        {SubjectColDefs.map((field: Field) => (
+        {LevelCategoriesFields.map((field: Field) => (
           <RenderFormBuilder key={field.name} field={field} />
         ))}
       </Flex>

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import ClearFilter from "@components/shared/ClearFilter";
 import QuickFilter from "@components/shared/QuickFilter";
 import { TbCategoryPlus } from "react-icons/tb";
+import CategorieLevelSidebar from "./sidebar/CategorieLevelSidebar";
 
 const HeaderActions = ({ gridRef }: any) => {
   const { t } = useTranslation();
@@ -39,6 +40,7 @@ const HeaderActions = ({ gridRef }: any) => {
           <ClearFilter gridRef={gridRef} />
           <QuickFilter gridRef={gridRef} />
         </Flex>
+        <CategorieLevelSidebar />
       </Flex>
     </Box>
   );

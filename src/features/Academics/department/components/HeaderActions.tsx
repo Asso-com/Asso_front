@@ -31,7 +31,7 @@ const HeaderActions = ({ gridRef }: any) => {
             color="blue.700"
             letterSpacing="wide"
           >
-            {t("DepartmentList")}
+            {t("Department List")}
           </Text>
         </HStack>
 

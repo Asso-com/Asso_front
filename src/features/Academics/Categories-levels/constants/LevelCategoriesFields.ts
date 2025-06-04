@@ -1,54 +1,34 @@
+
 import type { Field } from "@/types/formTypes";
 
-export const LevelCategoriesFields: Field[] = [
+const LevelCategoriesFields: Field[] = [
   {
-    name: "description",
-    type: "textarea",
-    label: "School Year",
-    placeholder: "School Year",
+    name: "name",
+    type: "text",
+    label: "Categorie",
+    placeholder: "Categorie",
     validationRules: {
       required: true,
       maxLength: 100,
     },
   },
   {
-    name: "dayOfWeek",
-    type: "select",
-    label: "Start Day",
-    placeholder: "Start Day",
-    options: [
-      { value: "MONDAY", label: "Monday" },
-      { value: "TUESDAY", label: "Tuesday" },
-      { value: "WEDNESDAY", label: "Wednesday" },
-      { value: "THURSDAY", label: "Thursday" },
-      { value: "FRIDAY", label: "Friday" },
-      { value: "SATURDAY", label: "Saturday" },
-      { value: "SUNDAY", label: "Sunday" },
-    ],
+    name: "description",
+    type: "text",
+    label: "Description",
+    placeholder: "Description",
     validationRules: {
       required: true,
+      maxLength: 100,
     },
   },
   {
-    name: "startDate",
-    type: "date",
-    label: "Starting Date",
-    placeholder: "Select Date",
+    name: "active",
+    type: "checkbox",
+    label: "Active",
+    placeholder: "Active",
     validationRules: {
       required: true,
-    },
-  },
-  {
-    name: "endDate",
-    type: "date",
-    label: "Ending Date",
-    placeholder: "Select Date",
-    validationRules: {
-      required: true,
-      isAfter: {
-        field: "startDate",
-        message: "Ending date must be after starting date",
-      },
     },
   },
 ];

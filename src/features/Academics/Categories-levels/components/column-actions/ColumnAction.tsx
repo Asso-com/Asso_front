@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
-import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
+import { EditIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "@store/toastSlice";
 import { MdOutlineToggleOff, MdOutlineToggleOn } from "react-icons/md";
@@ -19,6 +19,8 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
     (state: RootState) => state.authSlice.associationId
   );
 
+  const dispatch = useDispatch();
+
   const toggleModal = (modal: ModalType) => {
     setModalsState((prevState) => ({
       ...prevState,
@@ -26,8 +28,40 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
     }));
   };
 
+  const handleActivatePeriod = () => {
+    if (params?.data?.active) {
+      dispatch(
+        showToast({
+          title: "Information",
+          message: "You cannot deactivate an active Categorie Level",
+          type: "info",
+        })
+      );
+    } else {
+      //activateAcademicPeriod(params?.data?.id);
+    }
+  };
+
   return (
     <Flex align="center" justify="center" gap={2} height="100%">
+      <Box>
+        <GenericIconButtonWithTooltip
+          icon={
+            params?.data?.active ? (
+              <MdOutlineToggleOn size={36} />
+            ) : (
+              <MdOutlineToggleOff size={36} />
+            )
+          }
+          label={params?.data?.active ? "Activate" : "Deactivate"}
+          ariaLabel={"activate_btn"}
+          variant="none"
+          color={params?.data?.active ? "green" : "gray"}
+          size="sm"
+          onClick={handleActivatePeriod}
+        />
+      </Box>
+
       <GenericIconButtonWithTooltip
         icon={<EditIcon boxSize={5} />}
         label="Edit"
