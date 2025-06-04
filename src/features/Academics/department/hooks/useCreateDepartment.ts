@@ -4,23 +4,6 @@ import { showToast } from '@store/toastSlice';
 import { useDispatch } from 'react-redux';
 import DepartmentServiceApi from '../services/DepartmentServiceApi';
 
-
-// export interface CreateAcademicDepartmentInput {
-//     name: string;
-//     startDate: string;
-//     endDate: string;
-//     associationId: number;
-
-// }
-
-// export interface AcademicDepartmentResponse {
-//     id: number;
-//     name: string;
-//     startDate: string;
-//     endDate: string;
-//     associationId: number;
-// }
-
 const useCreateDepartment = (associationId: number) => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();

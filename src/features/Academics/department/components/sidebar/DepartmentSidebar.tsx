@@ -8,7 +8,7 @@ import FormContent from "./FormContent";
 import type { FormContentRef } from "./FormContent";
 import type { RootState } from "@store/index";
 import { useSelector } from "react-redux";
-import useCreateDepartment from "../../hooks/useDepartment";
+import useCreateDepartment from "../../hooks/useCreateDepartment";
 
 const DepartmentSidebar = () => {
   const { t } = useTranslation();

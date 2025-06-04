@@ -4,11 +4,11 @@ import { axiosInstance } from "../../../../services/api-services/axiosInstance";
 
 const DepartmentServiceApi = {
 
-    getAll: async (associationId: number): Promise<unknown> => {
+    getAll: async (associationId: number): Promise<any> => {
         // eslint-disable-next-line no-useless-catch
         try {
-            const response = await axiosInstance.get<unknown>(
-                `/api/v1/departements/associatio/${associationId}`,
+            const response = await axiosInstance.get<any>(
+                `/api/v1/departements/association/${associationId}`,
             );
             return response.data;
         } catch (error) {
@@ -16,7 +16,7 @@ const DepartmentServiceApi = {
         }
     },
  
-    create: async (data: unknown, associationId: number): Promise<unknown> => {
+    create: async (data: any, associationId: number): Promise<any> => {
         try {
             const response = await axiosInstance.post<unknown>(
                 `/api/v1/departements/association/${associationId}`,
@@ -26,7 +26,7 @@ const DepartmentServiceApi = {
         } catch (err) {
             const error = err as AxiosError;
             if (error.response?.status === 400) {
-                const backendData = error.response.data as unknown;
+                const backendData = error.response.data as any;
                 if (backendData.errors && typeof backendData.errors === 'object') {
                     const validationErrors = backendData.errors as Record<string, string>;
                     const message = Object.values(validationErrors).join(', ');

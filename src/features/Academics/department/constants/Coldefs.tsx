@@ -9,6 +9,7 @@ const DepartmentColumnDefs: ColDef[] = [
     resizable: true,
     minWidth: 120,
     flex: 1,
+    cellStyle: { textAlign: "left" },
   },
   {
     headerName: "Department",
@@ -18,6 +19,7 @@ const DepartmentColumnDefs: ColDef[] = [
     resizable: true,
     minWidth: 250,
     flex: 2,
+    cellStyle: { textAlign: "left" },
   },
   {
     headerName: "Active",
@@ -45,7 +47,6 @@ const DepartmentColumnDefs: ColDef[] = [
       alignItems: "center",
     },
   },
-
 ];
 
 export default DepartmentColumnDefs;

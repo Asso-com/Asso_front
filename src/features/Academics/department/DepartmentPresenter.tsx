@@ -8,7 +8,11 @@ import DepartmentColumnDefs from "./constants/Coldefs";
 import HeaderActions from "./components/HeaderActions";
 import ColumnAction from "./components/column-actions/ColumnAction";
 
-const DepartmentPresenter = ({ rows = [], total = 0 }: unknown) => {
+const DepartmentPresenter = ({
+  rows = [],
+  total = 0,
+  activeDepartments = 0,
+}: any) => {
   const gridRef = useRef<AgGridReactType>(null);
   const [isGridInitialized, setIsGridInitialized] = useState(false);
 
@@ -26,33 +30,32 @@ const DepartmentPresenter = ({ rows = [], total = 0 }: unknown) => {
           color="blue.500"
           stats={total.toString()}
           statTitle="Total Department"
-          borderLeft="6px solid" 
+          borderLeft="6px solid"
           borderColor={"blue.500"}
         />
         <StatsHorizontal
           color="teal.500"
-          stats={"current year"}
-          statTitle="Current School Year"
-          borderLeft="6px solid" 
-          borderColor={"teal.500"}
+          stats={activeDepartments.toString()}
+          statTitle="Total Department"
+          borderLeft="6px solid"
+          borderColor={"blue.500"}
         />
       </SimpleGrid>
       {isGridInitialized && <HeaderActions gridRef={gridRef} />}
       <CustomAgGrid
         ref={gridRef}
         rowData={rows}
-       colDefs={[
-        ...DepartmentColumnDefs,
-        {
-          headerName: "Actions",
-          field: "actions",
-          cellRenderer: ColumnAction,
-          filter: false,
-          sortable: false,
-          pinned: "right",
-        },
-      ]}
-
+        colDefs={[
+          ...DepartmentColumnDefs,
+          {
+            headerName: "Actions",
+            field: "actions",
+            cellRenderer: ColumnAction,
+            filter: false,
+            sortable: false,
+            pinned: "right",
+          },
+        ]}
         onGridReady={() => setIsGridInitialized(true)}
       />
     </Box>

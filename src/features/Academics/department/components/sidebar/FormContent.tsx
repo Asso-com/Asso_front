@@ -44,6 +44,7 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
     );
     setInitialValues({
       ...defaultValues,
+      active: true,
     });
   }, []);
 

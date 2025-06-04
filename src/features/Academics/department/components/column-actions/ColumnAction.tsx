@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
-import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
+import { EditIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "@store/toastSlice";
 import { MdOutlineToggleOff, MdOutlineToggleOn } from "react-icons/md";
-import type { ICellRendererParams } from "ag-grid-community"; 
+import type { ICellRendererParams } from "ag-grid-community";
 import type { RootState } from "@store/index";
 
 type ModalType = "showDetails" | "editModal";
@@ -18,7 +18,6 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
-  
 
   const dispatch = useDispatch();
 
@@ -39,45 +38,8 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
         })
       );
     } else {
-      activateAcademicPeriod(params?.data?.id);
+      //activateAcademicPeriod(params?.data?.id);
     }
-  };
-
-  const handleDelete = () => {
-    // Success Toast
-    // dispatch(
-    //   showToast({
-    //     title: "Deleted",
-    //     message: "Item deleted successfully.",
-    //     type: "success",
-    //   })
-    // );
-
-    // dispatch(
-    //   showToast({
-    //     title: "Delete Failed",
-    //     message: "An error occurred while deleting the item.",
-    //     type: "error",
-    //   })
-    // );
-
-    // // Info Toast
-    // dispatch(
-    //   showToast({
-    //     title: "Information",
-    //     message: "Delete operation has been logged.",
-    //     type: "info",
-    //   })
-    // );
-
-    // Warning Toast
-    dispatch(
-      showToast({
-        title: "Warning",
-        message: "This action cannot be undone.",
-        type: "warning",
-      })
-    );
   };
 
   return (
@@ -108,15 +70,6 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
         colorScheme="green"
         size="sm"
         onClick={() => toggleModal("editModal")}
-      />
-      <GenericIconButtonWithTooltip
-        icon={<DeleteIcon boxSize={5} />}
-        label="Delete"
-        ariaLabel="delete_btn"
-        variant="ghost"
-        colorScheme="red"
-        size="sm"
-        onClick={handleDelete}
       />
     </Flex>
   );

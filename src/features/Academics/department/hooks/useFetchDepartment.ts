@@ -2,8 +2,8 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { switchLoadingModal } from '@components/shared/modal-overlay/ModalLoading';
 import DepartmentServiceApi from '../services/DepartmentServiceApi';
 
-const useFetchDepartment = (associationId: number): UseQueryResult<unknown, Error> => {
-    return useQuery<unknown, Error>({
+const useFetchDepartment = (associationId: number): UseQueryResult<any, Error> => {
+    return useQuery<any, Error>({
         queryKey: ['department', associationId],
         queryFn: async () => {
             switchLoadingModal(); // show loading modal

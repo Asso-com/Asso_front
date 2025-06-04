@@ -2,10 +2,10 @@ import type { Field } from "@/types/formTypes";
 
 export const DepartmentFields: Field[] = [
     {
-        name: "Code",
+        name: "name",
         type: "text",
-        label: "Code",
-        placeholder: "Code",
+        label: "Department",
+        placeholder: "Department",
         validationRules: {
             required: true,
             maxLength: 100,
@@ -13,10 +13,10 @@ export const DepartmentFields: Field[] = [
     },
      
     {
-        name: "Department",
-        type: "text",
-        label: "Department",
-        placeholder: "Department",
+        name: "active",
+        type: "checkbox",
+        label: "Active",
+        placeholder: "Active",
         validationRules: {
             required: true,
         },
