@@ -1,11 +1,18 @@
-import React from 'react'
+import { useSelector } from "react-redux";
+import type { RootState } from "@store/index";
+import CategoriesLevelsPresenter from "./CategoriesLevelsPresenter";
+import useFetchCategoriesLevels from "./hooks/useFetchCategoriesLevels";
 
 const CategoriesLevelsContainer = () => {
-  return (
-    <div>
-      CategoriesLevelsContainer
-    </div>
-  )
-}
+  const associationId = useSelector(
+    (state: RootState) => state.authSlice.associationId
+  );
+  const { data = [] } = useFetchCategoriesLevels(associationId);
 
-export default CategoriesLevelsContainer
+  const activeCategoriesLevelss =
+    data.filter((categorieLevel: any) => categorieLevel?.active)?.length || 0;
+
+  return <CategoriesLevelsPresenter rows={data} total={data.length} activeCategoriesLevelss={activeCategoriesLevelss} />;
+};
+
+export default CategoriesLevelsContainer;
