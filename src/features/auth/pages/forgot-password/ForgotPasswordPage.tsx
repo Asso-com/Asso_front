@@ -1,12 +1,9 @@
-// import React, { useEffect, useState } from "react";
-import { Box, Heading, Image, Link, useColorModeValue } from "@chakra-ui/react";
 
 import logoApp from "../../../../assets/logo/logo_app.png";
-
 import { useTranslation } from "react-i18next";
-import LoginForm from "./LoginForm";
+import { Box, useColorModeValue, Image, Heading, Link } from "@chakra-ui/react";
 
-const LoginPage = () => {
+const ForgotPasswordPage = () => {
   const { t } = useTranslation();
   const headingColor = useColorModeValue("gray.700", "gray.100");
 
@@ -27,12 +24,7 @@ const LoginPage = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Image
-          src={logoApp}
-          maxH="200px"
-          alt="App Logo"
-          objectFit="cover"
-        />
+        <Image src={logoApp} maxH="200px" alt="App Logo" objectFit="cover" />
       </Box>
 
       <Box height="100%" bg="#fffff" p={{ base: "6", md: "8" }}>
@@ -44,22 +36,22 @@ const LoginPage = () => {
           color={headingColor}
           fontWeight="medium"
         >
-          {t("Please Login To Your Account")}
+          {t("Reset Your Password")}
         </Heading>
-        <LoginForm />
+
         <Link
-          href="/auth/forgot-password"
+          href="/login"
           color="blue.500"
           fontSize="sm"
           textAlign="center"
           display="block"
           mb="4"
         >
-          {t("Forgot Password?")}
+          {t("Go Back")}
         </Link>
       </Box>
     </Box>
   );
 };
 
-export default LoginPage;
+export default ForgotPasswordPage;

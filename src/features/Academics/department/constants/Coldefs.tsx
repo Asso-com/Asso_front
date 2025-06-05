@@ -23,7 +23,8 @@ const DepartmentColumnDefs: ColDef[] = [
     cellStyle: { textAlign: "left" },
   },
   {
-    field: "shared",
+    headerName: "Standard",
+    field: "standard",
     sortable: true,
     resizable: true,
     minWidth: 100,

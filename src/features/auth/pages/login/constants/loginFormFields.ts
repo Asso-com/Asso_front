@@ -1,4 +1,4 @@
-import type { Field } from "../../../types/formTypes";
+import type { Field } from "../../../../../types/formTypes";
 
 const loginFormFields: Field[] = [
     {

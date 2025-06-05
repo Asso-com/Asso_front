@@ -21,8 +21,9 @@ const LevelCategoriesColumnDefs: ColDef[] = [
     flex: 1,
     cellStyle: { textAlign: "left" },
   },
-  {
-    field: "shared",
+  { 
+    headerName: "Standard",
+    field: "standard",
     sortable: true,
     resizable: true,
     minWidth: 100,

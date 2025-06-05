@@ -138,10 +138,10 @@ const ModuleListScroller: React.FC = () => {
                   placement={isRTL ? "left" : "right"}
                 >
                   <IconButton
-                    icon={<Icon size={20} />}
+                    icon={<Icon size={18} />}
                     aria-label={module.MODULE}
                     variant="none"
-                    size="lg"
+                    size="md"
                     color="white"
                     _hover={{}}
                     _focus={{ boxShadow: "none" }}

@@ -5,7 +5,7 @@ import { FiLogIn } from "react-icons/fi";
 
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import createValidationSchema from '@utils/createValidationSchema';
-import loginFormFields from "@features/auth/constants/loginFormFields";
+import loginFormFields from "@features/auth/pages/login/constants/loginFormFields";
 import { useAuth } from "@hooks/useAuth";
 
 import type { Field as FieldType } from "@/types/formTypes";

@@ -18,15 +18,15 @@
   pointer-events: none;
 }
 
-#module_list {
+/* #module_list {
   transition: max-width 0.3s ease;
   max-width: 150px;
-}
+} */
 
-#module_list.hidden_module {
+/* #module_list.hidden_module {
   max-width: 0;
   display: none;
-}
+} */
 
 #sidebar_menus {
   transition: width 0.3s ease;
