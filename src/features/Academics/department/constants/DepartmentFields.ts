@@ -11,7 +11,7 @@ export const DepartmentFields: Field[] = [
             maxLength: 100,
         },
     },
-     
+
     {
         name: "active",
         type: "checkbox",
@@ -21,7 +21,7 @@ export const DepartmentFields: Field[] = [
             required: true,
         },
     },
-    
+
 ];
 
 export default DepartmentFields;

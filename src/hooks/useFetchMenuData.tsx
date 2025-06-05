@@ -8,12 +8,14 @@ import {
 } from "@store/menuSlice";
 import fakeMenuItems from "@/layouts/private-layout/menus/data/fakeMenuItems";
 import type { RootState } from "@store/index";
+
+// will be dynamic later from backend via API
+
 function useFetchMenuData() {
   const dispatch = useDispatch();
 
-  const currentModule = useSelector(
-    (state: RootState) => state.menuSlice.currentModule
-  );
+  const currentModule =
+    useSelector((state: RootState) => state.menuSlice.currentModule) || "ALL";
 
   useEffect(() => {
     dispatch(updateMenuData(fakeMenuItems));

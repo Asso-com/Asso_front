@@ -2,7 +2,7 @@ import { Box, Text, Flex, HStack, Icon } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import ClearFilter from "@components/shared/ClearFilter";
 import QuickFilter from "@components/shared/QuickFilter";
-import { FaRegCalendarAlt } from "react-icons/fa";
+import { FcDepartment } from "react-icons/fc";
 import DepartmentSidebar from "./sidebar/DepartmentSidebar";
 
 const HeaderActions = ({ gridRef }: any) => {
@@ -24,14 +24,14 @@ const HeaderActions = ({ gridRef }: any) => {
           borderWidth="1px"
           borderColor="blue.100"
         >
-          <Icon as={FaRegCalendarAlt} boxSize={5} color="blue.500" />
+          <Icon as={FcDepartment} boxSize={5} color="blue.500" />
           <Text
             fontSize="md"
             fontWeight="bold"
             color="blue.700"
             letterSpacing="wide"
           >
-            {t("Department List")}
+            {t("Departments List")}
           </Text>
         </HStack>
 

@@ -53,8 +53,6 @@ const GenericModal: React.FC<GenericModalProps> = ({
       <ModalOverlay />
       <ModalContent
         bgColor={bgColor}
-        // Note: Chakra ModalContent does not support `initial`, `animate`, `exit`, `transition` props by default.
-        // These props are likely from Framer Motion — you can wrap ModalContent with `motion()` from `framer-motion` if needed.
       >
         {title && (
           <>
@@ -64,7 +62,7 @@ const GenericModal: React.FC<GenericModalProps> = ({
             <ModalCloseButton size="sm" />
           </>
         )}
-        <ModalBody p={0}>{children}</ModalBody>
+        <ModalBody p={4}>{children}</ModalBody>
       </ModalContent>
     </Modal>
   );

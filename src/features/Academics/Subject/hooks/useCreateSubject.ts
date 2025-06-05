@@ -1,25 +1,25 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import YearSettingsServiceApi from '../services/YearSettingsServiceApi';
-import { showToast } from '@store/toastSlice';
 import { useDispatch } from 'react-redux';
+import { showToast } from '@store/toastSlice';
+import SubjectServiceApi from '../services/SubjectServiceApi';
+import type { SubjectRequest } from '../types';
 
-
-const useCreateAcademicPeriods = (associationId: number) => {
+const useCreateSubject = (associationId: number) => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation<any, Error, any>({
-        mutationFn: (newPeriod: any) =>
-            YearSettingsServiceApi.create(newPeriod),
+    return useMutation({
+        mutationFn: (subject: SubjectRequest) => SubjectServiceApi.create(subject),
 
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['academicPeriods', associationId],
+                queryKey: ['subjects', associationId],
             });
+
             dispatch(
                 showToast({
                     title: 'Success',
-                    message: 'Academic Period created successfully.',
+                    message: 'Subject created successfully.',
                     type: 'success',
                 })
             );
@@ -29,7 +29,7 @@ const useCreateAcademicPeriods = (associationId: number) => {
             dispatch(
                 showToast({
                     title: 'Error',
-                    message: 'Failed to create Academic Period.',
+                    message: 'Failed to create subject.',
                     type: 'error',
                 })
             );
@@ -37,4 +37,4 @@ const useCreateAcademicPeriods = (associationId: number) => {
     });
 };
 
-export default useCreateAcademicPeriods;
+export default useCreateSubject;

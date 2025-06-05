@@ -16,6 +16,17 @@ const DepartmentServiceApi = {
         }
     },
 
+    getCreateByAssociationId: async (associationId: number): Promise<any> => {
+        try {
+            const response = await axiosInstance.get<any>(
+                `/api/v1/departements/association/${associationId}/created`,
+            );
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
     toggelStatus: async (associationId: number, departementId: number): Promise<any> => {
         try {
             const response = await axiosInstance.put<any>(

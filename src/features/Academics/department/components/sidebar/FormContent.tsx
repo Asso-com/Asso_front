@@ -13,11 +13,8 @@ import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder
 
 import createValidationSchema from "@utils/createValidationSchema";
 import type { Field } from "@/types/formTypes";
-import { useSelector } from "react-redux";
-import type { RootState } from "@store/index"; 
 import DepartmentFields from "../../constants/DepartmentFields";
 
-// Define the shape of your form values dynamically from Field[]
 type FormValues = {
   [key: string]: any;
 };
@@ -30,9 +27,6 @@ export type FormContentRef = {
 const FormContent = forwardRef<FormContentRef>((_, ref) => {
   const [initialValues, setInitialValues] = useState<FormValues>({});
   const formikRef = useRef<FormikProps<FormValues>>(null);
-  const associationId = useSelector(
-    (state: RootState) => state.authSlice.associationId
-  );
 
   useEffect(() => {
     const defaultValues = DepartmentFields.reduce(
@@ -50,18 +44,19 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
 
   const validationSchema = useMemo(
     () => createValidationSchema(DepartmentFields),
-    [DepartmentFields]
+    []
   );
 
   useImperativeHandle(ref, () => ({
     submitForm: async () => {
-      if (!formikRef.current?.dirty) return null;
+      if (!formikRef.current) return null;
+
       try {
-        formikRef.current.handleSubmit();
+        await formikRef.current.submitForm();
+
         if (formikRef.current.isValid) {
           return {
             ...formikRef.current.values,
-            associationId: associationId,
           };
         }
       } catch (error) {
@@ -71,7 +66,9 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
     },
     resetForm: () => {
       if (formikRef.current) {
-        formikRef.current.resetForm({ values: formikRef.current.values });
+        formikRef.current.resetForm({
+          values: initialValues,
+        });
       }
     },
   }));
@@ -81,7 +78,7 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
       innerRef={formikRef}
       initialValues={initialValues}
       validationSchema={validationSchema}
-      // enableReinitialize
+      enableReinitialize
       onSubmit={() => {}}
     >
       <Flex direction="column" gap={4}>

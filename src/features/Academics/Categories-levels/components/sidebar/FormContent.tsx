@@ -16,7 +16,6 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@store/index";
 import LevelCategoriesFields from "../../constants/LevelCategoriesFields";
 
-
 type FormValues = {
   [key: string]: any;
 };
@@ -48,7 +47,7 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
   }, []);
 
   const validationSchema = useMemo(
-    () => createValidationSchema(LevelCategoriesFields), // ✅ corrigé ici aussi
+    () => createValidationSchema(LevelCategoriesFields), 
     []
   );
 

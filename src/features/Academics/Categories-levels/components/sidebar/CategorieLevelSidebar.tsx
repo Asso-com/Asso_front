@@ -7,15 +7,16 @@ import FormContent from "./FormContent";
 
 import type { FormContentRef } from "./FormContent";
 import type { RootState } from "@store/index";
-import { useSelector } from "react-redux"; 
+import { useSelector } from "react-redux";
 import useCreateCategoriesLevels from "../../hooks/useCreateCategoriesLevels";
 
 const CategorieLevelSidebar = () => {
   const { t } = useTranslation();
-   const associationId = useSelector(
+  const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
-  const { mutateAsync: createCategorieLevel } = useCreateCategoriesLevels(associationId);
+  const { mutateAsync: createCategorieLevel } =
+    useCreateCategoriesLevels(associationId);
 
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
@@ -30,9 +31,7 @@ const CategorieLevelSidebar = () => {
       try {
         createCategorieLevel(values);
         handleCloseSidebar();
-      } catch (error) {
-
-      }
+      } catch (error) {}
     }
   };
 

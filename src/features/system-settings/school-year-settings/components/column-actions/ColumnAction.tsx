@@ -4,23 +4,16 @@ import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/Gener
 import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "@store/toastSlice";
-import { MdOutlineToggleOff, MdOutlineToggleOn } from "react-icons/md";
 import type { ICellRendererParams } from "ag-grid-community";
-import useActiveAcademicPeriod from "../../hooks/useActiveAcademicPeriod";
-import type { RootState } from "@store/index";
+import { MdDelete, MdEdit } from "react-icons/md";
 
 type ModalType = "showDetails" | "editModal";
 
-const ColumnAction: React.FC<ICellRendererParams> = (params) => {
+const ColumnAction: React.FC<ICellRendererParams> = () => {
   const [modalsState, setModalsState] = useState<Record<ModalType, boolean>>({
     showDetails: false,
     editModal: false,
   });
-  const associationId = useSelector(
-    (state: RootState) => state.authSlice.associationId
-  );
-  const { mutateAsync: activateAcademicPeriod } =
-    useActiveAcademicPeriod(associationId);
 
   const dispatch = useDispatch();
 
@@ -29,20 +22,6 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
       ...prevState,
       [modal]: !prevState[modal],
     }));
-  };
-
-  const handleActivatePeriod = () => {
-    if (params?.data?.active) {
-      dispatch(
-        showToast({
-          title: "Information",
-          message: "You cannot deactivate an active Academic Period",
-          type: "info",
-        })
-      );
-    } else {
-      activateAcademicPeriod(params?.data?.id);
-    }
   };
 
   const handleDelete = () => {
@@ -84,26 +63,8 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
 
   return (
     <Flex align="center" justify="center" gap={2} height="100%">
-      <Box>
-        <GenericIconButtonWithTooltip
-          icon={
-            params?.data?.active ? (
-              <MdOutlineToggleOn size={36} />
-            ) : (
-              <MdOutlineToggleOff size={36} />
-            )
-          }
-          label={params?.data?.active ? "Activate" : "Deactivate"}
-          ariaLabel={"activate_btn"}
-          variant="none"
-          color={params?.data?.active ? "green" : "gray"}
-          size="sm"
-          onClick={handleActivatePeriod}
-        />
-      </Box>
-
       <GenericIconButtonWithTooltip
-        icon={<EditIcon boxSize={5} />}
+        icon={<MdEdit size={22} />}
         label="Edit"
         ariaLabel="edit_btn"
         variant="ghost"
@@ -112,7 +73,7 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
         onClick={() => toggleModal("editModal")}
       />
       <GenericIconButtonWithTooltip
-        icon={<DeleteIcon boxSize={5} />}
+        icon={<MdDelete size={22} />}
         label="Delete"
         ariaLabel="delete_btn"
         variant="ghost"

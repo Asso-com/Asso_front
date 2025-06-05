@@ -1,5 +1,6 @@
 import { Badge, Flex } from "@chakra-ui/react";
 import { type ColDef } from "ag-grid-community";
+import ActiveCellRender from "../components/column-actions/ActiveCellRender";
 const LevelCategoriesColumnDefs: ColDef[] = [
   {
     headerName: "name",
@@ -21,7 +22,7 @@ const LevelCategoriesColumnDefs: ColDef[] = [
     flex: 1,
     cellStyle: { textAlign: "left" },
   },
-  { 
+  {
     headerName: "Standard",
     field: "standard",
     sortable: true,
@@ -57,7 +58,7 @@ const LevelCategoriesColumnDefs: ColDef[] = [
     resizable: true,
     minWidth: 100,
     maxWidth: 120,
-    // cellRenderer: ActiveCellRender,
+    cellRenderer: ActiveCellRender,
     cellStyle: {
       display: "flex",
       justifyContent: "center",

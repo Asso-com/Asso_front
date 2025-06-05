@@ -26,14 +26,14 @@ const SchoolYearPresenter = ({ rows = [], total = 0 }: any) => {
           color="blue.500"
           stats={total.toString()}
           statTitle="Total Periods"
-          borderLeft="6px solid" 
+          borderLeft="6px solid"
           borderColor={"blue.500"}
         />
         <StatsHorizontal
           color="teal.500"
           stats={"current year"}
           statTitle="Current School Year"
-          borderLeft="6px solid" 
+          borderLeft="6px solid"
           borderColor={"teal.500"}
         />
       </SimpleGrid>
@@ -49,6 +49,7 @@ const SchoolYearPresenter = ({ rows = [], total = 0 }: any) => {
             cellRenderer: ColumnAction,
             filter: false,
             sortable: false,
+            width: 120,
             pinned: "right",
           },
         ]}

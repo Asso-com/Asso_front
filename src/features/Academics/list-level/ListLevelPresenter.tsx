@@ -9,11 +9,7 @@ import LevelColumnDefs from "./constants/Coldefs";
 import HeaderActions from "./components/HeaderActions";
 import ColumnAction from "./components/column-actions/ColumnAction";
 
-const LevelPresenter = ({
-  rows = [],
-  total = 0,
-  unActiveLevels = 0,
-}: any) => {
+const LevelPresenter = ({ rows = [], total = 0, unActiveLevels = 0 }: any) => {
   const gridRef = useRef<AgGridReactType>(null);
   const [isGridInitialized, setIsGridInitialized] = useState(false);
 
@@ -62,6 +58,7 @@ const LevelPresenter = ({
           },
         ]}
         onGridReady={() => setIsGridInitialized(true)}
+        pagination={true}
       />
     </Box>
   );

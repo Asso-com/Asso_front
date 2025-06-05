@@ -64,24 +64,6 @@ const DepartmentColumnDefs: ColDef[] = [
       justifyContent: "center",
       alignItems: "center",
     },
-    // cellRenderer: ({ value }: any) => (
-    //   <Badge
-    //     colorScheme={value ? "green" : "red"}
-    //     px={2}
-    //     py={1}
-    //     display="flex"
-    //     justifyContent="center"
-    //     alignItems="center"
-    //     my={2}
-    //   >
-    //     {value ? "Yes" : "No"}
-    //   </Badge>
-    // ),
-    // cellStyle: {
-    //   display: "flex",
-    //   justifyContent: "center",
-    //   alignItems: "center",
-    // },
   },
 ];
 

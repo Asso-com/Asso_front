@@ -38,7 +38,6 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
         })
       );
     } else {
-      //activateAcademicPeriod(params?.data?.id);
     }
   };
 

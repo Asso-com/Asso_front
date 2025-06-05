@@ -118,7 +118,7 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
             onChange={(selectedOption) => {
               const option = selectedOption as Option | null;
               form.setFieldValue(fullName, option?.value ?? "");
-              form.setFieldTouched(fullName, true);
+              // form.setFieldTouched(fullName, true);
             }}
             onBlur={formikField.onBlur}
             value={options?.find((option) => option.value == formikField.value)}

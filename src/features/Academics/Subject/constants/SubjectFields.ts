@@ -2,53 +2,23 @@ import type { Field } from "@/types/formTypes";
 
 export const SubjectFields: Field[] = [
   {
-    name: "description",
-    type: "textarea",
-    label: "School Year",
-    placeholder: "School Year",
+    name: "name",
+    type: "text",
+    label: "Name",
+    placeholder: "Name",
     validationRules: {
       required: true,
-      maxLength: 100,
+      maxLength: 50,
     },
   },
   {
-    name: "dayOfWeek",
+    name: "departmentId",
     type: "select",
-    label: "Start Day",
-    placeholder: "Start Day",
-    options: [
-      { value: "MONDAY", label: "Monday" },
-      { value: "TUESDAY", label: "Tuesday" },
-      { value: "WEDNESDAY", label: "Wednesday" },
-      { value: "THURSDAY", label: "Thursday" },
-      { value: "FRIDAY", label: "Friday" },
-      { value: "SATURDAY", label: "Saturday" },
-      { value: "SUNDAY", label: "Sunday" },
-    ],
+    label: "Departments",
+    placeholder: "Departments",
+    options: [], 
     validationRules: {
       required: true,
-    },
-  },
-  {
-    name: "startDate",
-    type: "date",
-    label: "Starting Date",
-    placeholder: "Select Date",
-    validationRules: {
-      required: true,
-    },
-  },
-  {
-    name: "endDate",
-    type: "date",
-    label: "Ending Date",
-    placeholder: "Select Date",
-    validationRules: {
-      required: true,
-      isAfter: {
-        field: "startDate",
-        message: "Ending date must be after starting date",
-      },
     },
   },
 ];

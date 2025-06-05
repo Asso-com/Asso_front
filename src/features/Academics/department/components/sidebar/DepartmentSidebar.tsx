@@ -12,7 +12,7 @@ import useCreateDepartment from "../../hooks/useCreateDepartment";
 
 const DepartmentSidebar = () => {
   const { t } = useTranslation();
-   const associationId = useSelector(
+  const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
   const { mutateAsync: createDepartment } = useCreateDepartment(associationId);
@@ -30,9 +30,7 @@ const DepartmentSidebar = () => {
       try {
         createDepartment(values);
         handleCloseSidebar();
-      } catch (error) {
-
-      }
+      } catch (error) {}
     }
   };
 
