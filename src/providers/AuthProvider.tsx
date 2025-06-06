@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useMemo,
   type ReactNode,
+  useLayoutEffect,
 } from "react";
 import AppLoader from "@components/shared/loader/Loader.";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,6 +36,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     (state: RootState) => state.authSlice.isUserLoggedIn
   );
 
+  // Effect to fetch a new access token using the refresh token when the component mounts
   useEffect(() => {
     const fetchRefreshToken = async () => {
       if (!isUserLoggedIn) {
@@ -53,39 +55,41 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     fetchRefreshToken();
-  }, [isUserLoggedIn]);
+  }, []);
 
-  useEffect(() => {
-    const authInterceptor = axiosInstance.interceptors.request.use(
-      (config) => {
-        if (accessToken && !config.headers.Authorization) {
-          config.headers.Authorization = `Bearer ${accessToken}`;
-        }
-        return config;
-      },
-      (error) => Promise.reject(error)
-    );
+  // Effect to add an interceptor for adding the access token to request headers
+  useLayoutEffect(() => {
+    const authInterceptor = axiosInstance.interceptors.request.use((config) => {
+      const requestConfig = config as typeof config & { _retry?: boolean };
+
+      if (accessToken && !requestConfig._retry) {
+        requestConfig.headers.Authorization = `Bearer ${accessToken}`;
+      }
+
+      return requestConfig;
+    });
 
     return () => {
       axiosInstance.interceptors.request.eject(authInterceptor);
     };
   }, [accessToken]);
 
-  // --------------------
-  // Axios Refresh Token on 403
-  // --------------------
-  useEffect(() => {
+  // Effect to add an interceptor for handling 403 errors (unauthorized) and refreshing the token
+  useLayoutEffect(() => {
     const refreshInterceptor = axiosInstance.interceptors.response.use(
       (response) => response,
+
       async (error) => {
         const originalRequest = error.config;
+
         if (error.response?.status === 403 && !originalRequest._retry) {
-          originalRequest._retry = true;
+          originalRequest._retry = true; //avoid infinite loops
+
           try {
             const res = await AuthServiceApi.refreshToken();
             setAccessToken(res.accessToken);
             originalRequest.headers.Authorization = `Bearer ${res.accessToken}`;
-            return axiosInstance(originalRequest);
+            return axiosInstance(originalRequest); // Retry the original request with the new token
           } catch (refreshError) {
             await handleLogoutProcess();
           }
@@ -93,7 +97,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         return Promise.reject(error);
       }
     );
-
     return () => {
       axiosInstance.interceptors.response.eject(refreshInterceptor);
     };
@@ -130,7 +133,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     await handleLogoutProcess();
   };
 
-  const contextValue = useMemo<AuthContextType>(
+  const contextValue = useMemo(
     () => ({
       accessToken,
       loginProvider,
@@ -138,7 +141,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     }),
     [accessToken]
   );
-
   if (loading) return <AppLoader />;
 
   return (

@@ -15,12 +15,12 @@ const NavItem: React.FC<NavItemProps> = ({ item, withoutIcons = false }) => {
   const IconComponent = GetIconComponent(item.icon);
   const navigate = useNavigate();
   const location = useLocation();
-  const isActiveNavbar = location.pathname === item.NAVLINK;
+  const isActiveNavbar = location.pathname === item.navLink;
   const textRef = useRef<HTMLParagraphElement | null>(null);
   const [isTruncated, setIsTruncated] = useState(false);
 
   const handleNavigate = () => {
-    navigate(item.NAVLINK);
+    navigate(item.navLink);
   };
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const NavItem: React.FC<NavItemProps> = ({ item, withoutIcons = false }) => {
     return () => {
       observer.disconnect();
     };
-  }, [item.MENU_DESCRIPTION]);
+  }, [item.menu_description]);
 
   return (
     <Box
@@ -63,7 +63,7 @@ const NavItem: React.FC<NavItemProps> = ({ item, withoutIcons = false }) => {
           <Icon as={IconComponent} boxSize={5} color="#00286D" />
         )}
         <Tooltip
-          label={item.MENU_DESCRIPTION}
+          label={item.menu_description}
           hasArrow
           placement="right"
           isDisabled={!isTruncated}
@@ -77,7 +77,7 @@ const NavItem: React.FC<NavItemProps> = ({ item, withoutIcons = false }) => {
             whiteSpace="nowrap"
             flex="1"
           >
-            {item.MENU_DESCRIPTION}
+            {item.menu_description}
           </Text>
         </Tooltip>
 

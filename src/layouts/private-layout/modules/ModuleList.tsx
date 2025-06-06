@@ -30,7 +30,7 @@ const ModuleListScroller: React.FC = () => {
   );
 
   const handleChangeModule = (module: ModuleItem) => {
-    dispatch(setFilterData(module.MODULE));
+    dispatch(setFilterData(module.module_code));
   };
 
   const moduleIcons: Record<string, React.ElementType> = {
@@ -74,8 +74,8 @@ const ModuleListScroller: React.FC = () => {
         scrollBehavior="smooth"
       >
         {modules.map((module, index) => {
-          const Icon = getModuleIcon(module.MODULE);
-          const isActive = module.MODULE === currentModule;
+          const Icon = getModuleIcon(module.module_code);
+          const isActive = module.module_code === currentModule;
 
           return (
             <Box
@@ -134,12 +134,12 @@ const ModuleListScroller: React.FC = () => {
                 zIndex="99999"
               >
                 <Tooltip
-                  label={module.MENU_DESCRIPTION}
+                  label={module.module_name}
                   placement={isRTL ? "left" : "right"}
                 >
                   <IconButton
                     icon={<Icon size={18} />}
-                    aria-label={module.MODULE}
+                    aria-label={module.module_code}
                     variant="none"
                     size="md"
                     color="white"

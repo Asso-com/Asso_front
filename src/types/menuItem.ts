@@ -1,16 +1,17 @@
 export interface ModuleItem {
-  ID: number;
-  MODULE: string;
-  MENU_DESCRIPTION: string;
+  id: number;
+  module_code: string;
+  module_name: string;
+  module_icon: string
 }
 
 export interface MenuItem {
-  MENU_ID: number;
-  MENU_DESCRIPTION: string;
-  NAVLINK: string;
+  menu_id: number;
+  menu_description: string;
+  navLink: string;
   icon: string;
   children?: MenuItem[];
   EDITABLE?: number;
-  MODULE_CODE?: string;
+  module_code?: string;
   MENU_PARENTID?: number;
 }

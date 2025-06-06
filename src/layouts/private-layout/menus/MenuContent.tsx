@@ -29,7 +29,7 @@ const SidebarContent: React.FC = () => {
   useEffect(() => {
     menuItems.forEach((item) => {
       if (item.children && isGroupActive(item.children)) {
-        setActiveGroup(item.MENU_ID);
+        setActiveGroup(item.menu_id);
       }
     });
   }, [location.pathname]);
@@ -39,7 +39,7 @@ const SidebarContent: React.FC = () => {
   };
 
   const isGroupActive = (children: MenuItem[]) => {
-    return children.some((child) => location.pathname === child.NAVLINK);
+    return children.some((child) => location.pathname === child.navLink);
   };
 
   const handleNavigate = (link: string) => {
@@ -51,17 +51,17 @@ const SidebarContent: React.FC = () => {
       {menuItems.map((item) => {
         const IconComponent = GetIconComponent(item.icon);
         const hasChildren = item.children && item.children.length > 0;
-        const isActiveGroup = item.MENU_ID === activeGroup;
+        const isActiveGroup = item.menu_id === activeGroup;
 
         return (
-          <Box key={item.MENU_ID} mb={2}>
+          <Box key={item.menu_id} mb={2}>
             <Box
-              //onClick={() => hasChildren && handleGroupClick(item.MENU_ID)}
+              //onClick={() => hasChildren && handleGroupClick(item.menu_id)}
               onClick={() => {
                 if (hasChildren) {
-                  handleGroupClick(item.MENU_ID);
+                  handleGroupClick(item.menu_id);
                 } else {
-                  handleNavigate(item.NAVLINK);
+                  handleNavigate(item.navLink);
                 }
               }}
               display="flex"
@@ -106,7 +106,7 @@ const SidebarContent: React.FC = () => {
                     }
                     transition="color 0.2s"
                   >
-                    {t(item.MENU_DESCRIPTION)}
+                    {t(item.menu_description)}
                   </Text>
                 </Box>
               </HStack>
@@ -145,7 +145,7 @@ const SidebarContent: React.FC = () => {
                 className="collapsible-group"
               >
                 {item.children?.map((subItem: MenuItem) => (
-                  <NavItem key={subItem.MENU_ID} item={subItem} withoutIcons />
+                  <NavItem key={subItem.menu_id} item={subItem} withoutIcons />
                 ))}
               </motion.div>
             )}

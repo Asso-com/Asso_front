@@ -44,7 +44,7 @@ const AssociationList: React.FC = () => {
   const activeBg = useColorModeValue("gray.100", "gray.600");
   const borderColor = useColorModeValue("gray.200", "gray.600");
 
-  // Dispatch the selected association ID to Redux
+  // Dispatch the selected association id to Redux
   const handleSelect = (association: Association) => {
     dispatch(setAssociationId(association.id));
   };

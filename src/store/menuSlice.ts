@@ -46,7 +46,7 @@ const menuSlice = createSlice({
                     (menuItem) =>
                         // menuItem.MENU_PARENTID === -1 &&
                         menuItem.children &&
-                        menuItem.MODULE_CODE === selectedModule
+                        menuItem.module_code === selectedModule
                 );
             }
         },

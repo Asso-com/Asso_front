@@ -1,15 +1,32 @@
 import type { ModuleItem } from "@/types/menuItem";
 
-export const fakeModules: ModuleItem[] = [
-    { ID: 9, MODULE: "ALL", MENU_DESCRIPTION: "All" },
-    { ID: 1, MODULE: "ENROLLMENT", MENU_DESCRIPTION: "Enrollment" },
-    { ID: 2, MODULE: "FINANCE", MENU_DESCRIPTION: "Finance" },
-    { ID: 3, MODULE: "EDUCATION", MENU_DESCRIPTION: "Education" },
-    { ID: 4, MODULE: "HUMAN_RESOURCES", MENU_DESCRIPTION: "Human resources" },
-    { ID: 5, MODULE: "COMMUNICATION", MENU_DESCRIPTION: "Communication" },
-    { ID: 6, MODULE: "PARTNER", MENU_DESCRIPTION: "Partner" },
-    { ID: 7, MODULE: "LIBRARY", MENU_DESCRIPTION: "Library" },
-    { ID: 8, MODULE: "SETTINGS", MENU_DESCRIPTION: "Settings" },
 
+//  ALL: FaThLarge,
+//     ENROLLMENT: FaUserGraduate,
+//     HUMAN_RESOURCES: FaChalkboardTeacher,
+//     ATTENDANCE: FaClipboardList,
+//     TIMETABLE: FaCalendarAlt,
+//     EDUCATION: FaBookOpen,
+//     GRADES: FaClipboardList,
+//     LIBRARY: FaBookOpen,
+//     FINANCE: FaMoneyCheckAlt,
+//     TRANSPORT: FaBusAlt,
+//     NOTIFICATIONS: FaBell,
+//     PARTNER: FaHandshake,
+//     EVENTS: FaCalendarAlt,
+//     ONLINE_CLASSES: FaLaptop,
+//     COMMUNICATION: FaComments,
+//     SETTINGS: FaCogs,
+
+export const fakeModules: ModuleItem[] = [
+    { id: 9, module_code: "ALL", module_name: "All", module_icon: "FaThLarge" },
+    { id: 1, module_code: "ENROLLMENT", module_name: "Enrollment", module_icon: "FaUserGraduate" },
+    { id: 2, module_code: "FINANCE", module_name: "Finance", module_icon: "FaMoneyCheckAlt" },
+    { id: 3, module_code: "EDUCATION", module_name: "Education", module_icon: "FaBookOpen" },
+    { id: 4, module_code: "HUMAN_RESOURCES", module_name: "Human resources", module_icon: "FaChalkboardTeacher" },
+    { id: 5, module_code: "COMMUNICATION", module_name: "Communication", module_icon: "FaComments" },
+    { id: 6, module_code: "PARTNER", module_name: "Partner", module_icon: "FaHandshake" },
+    { id: 7, module_code: "LIBRARY", module_name: "Library", module_icon: "FaBookOpen" },
+    { id: 8, module_code: "SETTINGS", module_name: "Settings", module_icon: "FaCogs" },
 ];
 
