@@ -61,6 +61,50 @@ const createValidationSchema = (fields: Field[]) => {
                 validator = Yup.date().typeError('Must be a valid date');
                 break;
 
+            case 'multi-select-checkbox':
+                let arrayValidator = Yup.array()
+                    .of(Yup.string().required("Each selection is required"));
+
+                if (rules?.minItems) {
+                    arrayValidator = arrayValidator.min(rules.minItems, `Select at least ${rules.minItems} items`);
+                }
+
+                if (rules?.required) {
+                    arrayValidator = arrayValidator.required("This field is required");
+                }
+
+                validator = arrayValidator;
+                break;
+            case 'string-array':
+                let itemValidator = Yup.string();
+
+                if (rules?.minLength !== undefined) {
+                    itemValidator = itemValidator.min(rules.minLength, `Each item must be at least ${rules.minLength} characters`);
+                }
+
+                if (rules?.maxLength !== undefined) {
+                    itemValidator = itemValidator.max(rules.maxLength, `Each item must be at most ${rules.maxLength} characters`);
+                }
+
+                itemValidator = itemValidator.required("Each item is required");
+
+                let stringArrayValidator = Yup.array().of(itemValidator);
+
+                if (rules?.minItems !== undefined) {
+                    stringArrayValidator = stringArrayValidator.min(rules.minItems, `At least ${rules.minItems} items required`);
+                }
+
+                if (rules?.maxItems !== undefined) {
+                    stringArrayValidator = stringArrayValidator.max(rules.maxItems, `At most ${rules.maxItems} items allowed`);
+                }
+
+                if (rules?.required) {
+                    stringArrayValidator = stringArrayValidator.required("This field is required");
+                }
+
+                validator = stringArrayValidator;
+                break;
+
             default:
                 let stringValidator = Yup.string();
                 if (rules?.minLength !== undefined) {

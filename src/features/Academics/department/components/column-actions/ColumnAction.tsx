@@ -50,9 +50,9 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
         isOpen={editModalOpen}
         onClose={toggleEditModal}
         title="Edit Department"
-        size="md"
+        size="2xl"
       >
-        <EditDepartement details={params.data} />
+        <EditDepartement details={params.data} onClose={toggleEditModal} />
       </GenericModal>
     </Flex>
   );

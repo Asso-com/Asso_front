@@ -6,8 +6,9 @@ import InputPhone from "../inputs/InputPhone";
 import GenericInput from "../inputs/GenericInput";
 import type { Field as FieldType } from "../../../types/formTypes";
 import SelectDropdown from "../inputs/GenericSelectDropdown";
-import type { MultiValue, SingleValue } from "react-select";
 import GenericCheckbox from "../inputs/GenericCheckbox";
+import MultiSelectCheckbox from "../inputs/MultiSelectCheckbox";
+import MultiTextInput from "../inputs/MultiTextInput";
 
 interface RenderFormBuilderProps {
   field: FieldType;
@@ -73,6 +74,29 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
             name={fullName}
             formikField={formikField}
             labelDirection={labelDirection}
+            {...inputProps}
+          />
+        ) : type === "multi-select-checkbox" ? (
+          <MultiSelectCheckbox
+            label={label}
+            options={options || []}
+            selectedValues={formikField.value || []}
+            onChange={(selected) => form.setFieldValue(fullName, selected)}
+            isInvalid={!!error && touched}
+            errorMessage={error}
+            isRequired={validationRules?.required}
+            {...inputProps}
+          />
+        ) : type === "string-array" ? (
+          <MultiTextInput
+            label={field.label}
+            values={formikField.value || [""]}
+            onChange={(newValues) => form.setFieldValue(fullName, newValues)}
+            isInvalid={isInvalid}
+            errorMessage={error}
+            isRequired={field.validationRules?.required}
+            labelDirection={labelDirection}
+            placeholder={placeholder}
             {...inputProps}
           />
         ) : type === "checkbox" ? (

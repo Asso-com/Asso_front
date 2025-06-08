@@ -3,9 +3,8 @@ import YearSettingsServiceApi from '../services/YearSettingsServiceApi';
 import { useDispatch } from 'react-redux';
 import { showToast } from '@store/toastSlice';
 
-const useActiveAcademicPeriod = (associationId: number) => {
+const useActivateAcademicPeriod = (associationId: number) => {
     const queryClient = useQueryClient();
-
     const dispatch = useDispatch();
 
     return useMutation({
@@ -13,8 +12,15 @@ const useActiveAcademicPeriod = (associationId: number) => {
             YearSettingsServiceApi.activateOrDeactivateAcademicPeriod(periodId, associationId),
 
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['academicPeriods', associationId] });
-            queryClient.invalidateQueries({ queryKey: ['academicPeriodsWeeks', associationId] });
+            const keysToInvalidate = [
+                'academicPeriods',
+                'academicPeriodsWeeks',
+                'academicPeriodsActive',
+            ];
+
+            keysToInvalidate.forEach((key) =>
+                queryClient.invalidateQueries({ queryKey: [key, associationId] })
+            );
 
             dispatch(
                 showToast({
@@ -25,8 +31,8 @@ const useActiveAcademicPeriod = (associationId: number) => {
             );
         },
 
-        onError: (error) => {
-            console.error('Failed to deactivate contract:', error);
+        onError: (error: unknown) => {
+            console.error('Activation error:', error);
             dispatch(
                 showToast({
                     title: 'Error',
@@ -38,4 +44,4 @@ const useActiveAcademicPeriod = (associationId: number) => {
     });
 };
 
-export default useActiveAcademicPeriod;
+export default useActivateAcademicPeriod;

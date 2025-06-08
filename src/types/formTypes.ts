@@ -26,6 +26,8 @@ export interface ValidationRules {
     isAfter?: CompareDateRule;
     isBefore?: CompareDateRule;
     email?: boolean;
+    minItems?: number;
+    maxItems?: number;
 }
 
 export type FieldType =
@@ -39,13 +41,16 @@ export type FieldType =
     | 'textarea'
     | 'select'
     | 'radio'
-    | 'checkbox';
+    | 'checkbox'
+    | 'multi-select-checkbox'
+    | 'string-array';
 
 export interface Field {
     name: string;
     label: string;
     placeholder?: string;
     inputProps?: any;
+    defaultValue?: any;
     type: FieldType;
     validationRules?: ValidationRules;
     options?: { label: string; value: any }[];

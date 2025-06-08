@@ -1,4 +1,41 @@
-# React + TypeScript + Vite
+# 🚀 React + TypeScript + Vite
+
+A modern and minimal setup using **React**, **TypeScript**, and **Vite**, optimized for **fast development**, **ESLint best practices**, and **HMR** (Hot Module Replacement).
+
+---
+
+## 📦 Stack
+
+- **React 18+**
+- **TypeScript 5+**
+- **Vite** for fast build & dev experience
+- **ESLint** with type-aware rules
+- **Node.js** v22 recommended
+- Optional: `react-x` and `react-dom` plugins for better React linting
+
+---
+
+## Environment Variables
+
+Add the following variables to your `.env` file:
+
+```bash
+VITE_APP_API=http://localhost:8080
+```
+
+## 🧱 Requirements
+
+- **Node.js** `v22.x`
+- **npm** (Choose one)
+
+## Installation
+
+To install the necessary dependencies, use the following command:
+
+```bash
+npm install
+
+```
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
@@ -24,31 +61,31 @@ export default tseslint.config({
   languageOptions: {
     // other options...
     parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
       tsconfigRootDir: import.meta.dirname,
     },
   },
-})
+});
 ```
 
 You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
 ```js
 // eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+import reactX from "eslint-plugin-react-x";
+import reactDom from "eslint-plugin-react-dom";
 
 export default tseslint.config({
   plugins: {
     // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
+    "react-x": reactX,
+    "react-dom": reactDom,
   },
   rules: {
     // other rules...
     // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
+    ...reactX.configs["recommended-typescript"].rules,
     ...reactDom.configs.recommended.rules,
   },
-})
+});
 ```

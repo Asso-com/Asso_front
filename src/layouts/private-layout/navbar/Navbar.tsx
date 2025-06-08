@@ -26,6 +26,7 @@ import DropDownLanguage from "./DropDownLanguage";
 import AssociationList from "./AssociationList";
 import { FiMoreVertical } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
+import ActivePeriod from "./ActivePeriod";
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -69,8 +70,9 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }) => {
             onClick={onToggleSidebar}
             variant="ghost"
           />
-          <Box display={{ base: "none", md: "block" }}>
+          <Box display={{ base: "none", md: "flex" }} gap={2}>
             <AssociationList />
+            <ActivePeriod />
           </Box>
         </Flex>
 
@@ -102,6 +104,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }) => {
           <DrawerBody py={2}>
             <VStack spacing={6} align="stretch">
               <AssociationList />
+              <ActivePeriod />
               <DropDownLanguage />
             </VStack>
           </DrawerBody>

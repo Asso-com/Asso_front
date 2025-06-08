@@ -3,7 +3,17 @@ import { axiosInstance } from "../../../../services/api-services/axiosInstance";
 
 
 const YearSettingsServiceApi = {
-
+    
+    getActivePeriodByAssociationId: async (associationId: number): Promise<any> => {
+        try {
+            const response = await axiosInstance.get<any>(
+                `/api/v1/academicPeriod/association/${associationId}/active`,
+            );
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
     getAll: async (associationId: number): Promise<any> => {
         try {
             const response = await axiosInstance.get<any>(

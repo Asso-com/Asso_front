@@ -4,16 +4,15 @@ import React, {
   forwardRef,
   useRef,
   useImperativeHandle,
-  useMemo,
 } from "react";
 import { Flex } from "@chakra-ui/react";
 import { Formik, type FormikProps } from "formik";
 
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
-
 import createValidationSchema from "@utils/createValidationSchema";
 import type { Field } from "@/types/formTypes";
 import DepartmentFields from "../../constants/DepartmentFields";
+import { getDefaultFormValues } from "@utils/getDefaultValueByType";
 
 type FormValues = {
   [key: string]: any;
@@ -29,23 +28,14 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
   const formikRef = useRef<FormikProps<FormValues>>(null);
 
   useEffect(() => {
-    const defaultValues = DepartmentFields.reduce(
-      (acc: FormValues, field: Field) => {
-        acc[field.name] = "";
-        return acc;
-      },
-      {}
-    );
+    const defaultValues = getDefaultFormValues(DepartmentFields);
     setInitialValues({
       ...defaultValues,
       active: true,
     });
   }, []);
 
-  const validationSchema = useMemo(
-    () => createValidationSchema(DepartmentFields),
-    []
-  );
+  const validationSchema = createValidationSchema(DepartmentFields);
 
   useImperativeHandle(ref, () => ({
     submitForm: async () => {
