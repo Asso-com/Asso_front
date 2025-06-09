@@ -29,8 +29,8 @@ const EditDepartement: React.FC<EditDepartementProps> = ({
 
     return {
       ...values,
-      selectedCodes: [2, 7],
-      managers: ["test", "test2"],
+      // selectedCodes: [2, 7],
+      // managers: ["test", "test2"],
     };
   }, [details]);
 
