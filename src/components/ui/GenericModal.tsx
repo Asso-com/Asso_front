@@ -51,9 +51,7 @@ const GenericModal: React.FC<GenericModalProps> = ({
       isCentered
     >
       <ModalOverlay />
-      <ModalContent
-        bgColor={bgColor}
-      >
+      <ModalContent bgColor={bgColor} mx={[2, 0]}>
         {title && (
           <>
             <ModalHeader p={2}>
@@ -62,7 +60,7 @@ const GenericModal: React.FC<GenericModalProps> = ({
             <ModalCloseButton size="sm" />
           </>
         )}
-        <ModalBody p={4}>{children}</ModalBody>
+        <ModalBody p={[2, 4]}>{children}</ModalBody>
       </ModalContent>
     </Modal>
   );

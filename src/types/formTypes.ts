@@ -1,5 +1,5 @@
 export interface PatternRule {
-    regex: string;
+    regex: RegExp;
     message?: string;
 }
 

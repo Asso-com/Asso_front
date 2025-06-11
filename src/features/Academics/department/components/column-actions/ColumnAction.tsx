@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
 import { useDispatch } from "react-redux";
-import { showToast } from "@store/toastSlice";
 import { MdDelete, MdEdit } from "react-icons/md";
 import type { ICellRendererParams } from "ag-grid-community";
 import { confirmAlert } from "@components/shared/confirmAlert";

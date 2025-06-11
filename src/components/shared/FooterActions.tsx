@@ -1,4 +1,4 @@
-import { Box, Button, Spinner } from "@chakra-ui/react";
+import { Box, Button, Spinner, type ButtonProps } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import type { ReactElement } from "react";
 
@@ -9,6 +9,11 @@ interface FooterActionsProps {
   cancelText?: string;
   saveText?: string;
   isDisabled?: boolean;
+  cancelButtonProps?: Omit<ButtonProps, "onClick" | "isDisabled">;
+  saveButtonProps?: Omit<
+    ButtonProps,
+    "onClick" | "isDisabled" | "rightIcon" | "type"
+  >;
 }
 
 function FooterActions({
@@ -18,6 +23,8 @@ function FooterActions({
   cancelText = "Cancel",
   saveText = "",
   isDisabled = false,
+  cancelButtonProps = {},
+  saveButtonProps = {},
 }: FooterActionsProps) {
   const { t } = useTranslation();
 
@@ -28,22 +35,24 @@ function FooterActions({
   return (
     <Box display="flex" gap={2} alignItems="center" justifyContent="flex-end">
       <Button
-        colorScheme={"secondary"}
-        onClick={handleSave}
-        isDisabled={isSaving || isDisabled}
-        rightIcon={rightIcon}
-        size={"md"}
-        type="submit"
-      >
-        {isSaving ? t("Saving...") : t(saveText)}
-      </Button>
-      <Button
         colorScheme="gray"
         onClick={onClose}
         isDisabled={isSaving}
-        size={"md"}
+        size="sm"
+        {...cancelButtonProps}
       >
         {t(cancelText)}
+      </Button>
+      <Button
+        colorScheme="secondary"
+        onClick={handleSave}
+        isDisabled={isSaving || isDisabled}
+        rightIcon={rightIcon}
+        size="sm"
+        type="submit"
+        {...saveButtonProps}
+      >
+        {isSaving ? t("Saving...") : t(saveText)}
       </Button>
     </Box>
   );
