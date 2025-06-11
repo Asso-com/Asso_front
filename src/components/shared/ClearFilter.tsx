@@ -1,54 +1,54 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 
-import { MdOutlineFilterAltOff, MdFilterAlt } from "react-icons/md";
-import { Box, Flex } from "@chakra-ui/react";
-import GenericIconButtonWithTooltip from "./icons-buttons/GenericIconButtonWithTooltip";
+import { MdOutlineFilterAltOff, MdFilterAlt } from "react-icons/md"
+import { Box, Flex } from "@chakra-ui/react"
+import GenericIconButtonWithTooltip from "./icons-buttons/GenericIconButtonWithTooltip"
 
 function ClearFilter({ gridRef }: any) {
-  const [isFilterActive, setIsFilterActive] = useState(false);
+  const [isFilterActive, setIsFilterActive] = useState(false)
 
   const checkFilterStatus = () => {
     if (gridRef.current?.api) {
-      const isActive = gridRef.current.api.isAnyFilterPresent();
-      setIsFilterActive(isActive);
+      const isActive = gridRef.current.api.isAnyFilterPresent()
+      setIsFilterActive(isActive)
     }
-  };
+  }
 
   const handleClearFilter = () => {
     if (gridRef.current?.api) {
-      gridRef.current?.api?.setFilterModel(null);
-      gridRef.current?.api?.onFilterChanged();
-      setIsFilterActive(false);
+      gridRef.current?.api?.setFilterModel(null)
+      gridRef.current?.api?.onFilterChanged()
+      setIsFilterActive(false)
     }
-  };
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (gridRef.current?.api) {
-        checkFilterStatus();
+        checkFilterStatus()
 
         const filterChangedListener = () => {
-          checkFilterStatus();
-        };
+          checkFilterStatus()
+        }
 
         gridRef.current.api.addEventListener(
           "filterChanged",
           filterChangedListener
-        );
+        )
 
-        clearInterval(interval);
+        clearInterval(interval)
 
         return () => {
           gridRef.current.api.removeEventListener(
             "filterChanged",
             filterChangedListener
-          );
-        };
+          )
+        }
       }
-    }, 100); // check every 100ms
+    }, 100) // check every 100ms
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <>
@@ -80,7 +80,7 @@ function ClearFilter({ gridRef }: any) {
         )}
       </Flex>
     </>
-  );
+  )
 }
 
-export default ClearFilter;
+export default ClearFilter

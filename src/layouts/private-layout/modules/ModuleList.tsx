@@ -1,5 +1,4 @@
-import React from "react";
-import { Flex, Box, IconButton, Tooltip } from "@chakra-ui/react";
+import { Flex, Box, IconButton, Tooltip } from "@chakra-ui/react"
 import {
   FaUserGraduate,
   FaChalkboardTeacher,
@@ -14,24 +13,24 @@ import {
   FaComments,
   FaHandshake,
   FaThLarge,
-} from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
-import { setFilterData } from "@store/menuSlice";
-import type { RootState } from "@store/index";
-import type { ModuleItem } from "@/types/menuItem";
-import { useDirection } from "@hooks/useDirection";
+} from "react-icons/fa"
+import { useDispatch, useSelector } from "react-redux"
+import { setFilterData } from "@store/menuSlice"
+import type { RootState } from "@store/index"
+import type { ModuleItem } from "@/types/menuItem"
+import { useDirection } from "@hooks/useDirection"
 
 const ModuleListScroller: React.FC = () => {
-  const dispatch = useDispatch();
-  const { isRTL } = useDirection();
+  const dispatch = useDispatch()
+  const { isRTL } = useDirection()
 
   const { modulesList: modules = [], currentModule } = useSelector(
     (state: RootState) => state.menuSlice
-  );
+  )
 
   const handleChangeModule = (module: ModuleItem) => {
-    dispatch(setFilterData(module.module_code));
-  };
+    dispatch(setFilterData(module.module_code))
+  }
 
   const moduleIcons: Record<string, React.ElementType> = {
     ALL: FaThLarge,
@@ -50,11 +49,11 @@ const ModuleListScroller: React.FC = () => {
     ONLINE_CLASSES: FaLaptop,
     COMMUNICATION: FaComments,
     SETTINGS: FaCogs,
-  };
+  }
 
   const getModuleIcon = (moduleName: string) => {
-    return moduleIcons[moduleName] || FaThLarge;
-  };
+    return moduleIcons[moduleName] || FaThLarge
+  }
 
   return (
     <Flex
@@ -74,8 +73,8 @@ const ModuleListScroller: React.FC = () => {
         scrollBehavior="smooth"
       >
         {modules.map((module, index) => {
-          const Icon = getModuleIcon(module.module_code);
-          const isActive = module.module_code === currentModule;
+          const Icon = getModuleIcon(module.module_code)
+          const isActive = module.module_code === currentModule
 
           return (
             <Box
@@ -149,11 +148,11 @@ const ModuleListScroller: React.FC = () => {
                 </Tooltip>
               </Box>
             </Box>
-          );
+          )
         })}
       </Flex>
     </Flex>
-  );
-};
+  )
+}
 
-export default ModuleListScroller;
+export default ModuleListScroller

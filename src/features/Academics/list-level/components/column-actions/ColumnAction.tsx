@@ -1,15 +1,10 @@
-import React, { useState } from "react";
-import { Box, Flex } from "@chakra-ui/react";
-import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
-import { EditIcon } from "@chakra-ui/icons";
+import { Flex } from "@chakra-ui/react"
+import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip"
+import { EditIcon } from "@chakra-ui/icons"
 
-import type { ICellRendererParams } from "ag-grid-community";
+import type { ICellRendererParams } from "ag-grid-community"
 
-
-
-const ColumnAction: React.FC<ICellRendererParams> = (params) => {
-
-
+const ColumnAction: React.FC<ICellRendererParams> = () => {
   return (
     <Flex align="center" justify="center" gap={2} height="100%">
       <GenericIconButtonWithTooltip
@@ -19,10 +14,9 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
         variant="ghost"
         colorScheme="green"
         size="sm"
-    
       />
     </Flex>
-  );
-};
+  )
+}
 
-export default ColumnAction;
+export default ColumnAction

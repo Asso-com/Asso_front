@@ -1,6 +1,5 @@
-import React from "react";
-import { Field, type FieldProps } from "formik";
-import { get } from "lodash";
+import { Field, type FieldProps } from "formik"
+import { get } from "lodash"
 
 import InputPhone from "../inputs/InputPhone";
 import GenericInput from "../inputs/GenericInput";
@@ -12,15 +11,15 @@ import MultiTextInput from "../inputs/MultiTextInput";
 import FileInput from "../inputs/FileInput";
 
 interface RenderFormBuilderProps {
-  field: FieldType;
-  arrayName?: string;
-  index?: number;
-  labelDirection?: "top" | "left";
+  field: FieldType
+  arrayName?: string
+  index?: number
+  labelDirection?: "top" | "left"
 }
 type Option = {
-  label: string;
-  value: string | number;
-};
+  label: string
+  value: string | number
+}
 const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
   field,
   arrayName,
@@ -35,36 +34,36 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
     options,
     placeholder,
     inputProps,
-  } = field;
+  } = field
 
   const fullName =
     arrayName !== undefined && index !== undefined
       ? `${arrayName}.${index}.${name}`
-      : name;
+      : name
 
   return (
     <Field name={fullName}>
       {({ field: formikField, form }: FieldProps) => {
-        const error = get(form.errors, fullName);
-        const touched = get(form.touched, fullName);
-        const isInvalid = !!error && !!touched;
+        const error = get(form.errors, fullName)
+        const touched = get(form.touched, fullName)
+        const isInvalid = !!error && !!touched
 
         const formattedValue =
           type === "date" && formikField.value
             ? new Date(formikField.value).toISOString().split("T")[0]
-            : formikField.value;
+            : formikField.value
 
         const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           const formattedDate = new Date(e.target.value)
             .toISOString()
-            .split("T")[0];
+            .split("T")[0]
           formikField.onChange({
             target: {
               name: formikField.name,
               value: formattedDate,
             },
-          });
-        };
+          })
+        }
 
         // const handleFileChange = (
         //   event: React.ChangeEvent<HTMLInputElement>
@@ -213,7 +212,7 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
         }
       }}
     </Field>
-  );
-};
+  )
+}
 
-export default RenderFormBuilder;
+export default RenderFormBuilder

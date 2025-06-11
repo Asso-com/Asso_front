@@ -1,48 +1,47 @@
-import GetIconComponent from "./getIconComponent";
-import { Box, Flex, Icon, Text, Tooltip } from "@chakra-ui/react";
-import { useNavigate, useLocation } from "react-router-dom";
-import React, { useRef, useState, useEffect } from "react";
+import GetIconComponent from "./getIconComponent"
+import { Box, Flex, Icon, Text, Tooltip } from "@chakra-ui/react"
+import { useNavigate, useLocation } from "react-router-dom"
+import { useRef, useState, useEffect } from "react"
 
-
-import type { MenuItem } from "../../../types/menuItem";
+import type { MenuItem } from "../../../types/menuItem"
 
 interface NavItemProps {
-  item: MenuItem;
-  withoutIcons?: boolean;
+  item: MenuItem
+  withoutIcons?: boolean
 }
 
 const NavItem: React.FC<NavItemProps> = ({ item, withoutIcons = false }) => {
-  const IconComponent = GetIconComponent(item.icon);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const isActiveNavbar = location.pathname === item.navLink;
-  const textRef = useRef<HTMLParagraphElement | null>(null);
-  const [isTruncated, setIsTruncated] = useState(false);
+  const IconComponent = GetIconComponent(item.icon)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const isActiveNavbar = location.pathname === item.navLink
+  const textRef = useRef<HTMLParagraphElement | null>(null)
+  const [isTruncated, setIsTruncated] = useState(false)
 
   const handleNavigate = () => {
-    navigate(item.navLink);
-  };
+    navigate(item.navLink)
+  }
 
   useEffect(() => {
-    const textElement = textRef.current;
-    if (!textElement) return;
+    const textElement = textRef.current
+    if (!textElement) return
 
     const checkTruncation = () => {
-      setIsTruncated(textElement.scrollWidth > textElement.clientWidth);
-    };
+      setIsTruncated(textElement.scrollWidth > textElement.clientWidth)
+    }
 
-    checkTruncation();
+    checkTruncation()
 
     const observer = new ResizeObserver(() => {
-      checkTruncation();
-    });
+      checkTruncation()
+    })
 
-    observer.observe(textElement);
+    observer.observe(textElement)
 
     return () => {
-      observer.disconnect();
-    };
-  }, [item.menu_description]);
+      observer.disconnect()
+    }
+  }, [item.menu_description])
 
   return (
     <Box
@@ -80,10 +79,9 @@ const NavItem: React.FC<NavItemProps> = ({ item, withoutIcons = false }) => {
             {item.menu_description}
           </Text>
         </Tooltip>
-
       </Flex>
     </Box>
-  );
-};
+  )
+}
 
-export default NavItem;
+export default NavItem

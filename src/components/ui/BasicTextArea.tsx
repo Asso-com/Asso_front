@@ -1,15 +1,14 @@
-import React from "react";
-import { Textarea, type TextareaProps } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
+import { Textarea, type TextareaProps } from "@chakra-ui/react"
+import { useTranslation } from "react-i18next"
 
 interface BasicTextAreaProps extends TextareaProps {
-  placeholder?: string;
-  fontSize?: number | string;
-  rows?: number;
-  resize?: "none" | "both" | "horizontal" | "vertical";
+  placeholder?: string
+  fontSize?: number | string
+  rows?: number
+  resize?: "none" | "both" | "horizontal" | "vertical"
   formikField?: Partial<
     Pick<TextareaProps, "value" | "onChange" | "onBlur" | "name">
-  >;
+  >
 }
 
 const BasicTextArea: React.FC<BasicTextAreaProps> = ({
@@ -20,7 +19,7 @@ const BasicTextArea: React.FC<BasicTextAreaProps> = ({
   formikField = {},
   ...textAreaProps
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <Textarea
@@ -40,7 +39,7 @@ const BasicTextArea: React.FC<BasicTextAreaProps> = ({
       {...textAreaProps}
       {...formikField}
     />
-  );
-};
+  )
+}
 
-export default BasicTextArea;
+export default BasicTextArea

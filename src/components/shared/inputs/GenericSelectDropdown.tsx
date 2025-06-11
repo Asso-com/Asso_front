@@ -1,46 +1,45 @@
-import React from "react";
-import Select, { type SingleValue, type MultiValue } from "react-select";
-import { Box, Flex, Text, Icon } from "@chakra-ui/react";
-import { CiSearch } from "react-icons/ci";
-import { useTranslation } from "react-i18next";
-import { FormControl, FormErrorMessage } from "@chakra-ui/react";
-import TextLabel from "@components/ui/TextLabel";
+import Select, { type SingleValue, type MultiValue } from "react-select"
+import { Box, Flex, Text, Icon } from "@chakra-ui/react"
+import { CiSearch } from "react-icons/ci"
+import { useTranslation } from "react-i18next"
+import { FormControl, FormErrorMessage } from "@chakra-ui/react"
+import TextLabel from "@components/ui/TextLabel"
 
 interface Option {
-  label: string;
-  value: string | number | boolean;
-  [key: string]: any;
+  label: string
+  value: string | number | boolean
+  [key: string]: any
 }
 
-type SelectValue = SingleValue<Option> | MultiValue<Option>;
+type SelectValue = SingleValue<Option> | MultiValue<Option>
 
 interface SelectDropdownProps {
-  options: Option[];
-  defaultValue?: Option | Option[];
-  onChange: (value: SelectValue) => void;
-  placeholder?: string;
-  isClearable?: boolean;
-  isSearchable?: boolean;
-  isDisabled?: boolean;
-  width?: string | number;
-  isMulti?: boolean;
-  onKeyDown?: React.KeyboardEventHandler;
-  onInputChange?: (newValue: string, actionMeta: any) => void;
-  getOptionLabel?: (option: Option) => string;
-  inputValue?: string;
-  value?: SelectValue;
+  options: Option[]
+  defaultValue?: Option | Option[]
+  onChange: (value: SelectValue) => void
+  placeholder?: string
+  isClearable?: boolean
+  isSearchable?: boolean
+  isDisabled?: boolean
+  width?: string | number
+  isMulti?: boolean
+  onKeyDown?: React.KeyboardEventHandler
+  onInputChange?: (newValue: string, actionMeta: any) => void
+  getOptionLabel?: (option: Option) => string
+  inputValue?: string
+  value?: SelectValue
   customLabelRenderer?: (
     option: Option,
     meta: { inputValue: string }
-  ) => React.ReactNode;
-  menuPortalStyles?: React.CSSProperties;
-  menuListStyles?: React.CSSProperties;
-  label?: string;
-  labelDirection?: "top" | "left";
-  isInvalid?: boolean;
-  isRequired?: boolean;
-  errorMessage?: string;
-  key?: string | number;
+  ) => React.ReactNode
+  menuPortalStyles?: React.CSSProperties
+  menuListStyles?: React.CSSProperties
+  label?: string
+  labelDirection?: "top" | "left"
+  isInvalid?: boolean
+  isRequired?: boolean
+  errorMessage?: string
+  key?: string | number
 }
 
 const SelectDropdown: React.FC<SelectDropdownProps> = ({
@@ -68,7 +67,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
   errorMessage = "This field is required",
   key,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   const customStyles = {
     control: (css: any, state: any) => ({
@@ -144,7 +143,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
         color: "inherit",
       },
     }),
-  };
+  }
 
   return (
     <FormControl isInvalid={isInvalid} isRequired={isRequired} key={key}>
@@ -173,7 +172,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
             menuPlacement="auto"
             styles={customStyles}
             value={value}
-            options={options?.map((option) => ({
+            options={options?.map(option => ({
               ...option,
               label: t(option.label),
             }))}
@@ -211,20 +210,20 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
         <FormErrorMessage>{t(errorMessage)}</FormErrorMessage>
       )}
     </FormControl>
-  );
-};
+  )
+}
 
 const formatOptionLabel = (
   props: Option,
   { inputValue }: { inputValue: string }
 ) => {
   if (props.label) {
-    const index = props.label.toLowerCase().indexOf(inputValue?.toLowerCase());
+    const index = props.label.toLowerCase().indexOf(inputValue?.toLowerCase())
 
     if (index >= 0) {
-      const before = props.label.substring(0, index);
-      const match = props.label.substring(index, index + inputValue.length);
-      const after = props.label.substring(index + inputValue.length);
+      const before = props.label.substring(0, index)
+      const match = props.label.substring(index, index + inputValue.length)
+      const after = props.label.substring(index + inputValue.length)
 
       return (
         <Box
@@ -243,7 +242,7 @@ const formatOptionLabel = (
             {after}
           </Text>
         </Box>
-      );
+      )
     }
 
     return (
@@ -259,9 +258,9 @@ const formatOptionLabel = (
           {props.label}
         </Text>
       </Box>
-    );
+    )
   }
-  return null;
-};
+  return null
+}
 
-export default SelectDropdown;
+export default SelectDropdown

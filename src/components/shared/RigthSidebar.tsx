@@ -9,18 +9,17 @@ import {
   Text,
   Flex,
   DrawerFooter,
-} from "@chakra-ui/react";
-import { CloseIcon } from "@chakra-ui/icons";
-import { useTranslation } from "react-i18next";
-import React from "react";
-import { useDirection } from "@hooks/useDirection";
+} from "@chakra-ui/react"
+import { CloseIcon } from "@chakra-ui/icons"
+import { useTranslation } from "react-i18next"
+import { useDirection } from "@hooks/useDirection"
 
 interface RightSidebarProps {
-  isOpen: boolean;
-  title?: string;
-  onClose: () => void;
-  children: React.ReactNode;
-  footer?: React.ReactNode;
+  isOpen: boolean
+  title?: string
+  onClose: () => void
+  children: React.ReactNode
+  footer?: React.ReactNode
 }
 
 const RightSidebar: React.FC<RightSidebarProps> = ({
@@ -30,9 +29,9 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
   children,
   footer,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
-  const { direction } = useDirection();
+  const { direction } = useDirection()
 
   return (
     <Drawer
@@ -87,7 +86,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
         )}
       </DrawerContent>
     </Drawer>
-  );
-};
+  )
+}
 
-export default RightSidebar;
+export default RightSidebar

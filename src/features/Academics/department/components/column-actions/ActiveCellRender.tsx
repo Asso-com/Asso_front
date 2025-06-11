@@ -1,27 +1,26 @@
-import React from "react";
-import { Box } from "@chakra-ui/react";
-import { MdOutlineToggleOn } from "react-icons/md";
-import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
-import { useSelector } from "react-redux";
-import type { ICellRendererParams } from "ag-grid-community";
-import type { RootState } from "@store/index";
-import useActiveDepartment from "../../hooks/useActiveDepartment";
+import { Box } from "@chakra-ui/react"
+import { MdOutlineToggleOn } from "react-icons/md"
+import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip"
+import { useSelector } from "react-redux"
+import type { ICellRendererParams } from "ag-grid-community"
+import type { RootState } from "@store/index"
+import useActiveDepartment from "../../hooks/useActiveDepartment"
 
 const ActiveCellRender: React.FC<ICellRendererParams> = ({ data }) => {
-  const isActive = data?.active;
-  const departmentId = data?.id;
+  const isActive = data?.active
+  const departmentId = data?.id
 
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
-  );
+  )
 
-  const { mutateAsync: toggleStatus } = useActiveDepartment(associationId);
+  const { mutateAsync: toggleStatus } = useActiveDepartment(associationId)
 
   const handleToggleStatus = async () => {
-    if (!departmentId) return;
+    if (!departmentId) return
 
-    await toggleStatus(departmentId);
-  };
+    await toggleStatus(departmentId)
+  }
 
   return (
     <Box display="flex" justifyContent="center" alignItems="center">
@@ -35,7 +34,7 @@ const ActiveCellRender: React.FC<ICellRendererParams> = ({ data }) => {
         onClick={handleToggleStatus}
       />
     </Box>
-  );
-};
+  )
+}
 
-export default ActiveCellRender;
+export default ActiveCellRender
