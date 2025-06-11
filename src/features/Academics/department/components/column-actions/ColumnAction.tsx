@@ -1,28 +1,26 @@
-import React, { useState } from "react";
-import { Flex } from "@chakra-ui/react";
-import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
-import { useDispatch } from "react-redux";
-import { showToast } from "@store/toastSlice";
-import { MdDelete, MdEdit } from "react-icons/md";
-import type { ICellRendererParams } from "ag-grid-community";
-import { confirmAlert } from "@components/shared/confirmAlert";
-import GenericModal from "@components/ui/GenericModal";
-import EditDepartement from "./EditDepartement";
+import { useState } from "react"
+import { Flex } from "@chakra-ui/react"
+import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip"
+// import { useDispatch } from "react-redux"
+import { MdDelete, MdEdit } from "react-icons/md"
+import type { ICellRendererParams } from "ag-grid-community"
+// import { confirmAlert } from "@components/shared/confirmAlert"
+import GenericModal from "@components/ui/GenericModal"
+import EditDepartement from "./EditDepartement"
 
-const ColumnAction: React.FC<ICellRendererParams> = (params) => {
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const dispatch = useDispatch();
+const ColumnAction: React.FC<ICellRendererParams> = params => {
+  const [editModalOpen, setEditModalOpen] = useState(false)
 
   const handleDelete = async () => {
-    const isConfirmed = await confirmAlert({
-      title: "Delete Confirmation",
-      text: "You won't be able to revert this!",
-    });
-  };
+    // const isConfirmed = await confirmAlert({
+    //   title: "Delete Confirmation",
+    //   text: "You won't be able to revert this!",
+    // })
+  }
 
   const toggleEditModal = () => {
-    setEditModalOpen(!editModalOpen);
-  };
+    setEditModalOpen(!editModalOpen)
+  }
 
   return (
     <Flex align="center" justify="center" gap={2} height="100%">
@@ -55,7 +53,7 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
         <EditDepartement details={params.data} onClose={toggleEditModal} />
       </GenericModal>
     </Flex>
-  );
-};
+  )
+}
 
-export default ColumnAction;
+export default ColumnAction

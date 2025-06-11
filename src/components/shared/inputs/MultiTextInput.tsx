@@ -1,4 +1,3 @@
-import React from "react";
 import {
   FormControl,
   FormLabel,
@@ -11,19 +10,19 @@ import {
   Box,
   useColorModeValue,
   IconButton,
-} from "@chakra-ui/react";
-import { AddIcon, CloseIcon } from "@chakra-ui/icons";
-import BasicInput from "@components/ui/BasicInput";
+} from "@chakra-ui/react"
+import { AddIcon, CloseIcon } from "@chakra-ui/icons"
+import BasicInput from "@components/ui/BasicInput"
 
 interface DynamicStringInputsProps {
-  label?: string;
-  values: string[];
-  onChange: (values: string[]) => void;
-  isInvalid?: boolean;
-  errorMessage?: string;
-  isRequired?: boolean;
-  placeholder?: string;
-  addButtonText?: string;
+  label?: string
+  values: string[]
+  onChange: (values: string[]) => void
+  isInvalid?: boolean
+  errorMessage?: string
+  isRequired?: boolean
+  placeholder?: string
+  addButtonText?: string
 }
 
 const MultiTextInput: React.FC<DynamicStringInputsProps> = ({
@@ -38,25 +37,25 @@ const MultiTextInput: React.FC<DynamicStringInputsProps> = ({
   ...inputProps
 }) => {
   const handleChange = (index: number, newValue: string) => {
-    const updated = [...values];
-    updated[index] = newValue;
-    onChange(updated);
-  };
+    const updated = [...values]
+    updated[index] = newValue
+    onChange(updated)
+  }
 
   const handleAdd = () => {
-    onChange([...values, ""]);
-  };
+    onChange([...values, ""])
+  }
 
   const handleRemove = (index: number) => {
-    if (values.length === 1) return;
-    const updated = values.filter((_, i) => i !== index);
-    onChange(updated);
-  };
+    if (values.length === 1) return
+    const updated = values.filter((_, i) => i !== index)
+    onChange(updated)
+  }
 
   //const hoverBg = useColorModeValue("gray.50", "gray.700");
-  const borderColor = useColorModeValue("gray.200", "gray.600");
-  const focusBorderColor = useColorModeValue("blue.500", "blue.300");
-  const errorBorderColor = useColorModeValue("red.500", "red.300");
+  const borderColor = useColorModeValue("gray.200", "gray.600")
+  const focusBorderColor = useColorModeValue("blue.500", "blue.300")
+  const errorBorderColor = useColorModeValue("red.500", "red.300")
 
   return (
     <FormControl isInvalid={isInvalid} isRequired={isRequired}>
@@ -82,7 +81,7 @@ const MultiTextInput: React.FC<DynamicStringInputsProps> = ({
           <InputGroup key={index}>
             <BasicInput
               value={value}
-              onChange={(e) => handleChange(index, e.target.value)}
+              onChange={e => handleChange(index, e.target.value)}
               placeholder={`${placeholder} ${index + 1}`}
               borderColor={borderColor}
               _hover={{ borderColor: borderColor }}
@@ -140,7 +139,7 @@ const MultiTextInput: React.FC<DynamicStringInputsProps> = ({
         </FormErrorMessage>
       )}
     </FormControl>
-  );
-};
+  )
+}
 
-export default MultiTextInput;
+export default MultiTextInput

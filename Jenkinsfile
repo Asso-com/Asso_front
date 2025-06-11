@@ -24,7 +24,7 @@ pipeline {
         echo 'pushing ...'
         sh 'docker push 190084704684.dkr.ecr.eu-west-3.amazonaws.com/asso/frontend:latest'
       }
-    }    
+    }
     
     stage('deploy the asso project on the server!') {
       when {

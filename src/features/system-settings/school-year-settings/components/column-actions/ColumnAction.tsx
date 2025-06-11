@@ -1,28 +1,26 @@
-import React, { useState } from "react";
-import { Box, Flex } from "@chakra-ui/react";
-import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
-import { EditIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons";
-import { useDispatch, useSelector } from "react-redux";
-import { showToast } from "@store/toastSlice";
-import type { ICellRendererParams } from "ag-grid-community";
-import { MdDelete, MdEdit } from "react-icons/md";
+import { Flex } from "@chakra-ui/react"
+import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip"
+import { useDispatch } from "react-redux"
+import { showToast } from "@store/toastSlice"
+import type { ICellRendererParams } from "ag-grid-community"
+import { MdDelete, MdEdit } from "react-icons/md"
 
-type ModalType = "showDetails" | "editModal";
+// type ModalType = "showDetails" | "editModal"
 
 const ColumnAction: React.FC<ICellRendererParams> = () => {
-  const [modalsState, setModalsState] = useState<Record<ModalType, boolean>>({
-    showDetails: false,
-    editModal: false,
-  });
+  // const [modalsState, setModalsState] = useState<Record<ModalType, boolean>>({
+  //   showDetails: false,
+  //   editModal: false,
+  // })
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const toggleModal = (modal: ModalType) => {
-    setModalsState((prevState) => ({
-      ...prevState,
-      [modal]: !prevState[modal],
-    }));
-  };
+  // const toggleModal = (modal: ModalType) => {
+  //   setModalsState(prevState => ({
+  //     ...prevState,
+  //     [modal]: !prevState[modal],
+  //   }))
+  // }
 
   const handleDelete = () => {
     // Success Toast
@@ -58,8 +56,8 @@ const ColumnAction: React.FC<ICellRendererParams> = () => {
         message: "This action cannot be undone.",
         type: "warning",
       })
-    );
-  };
+    )
+  }
 
   return (
     <Flex align="center" justify="center" gap={2} height="100%">
@@ -70,7 +68,7 @@ const ColumnAction: React.FC<ICellRendererParams> = () => {
         variant="ghost"
         colorScheme="green"
         size="sm"
-        onClick={() => toggleModal("editModal")}
+        // onClick={() => toggleModal("editModal")}
       />
       <GenericIconButtonWithTooltip
         icon={<MdDelete size={22} />}
@@ -82,7 +80,7 @@ const ColumnAction: React.FC<ICellRendererParams> = () => {
         onClick={handleDelete}
       />
     </Flex>
-  );
-};
+  )
+}
 
-export default ColumnAction;
+export default ColumnAction
