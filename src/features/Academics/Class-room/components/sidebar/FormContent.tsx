@@ -1,4 +1,4 @@
-import  {
+import {
   useEffect,
   useState,
   forwardRef,
@@ -32,6 +32,7 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
     setInitialValues({
       ...defaultValues,
       active: true,
+      capacity: 10,
     });
   }, []);
 

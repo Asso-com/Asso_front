@@ -13,6 +13,8 @@ import createValidationSchema from "@utils/createValidationSchema";
 import type { Field } from "@/types/formTypes";
 import { getDefaultFormValues } from "@utils/getDefaultValueByType";
 import StaffFields from "../../constants/StaffFields";
+import type { RootState } from "@store/index";
+import { useSelector } from "react-redux";
 
 type FormValues = {
   [key: string]: any;
@@ -24,6 +26,9 @@ export type FormContentRef = {
 };
 
 const FormContent = forwardRef<FormContentRef>((_, ref) => {
+  const associationId = useSelector(
+    (state: RootState) => state.authSlice.associationId
+  );
   const [initialValues, setInitialValues] = useState<FormValues>({});
   const formikRef = useRef<FormikProps<FormValues>>(null);
 
@@ -31,7 +36,7 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
     const defaultValues = getDefaultFormValues(StaffFields);
     setInitialValues({
       ...defaultValues,
-      active: true,
+      associationId: associationId,
     });
   }, []);
 

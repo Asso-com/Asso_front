@@ -1,27 +1,18 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useDispatch, useSelector } from 'react-redux';
-import { showToast } from '@store/toastSlice'; 
-import type { RootState } from '@store/index';
+import { useDispatch } from 'react-redux';
+import { showToast } from '@store/toastSlice';
 import ClassRoomServiceApi from '@features/Academics/Class-room/services/ClassRoomServiceApi';
 
-const useDeleteClassRoom = () => {
+const useDeleteClassRoom = (associationId: number) => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  const associationId = useSelector(
-    (state: RootState) => state.authSlice.associationId
-  );
 
   return useMutation({
-    mutationFn: async (classRoomId: number) => {
-      if (!associationId || isNaN(associationId)) {
-        throw new Error('Association ID is missing or invalid');
-      }
-      await ClassRoomServiceApi.delete(classRoomId);
-    },
+    mutationFn: (classRoomId: number) => ClassRoomServiceApi.delete(classRoomId),
+
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['classRoom'],
-      });
+      queryClient.invalidateQueries({ queryKey: ['classRoom', associationId] });
+
       dispatch(
         showToast({
           title: 'Success',
@@ -30,6 +21,7 @@ const useDeleteClassRoom = () => {
         })
       );
     },
+
     onError: (error: Error) => {
       dispatch(
         showToast({

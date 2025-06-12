@@ -1,10 +1,6 @@
-
-
 import React, { useMemo } from "react";
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import { Form, Formik, type FormikHelpers } from "formik";
-import { useDispatch } from "react-redux";
-import { showToast } from "@store/toastSlice";
 
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import createValidationSchema from "@utils/createValidationSchema";
@@ -23,7 +19,6 @@ interface FormValues {
 }
 
 const EditStaff: React.FC<EditStaffProps> = ({ details, onClose }) => {
-  const dispatch = useDispatch();
   const { mutateAsync: updateStaff } = useUpdateStaff();
 
   const initialValues: FormValues = useMemo(() => {
@@ -33,11 +28,14 @@ const EditStaff: React.FC<EditStaffProps> = ({ details, onClose }) => {
     }, {});
 
     return {
-      ...values, 
+      ...values,
     };
   }, [details]);
 
-  const validationSchema = useMemo(() => createValidationSchema(StaffFields), []);
+  const validationSchema = useMemo(
+    () => createValidationSchema(StaffFields),
+    []
+  );
 
   const onSubmit = async (
     values: FormValues,
@@ -46,22 +44,12 @@ const EditStaff: React.FC<EditStaffProps> = ({ details, onClose }) => {
     try {
       await updateStaff({
         staffId: details?.id,
-        data: {
-          ...values,
-          isActive: values.isActive ?? true,  
-        },
+        data: values,
       });
-      dispatch(
-        showToast({
-          title: "Succès",
-          message: "Le membre du personnel a été mis à jour avec succès",
-          type: "success",
-        })
-      );
       setSubmitting(false);
       onClose();
     } catch (error) {
-      setSubmitting(false); 
+      setSubmitting(false);
     }
   };
 

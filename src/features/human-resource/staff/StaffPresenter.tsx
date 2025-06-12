@@ -1,27 +1,24 @@
-
-import { useEffect, useRef, useState } from 'react';
-import { Box, SimpleGrid } from '@chakra-ui/react';
-import CustomAgGrid from '@components/shared/ag-grid/CustomAgGrid';
-import StatsHorizontal from '@components/shared/StatsHorizontal';
-import { HiOutlineOfficeBuilding } from 'react-icons/hi';
-import { MdBlock } from 'react-icons/md';
-import type { AgGridReact as AgGridReactType } from 'ag-grid-react';
-import StaffColumnDefs from './constants/Coldefs';
-import HeaderActions from './components/HeaderActions';
-import ColumnAction from './components/column-actions/ColumnAction';
+import { useEffect, useRef, useState } from "react";
+import { Box, SimpleGrid } from "@chakra-ui/react";
+import CustomAgGrid from "@components/shared/ag-grid/CustomAgGrid";
+import StatsHorizontal from "@components/shared/StatsHorizontal";
+import { HiOutlineOfficeBuilding } from "react-icons/hi";
+import { MdBlock } from "react-icons/md";
+import type { AgGridReact as AgGridReactType } from "ag-grid-react";
+import StaffColumnDefs from "./constants/Coldefs";
+import HeaderActions from "./components/HeaderActions";
+import ColumnAction from "./components/column-actions/ColumnAction";
 
 interface StaffPresenterProps {
   rows?: any[];
   total?: number;
   unActiveStaffs?: number;
-  associationId: number;
 }
 
 const StaffPresenter = ({
   rows = [],
   total = 0,
   unActiveStaffs = 0,
-  associationId,
 }: StaffPresenterProps) => {
   const gridRef = useRef<AgGridReactType>(null);
   const [isGridInitialized, setIsGridInitialized] = useState(false);
@@ -61,14 +58,13 @@ const StaffPresenter = ({
         colDefs={[
           ...StaffColumnDefs,
           {
-            headerName: 'Actions',
-            field: 'actions',
+            headerName: "Actions",
+            field: "actions",
             cellRenderer: ColumnAction,
-            cellRendererParams: { associationId },
             filter: false,
             sortable: false,
             width: 120,
-            pinned: 'right',
+            pinned: "right",
           },
         ]}
         onGridReady={() => setIsGridInitialized(true)}

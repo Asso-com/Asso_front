@@ -12,7 +12,6 @@ const useFetchClassRoom = (associationId: number): UseQueryResult<any, Error> =>
                 return response;
             } catch (err) {
                 console.error("Error fetching classRoom:", err);
-                throw err;
             } finally {
                 switchLoadingModal();
             }

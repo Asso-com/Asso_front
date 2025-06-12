@@ -1,29 +1,27 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-import { showToast } from '@store/toastSlice';
 import { useDispatch } from 'react-redux';
+import { showToast } from '@store/toastSlice';
 import ClassRoomServiceApi from '../services/ClassRoomServiceApi';
 
-const useCreateClassRoom = () => {
+interface CreateClassRoomPayload {
+    associationId: number;
+    name: string;
+    capacity: number;
+    description: string;
+    active: boolean;
+}
+
+const useCreateClassRoom = (associationId: number) => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
-    return useMutation<any, Error, any>({
-        mutationFn: (payload: {
-            associationId: number;
-            name: string;
-            capacity: number;
-            description: string;
-            active: boolean
-        }) => ClassRoomServiceApi.create(payload.associationId, {
-            name: payload.name,
-            capacity: payload.capacity,
-            description: payload.description,
-            active: payload.active
-        }),
+
+    return useMutation<void, Error, CreateClassRoomPayload>({
+        mutationFn: ({ associationId, ...data }) =>
+            ClassRoomServiceApi.create(associationId, data),
+
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ['classRoom'],
-            });
+            queryClient.invalidateQueries({ queryKey: ['classRoom', associationId] });
+
             dispatch(
                 showToast({
                     title: 'Success',

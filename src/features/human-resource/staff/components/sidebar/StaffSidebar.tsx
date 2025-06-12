@@ -28,12 +28,7 @@ const StaffSidebar = () => {
     const values = await formRef.current?.submitForm();
     if (values) {
       try {
-        const staffData = {
-          ...values,
-          associationId,
-          dateOfJoining: new Date().toISOString(),
-        };
-        createStaff(staffData);
+        createStaff(values);
         handleCloseSidebar();
       } catch (error) {}
     }

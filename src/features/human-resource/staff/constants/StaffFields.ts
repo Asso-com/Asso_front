@@ -92,7 +92,6 @@ export const StaffFields: Field[] = [
         placeholder: "Enter base salary",
         validationRules: {
             required: true,
-            min: 0
         }
     },
     {
@@ -100,12 +99,11 @@ export const StaffFields: Field[] = [
         type: "select",
         label: "Job Category",
         options: [
-            { label: "Administrateur", value: "ADMIN" },
+            { label: "Administrateur", value: "ADMINISTRATOR" },
             { label: "Bibliothécaire", value: "BIBLIOTHECAIRE" },
             { label: "Comptable", value: "COMPTABLE" },
             { label: "Enseignement", value: "ENSEIGNEMENT" },
             { label: "Réceptionniste", value: "RECEPTIONNISTE" },
-            { label: "Super Admin", value: "SUPER_ADMIN" }
         ],
         validationRules: {
             required: true
@@ -115,13 +113,24 @@ export const StaffFields: Field[] = [
         name: "dateOfJoining",
         label: "Date d'adhésion",
         type: "date",
+        placeholder: "Select Date",
+        validationRules: {
+            required: true,
+        }
     },
     {
-        name: "isActive",
-        type: "checkbox",
-        label: "Active Status",
-        defaultValue: true
-    }
+        name: "dateOfLeaving",
+        label: "Date d'adhésion",
+        type: "date",
+        placeholder: "Select Date",
+        validationRules: {
+            required: true,
+            isAfter: {
+                field: "dateOfJoining",
+                message: "Ending date must be after joining date"
+            }
+        }
+    },
 ];
 
 export default StaffFields;

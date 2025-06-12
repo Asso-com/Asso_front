@@ -1,10 +1,7 @@
-
- 
 import React, { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
-import { useDispatch } from "react-redux";
-import { showToast } from "@store/toastSlice";
+import { useSelector } from "react-redux";
 import { MdDelete, MdEdit } from "react-icons/md";
 import type { ICellRendererParams } from "ag-grid-community";
 import { confirmAlert } from "@components/shared/confirmAlert";
@@ -12,11 +9,15 @@ import GenericModal from "@components/ui/GenericModal";
 
 import useDeleteStaff from "../../hooks/useDeleteStaff";
 import EditStaff from "./EditStaff";
+import type { RootState } from "@store/index";
 
 const ColumnAction: React.FC<ICellRendererParams> = (params) => {
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const dispatch = useDispatch();
-  const { mutate: deleteStaff } = useDeleteStaff();
+
+  const associationId = useSelector(
+    (state: RootState) => state.authSlice.associationId
+  );
+  const { mutateAsync: deleteStaff } = useDeleteStaff(associationId);
 
   const handleDelete = async () => {
     const isConfirmed = await confirmAlert({
@@ -28,15 +29,7 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
     if (isConfirmed) {
       try {
         await deleteStaff(params.data.id);
-      } catch (error) {
-        dispatch(
-          showToast({
-            title: "Error",
-            message: "Failed to delete staff member",
-            type: "error",
-          })
-        );
-      }
+      } catch (error) {}
     }
   };
 
@@ -67,13 +60,13 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
         disabled={params.data.standard}
       />
       <GenericModal
-  isOpen={editModalOpen}
-  onClose={toggleEditModal}
-  title="Edit staff"
-  size="2xl"
->
-  <EditStaff details={params.data} onClose={toggleEditModal} />
-</GenericModal>
+        isOpen={editModalOpen}
+        onClose={toggleEditModal}
+        title="Edit staff"
+        size="4xl"
+      >
+        <EditStaff details={params.data} onClose={toggleEditModal} />
+      </GenericModal>
     </Flex>
   );
 };

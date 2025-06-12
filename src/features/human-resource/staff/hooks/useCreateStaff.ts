@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { showToast } from '@store/toastSlice';
 import { useDispatch } from 'react-redux';
+import { showToast } from '@store/toastSlice';
 import StaffServiceApi from '../services/StaffServiceApi';
 
 // interface StaffFormData {
@@ -16,6 +16,7 @@ import StaffServiceApi from '../services/StaffServiceApi';
 //     basicSalary: number;
 //     jobCategory: string;
 //     isActive: boolean;
+//     associationId: number;
 // }
 
 const useCreateStaff = (associationId: number) => {
@@ -23,24 +24,31 @@ const useCreateStaff = (associationId: number) => {
     const dispatch = useDispatch();
 
     return useMutation({
-        mutationFn: (formData: any) => StaffServiceApi.create(formData),
+        mutationFn: (formData: any) =>
+            StaffServiceApi.create({ ...formData, associationId }),
+
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ['staff', associationId],
             });
-            dispatch(showToast({
-                title: 'Succès',
-                message: 'Le membre a été ajouté avec succès',
-                type: 'success'
-            }));
+            dispatch(
+                showToast({
+                    title: 'Success',
+                    message: 'Staff member added successfully.',
+                    type: 'success',
+                })
+            );
         },
+
         onError: (error: Error) => {
-            dispatch(showToast({
-                title: 'Erreur',
-                message: error.message || "Échec de l'ajout du membre",
-                type: 'error'
-            }));
-        }
+            dispatch(
+                showToast({
+                    title: 'Error',
+                    message: error.message || 'Failed to add staff member.',
+                    type: 'error',
+                })
+            );
+        },
     });
 };
 

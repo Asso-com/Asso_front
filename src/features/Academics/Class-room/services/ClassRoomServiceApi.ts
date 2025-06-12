@@ -48,7 +48,6 @@ const ClassRoomServiceApi = {
                 ...data,
                 associationId
             };
-
             const response = await axiosInstance.post<unknown>(
                 `/api/v1/class-rooms`,
                 payload
@@ -107,8 +106,6 @@ const ClassRoomServiceApi = {
         }
     },
     delete: async (classroomId: string | number): Promise<void> => {
-
-
         try {
             await axiosInstance.delete(
                 `/api/v1/class-rooms/${classroomId}`

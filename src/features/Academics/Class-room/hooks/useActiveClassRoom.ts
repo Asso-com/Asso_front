@@ -3,31 +3,36 @@ import { useDispatch } from 'react-redux';
 import { showToast } from '@store/toastSlice';
 import ClassRoomServiceApi from '../services/ClassRoomServiceApi';
 
+interface ToggleStatusResponse {
+  success: boolean;
+  message?: string;
+}
+
 const useActiveClassRoom = (associationId: number) => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
-  return useMutation({
+  return useMutation<ToggleStatusResponse, Error, number>({
     mutationFn: (classRoomId: number) =>
       ClassRoomServiceApi.toggleStatus(classRoomId),
 
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['classRoom', associationId] });
 
       dispatch(
         showToast({
           title: 'Success',
-          message: 'ClassRoom status updated successfully.',
+          message: data.message || 'ClassRoom status updated successfully.',
           type: 'success',
         })
       );
     },
+
     onError: (error) => {
-      console.error('Failed to update classRoom status:', error);
       dispatch(
         showToast({
           title: 'Error',
-          message: 'Failed to update classRoom status. Please try again.',
+          message: error.message || 'Failed to update classRoom status. Please try again.',
           type: 'error',
         })
       );

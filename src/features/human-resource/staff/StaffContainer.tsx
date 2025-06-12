@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import type { RootState } from "@store/index"; 
+import type { RootState } from "@store/index";
 import StaffPresenter from "./StaffPresenter";
 import useFetchStaff from "./hooks/useFetchStaff";
 
@@ -12,11 +12,13 @@ const StaffContainer = () => {
   const unActiveStaffs =
     data.filter((department: any) => !department?.active)?.length || 0;
 
-  return <StaffPresenter
-          rows={data} 
-          total={data.length} 
-          unActiveStaffs={unActiveStaffs} 
-          associationId={associationId}/>;
+  return (
+    <StaffPresenter
+      rows={data}
+      total={data.length}
+      unActiveStaffs={unActiveStaffs}
+    />
+  );
 };
 
 export default StaffContainer;

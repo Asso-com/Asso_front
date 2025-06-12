@@ -6,11 +6,16 @@ import type { ICellRendererParams } from "ag-grid-community";
 import { confirmAlert } from "@components/shared/confirmAlert";
 import GenericModal from "@components/ui/GenericModal";
 import EditClassRoom from "./EditClassRoom";
-import useDeleteClassRoom from "@features/Academics/Categories-levels/hooks/useDeleteClassRoom";
+import useDeleteClassRoom from "@features/Academics/Class-room/hooks/useDeleteClassRoom";
+import { useSelector } from "react-redux";
+import type { RootState } from "@store/index";
 
 const ColumnAction: React.FC<ICellRendererParams> = (params) => {
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const { mutateAsync: deleteClassRoom } = useDeleteClassRoom();
+  const associationId = useSelector(
+    (state: RootState) => state.authSlice.associationId
+  );
+  const { mutateAsync: deleteClassRoom } = useDeleteClassRoom(associationId);
 
   const handleDelete = async () => {
     const isConfirmed = await confirmAlert({
@@ -57,13 +62,9 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
         isOpen={editModalOpen}
         onClose={toggleEditModal}
         title="Edit ClassRoom"
-        size="2xl"
+        size="3xl"
       >
-        <EditClassRoom
-          details={params.data}
-          onClose={toggleEditModal}
-          classRoomId={params.data.id}
-        />
+        <EditClassRoom details={params.data} onClose={toggleEditModal} />
       </GenericModal>
     </Flex>
   );

@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react";
-import RigthSidebar from "@components/shared/RigthSidebar";
+import { FiPlus } from "react-icons/fi";
 import SidebarButtonsActions from "@components/shared/SidebarButtonsActions";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,56 +8,49 @@ import type { FormContentRef } from "./FormContent";
 import type { RootState } from "@store/index";
 import { useSelector } from "react-redux";
 import useCreateClassRoom from "../../hooks/useCreateClassRoom";
+import RightSidebar from "@components/shared/RigthSidebar";
 
 const ClassRoomSidebar = () => {
   const { t } = useTranslation();
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
-  const { mutateAsync: createClassRoom } = useCreateClassRoom();
 
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const { mutateAsync: createClassRoom, isPending: isSubmitting } =
+    useCreateClassRoom(associationId);
 
-  const handleCloseSidebar = () => setSidebarOpen(false);
-  const handleOpenSidebar = () => setSidebarOpen(true);
-
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const formRef = useRef<FormContentRef>(null);
 
-  /**const handleSubmitForm = async () => {
-    const values = await formRef.current?.submitForm();
-    if (values && associationId) {
-      
+  const handleOpenSidebar = () => setSidebarOpen(true);
+  const handleCloseSidebar = () => setSidebarOpen(false);
+
+  const handleSubmitForm = async () => {
+    const formValues = await formRef.current?.submitForm();
+
+    if (formValues && associationId) {
       try {
-        await createClassRoom({ 
-          associationId, 
-          data: values 
-        });
+        const apiPayload = {
+          associationId: Number(associationId),
+          name: String(formValues.name),
+          capacity: Number(formValues.capacity),
+          description: formValues.description
+            ? String(formValues.description)
+            : "",
+          active: Boolean(formValues.active),
+        };
+
+        await createClassRoom(apiPayload);
+        formRef.current?.resetForm?.();
         handleCloseSidebar();
-      } catch (error) { 
+      } catch (error: unknown) {
+        console.error(
+          "Error creating classroom:",
+          error instanceof Error ? error.message : error
+        );
       }
     }
-  };**/
-
- const handleSubmitForm = async () => {
-  const formValues = await formRef.current?.submitForm();
-  if (formValues && associationId) {
-    try {
-      // Construire l'objet exact comme l'API l'attend
-      const apiPayload = {
-        associationId: Number(associationId),
-        name: String(formValues.name),
-        capacity: Number(formValues.capacity),
-        description: formValues.description ? String(formValues.description) : "",
-        active: Boolean(formValues.active)
-      };
-
-      await createClassRoom(apiPayload);
-      handleCloseSidebar();
-    } catch (error) {
-      console.error("Error creating classroom:", error);
-    }
-  }
-};
+  };
 
   return (
     <>
@@ -67,23 +60,25 @@ const ClassRoomSidebar = () => {
         variant="outline"
         colorScheme="primary"
         onClick={handleOpenSidebar}
+        leftIcon={<FiPlus />}
       >
         {t("Add Class Room")}
       </Button>
 
-      <RigthSidebar
+      <RightSidebar
         isOpen={sidebarOpen}
-        title={"Add Class Room"}
+        title={t("Add Class Room")}
         onClose={handleCloseSidebar}
         footer={
           <SidebarButtonsActions
             onSubmitForm={handleSubmitForm}
             onClose={handleCloseSidebar}
+            isLoading={isSubmitting}
           />
         }
       >
         <FormContent ref={formRef} />
-      </RigthSidebar>
+      </RightSidebar>
     </>
   );
 };

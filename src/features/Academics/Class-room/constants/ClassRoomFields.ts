@@ -28,7 +28,6 @@ export const ClassRoomFields: Field[] = [
         placeholder: "Capacity",
         validationRules: {
             required: true,
-            maxLength: 100,
         },
     },
     {

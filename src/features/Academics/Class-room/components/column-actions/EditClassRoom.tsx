@@ -7,69 +7,46 @@ import type { Field } from "@/types/formTypes";
 import ClassRoomFields from "../../constants/ClassRoomFields";
 import FooterActions from "@components/shared/FooterActions";
 import { useSelector } from "react-redux";
-import type { RootState } from "@store/index"; 
-import useUpdateClassRoom from "@features/Academics/Categories-levels/hooks/useUpdateClassRoom";
+import type { RootState } from "@store/index";
+import useUpdateClassRoom from "@features/Academics/Class-room/hooks/useUpdateClassRoom";
 
 interface EditClassRoomProps {
   details?: Record<string, any>;
   onClose: () => void;
-  classRoomId?: number;
 }
 
 interface FormValues {
   [key: string]: any;
 }
 
-const EditClassRoom: React.FC<EditClassRoomProps> = ({
-  details,
-  onClose,
-  classRoomId,
-}) => {
-  const { mutateAsync: updateClassRoom, isPending } = useUpdateClassRoom();
+const EditClassRoom: React.FC<EditClassRoomProps> = ({ details, onClose }) => {
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
 
+  const { mutateAsync: updateClassRoom, isPending } =
+    useUpdateClassRoom(associationId);
+
   const initialValues: FormValues = useMemo(() => {
-    const values = ClassRoomFields.reduce((acc: FormValues, field: Field) => {
+    return ClassRoomFields.reduce((acc: FormValues, field: Field) => {
       acc[field.name] = details?.[field.name] ?? "";
       return acc;
     }, {});
-
-    return {
-      ...values,
-      active: details?.active ?? true, // Default to true if not provided
-    };
   }, [details]);
 
-  const validationSchema = useMemo(
-    () => createValidationSchema(ClassRoomFields),
-    []
-  );
+  const validationSchema = createValidationSchema(ClassRoomFields);
 
   const onSubmit = async (
     values: FormValues,
     { setSubmitting }: FormikHelpers<FormValues>
   ) => {
     try {
-      if (!classRoomId) {
-        throw new Error("ClassRoom ID is missing");
-      }
-      if (!associationId) {
-        throw new Error("Association ID is missing");
-      }
-
-      const payload = {
-        name: String(values.name),
-        capacity: Number(values.capacity),
-        description: values.description ? String(values.description) : "",
-        active: values.active ?? true,
-      };
-
-      await updateClassRoom({ classRoomId, data: payload });
-      setSubmitting(false);
+      const classRoomId = details?.id;
+      await updateClassRoom({ classRoomId, data: values });
       onClose();
     } catch (error) {
+      console.error("Failed to update ClassRoom:", error);
+    } finally {
       setSubmitting(false);
     }
   };
@@ -85,11 +62,14 @@ const EditClassRoom: React.FC<EditClassRoomProps> = ({
       >
         {({ isSubmitting, handleSubmit, dirty }) => (
           <Form>
-            <SimpleGrid columns={1} spacing={2} mt={1}>
-              {ClassRoomFields.map((field: Field) => (
-                <RenderFormBuilder key={field.name} field={field} />
-              ))}
+            <SimpleGrid columns={2} spacing={4} mt={2}>
+              {ClassRoomFields.filter((field) => field.name !== "active").map(
+                (field: Field) => (
+                  <RenderFormBuilder key={field.name} field={field} />
+                )
+              )}
             </SimpleGrid>
+
             <FooterActions
               onClose={onClose}
               handleSave={handleSubmit}

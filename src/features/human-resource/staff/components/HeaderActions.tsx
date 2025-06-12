@@ -2,8 +2,8 @@ import { Box, Text, Flex, HStack, Icon } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import ClearFilter from "@components/shared/ClearFilter";
 import QuickFilter from "@components/shared/QuickFilter";
-import { FcDepartment} from "react-icons/fc"; 
 import StaffSidebar from "./sidebar/StaffSidebar";
+import { FaUser } from "react-icons/fa";
 
 const HeaderActions = ({ gridRef }: any) => {
   const { t } = useTranslation();
@@ -24,7 +24,7 @@ const HeaderActions = ({ gridRef }: any) => {
           borderWidth="1px"
           borderColor="blue.100"
         >
-          <Icon as={FcDepartment} boxSize={5} color="blue.500" />
+          <Icon as={FaUser} boxSize={5} color="blue.500" />
           <Text
             fontSize="md"
             fontWeight="bold"
@@ -34,7 +34,7 @@ const HeaderActions = ({ gridRef }: any) => {
             {t("Staff List")}
           </Text>
         </HStack>
- 
+
         <Flex alignItems="center" gap={2}>
           <ClearFilter gridRef={gridRef} />
           <QuickFilter gridRef={gridRef} />

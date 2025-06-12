@@ -27,45 +27,41 @@ const useUpdateStaff = () => {
   );
 
   return useMutation({
-    mutationFn: async ({ staffId, data }: { staffId: number; data: StaffUpdateData }) => {
-      if (!associationId || isNaN(associationId)) {
-        throw new Error("L'ID de l'association est manquant ou invalide");
-      }
-      if (!data || Object.keys(data).length === 0) {
-        throw new Error("Les données de mise à jour sont vides");
-      }
-
-      const updateData = {
+    mutationFn: async ({
+      staffId,
+      data,
+    }: {
+      staffId: number;
+      data: StaffUpdateData;
+    }) => {
+      const payload = {
         ...data,
         associationId,
       };
 
-      return StaffServiceApi.update(staffId, updateData);
+      return StaffServiceApi.update(staffId, payload);
     },
+
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['staff', associationId],
-        exact: true,
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['department-by-association', associationId],
-        exact: true,
       });
 
       dispatch(
         showToast({
-          title: 'Succès',
-          message: 'Le membre du personnel a été mis à jour avec succès',
+          title: 'Success',
+          message: 'Staff member updated successfully.',
           type: 'success',
         })
       );
     },
+
     onError: (error: Error) => {
-      const message = error.message || "Échec de la mise à jour du membre du personnel";
       dispatch(
         showToast({
-          title: 'Erreur',
-          message,
+          title: 'Error',
+          message:
+            error.message || 'Failed to update staff member. Please try again.',
           type: 'error',
         })
       );

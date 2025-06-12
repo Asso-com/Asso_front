@@ -19,7 +19,6 @@ const ActiveCellRender: React.FC<ICellRendererParams> = ({ data }) => {
 
   const handleToggleStatus = async () => {
     if (!classRoomId) return;
-
     await toggleStatus(classRoomId);
   };
 
