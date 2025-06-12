@@ -1,12 +1,11 @@
-import React from "react";
-import { Text, type TextProps } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
+import { Text, type TextProps } from "@chakra-ui/react"
+import { useTranslation } from "react-i18next"
 
 interface TextLabelProps extends TextProps {
-  label: string;
-  fontSize?: number | string;
-  fontWeight?: string | number;
-  maxWidth?: string | number;
+  label: string
+  fontSize?: number | string
+  fontWeight?: string | number
+  maxWidth?: string | number
 }
 
 const TextLabel: React.FC<TextLabelProps> = ({
@@ -16,7 +15,7 @@ const TextLabel: React.FC<TextLabelProps> = ({
   maxWidth = "100%",
   ...props
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <Text
@@ -30,7 +29,7 @@ const TextLabel: React.FC<TextLabelProps> = ({
     >
       {t(label)}
     </Text>
-  );
-};
+  )
+}
 
-export default TextLabel;
+export default TextLabel

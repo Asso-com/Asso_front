@@ -1,0 +1,25 @@
+services:
+  asso-front:
+    image: front
+    # image: 190084704684.dkr.ecr.eu-west-3.amazonaws.com/asso/frontend:latest
+    container_name: asso-front
+    ports:
+      - "5000:80"
+    restart: always
+    networks:
+      - mysql-asso-net
+
+  asso-back:
+    image: backend
+    # image: 190084704684.dkr.ecr.eu-west-3.amazonaws.com/asso/backend:latest
+    container_name: asso-back
+    ports:
+      - "5001:8080"
+    restart: always
+    networks:
+      - mysql-asso-net
+
+networks:
+  mysql-asso-net:
+    name: mysql-asso-net
+    external: true

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import { useCallback, useRef } from "react"
 import {
   Input,
   InputGroup,
@@ -8,48 +8,47 @@ import {
   Box,
   Flex,
   useColorModeValue,
-} from "@chakra-ui/react";
-import { FaSearch, FaTimes } from "react-icons/fa";
-import { useTranslation } from "react-i18next";
-import type { AgGridReact } from "ag-grid-react";
-import type { ICellRendererParams } from "ag-grid-community";
+} from "@chakra-ui/react"
+import { FaSearch, FaTimes } from "react-icons/fa"
+import { useTranslation } from "react-i18next"
+import type { AgGridReact } from "ag-grid-react"
 
 // Define props interface
 interface QuickFilterProps {
-  gridRef: React.RefObject<AgGridReact>;
-  placeholder?: string;
+  gridRef: React.RefObject<AgGridReact>
+  placeholder?: string
 }
 
 const QuickFilter: React.FC<QuickFilterProps> = ({
   gridRef,
   placeholder = "Search here",
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null)
 
   const onFilterTextBoxChanged = useCallback(() => {
     if (gridRef.current?.api) {
       gridRef.current.api.setGridOption(
         "quickFilterText",
         inputRef.current?.value
-      );
+      )
     }
-  }, [gridRef]);
+  }, [gridRef])
 
   const handleClearIconClick = () => {
     if (inputRef.current) {
-      inputRef.current.value = "";
-      onFilterTextBoxChanged();
+      inputRef.current.value = ""
+      onFilterTextBoxChanged()
     }
-  };
+  }
 
-  const inputBg = useColorModeValue("white", "gray.700");
-  const inputHoverBg = useColorModeValue("gray.50", "gray.600");
+  const inputBg = useColorModeValue("white", "gray.700")
+  const inputHoverBg = useColorModeValue("gray.50", "gray.600")
   const inputFocusShadow = useColorModeValue(
     "0 0 0 2px rgba(66, 153, 225, 0.6)",
     "0 0 0 2px rgba(66, 153, 225, 0.4)"
-  );
+  )
 
   return (
     <Flex w="100%" justify="center" px={4}>
@@ -93,7 +92,7 @@ const QuickFilter: React.FC<QuickFilterProps> = ({
         </InputGroup>
       </Box>
     </Flex>
-  );
-};
+  )
+}
 
-export default QuickFilter;
+export default QuickFilter

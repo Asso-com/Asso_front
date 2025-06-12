@@ -1,19 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Box, SimpleGrid } from "@chakra-ui/react";
-import CustomAgGrid from "@components/shared/ag-grid/CustomAgGrid";
-import type { AgGridReact as AgGridReactType } from "ag-grid-react";
-import academicWeeksColumnDefs from "./constants/Coldefs";
-import HeaderActions from "./HeaderActions";
+import { useEffect, useRef, useState } from "react"
+import { Box } from "@chakra-ui/react"
+import CustomAgGrid from "@components/shared/ag-grid/CustomAgGrid"
+import type { AgGridReact as AgGridReactType } from "ag-grid-react"
+import academicWeeksColumnDefs from "./constants/Coldefs"
+import HeaderActions from "./HeaderActions"
 
-const AcademicPeriodWeeksPresenter = ({ rows = [], total = 0 }: any) => {
-  const gridRef = useRef<AgGridReactType>(null);
-  const [isGridInitialized, setIsGridInitialized] = useState(false);
+const AcademicPeriodWeeksPresenter = ({ rows = [] }: any) => {
+  const gridRef = useRef<AgGridReactType>(null)
+  const [isGridInitialized, setIsGridInitialized] = useState(false)
 
   useEffect(() => {
     if (gridRef.current) {
-      setIsGridInitialized(true);
+      setIsGridInitialized(true)
     }
-  }, [gridRef.current]);
+  }, [gridRef.current])
 
   return (
     <Box height="100%" display="flex" flexDirection="column" gap={2} p={1}>
@@ -26,7 +26,7 @@ const AcademicPeriodWeeksPresenter = ({ rows = [], total = 0 }: any) => {
         pagination={true}
       />
     </Box>
-  );
-};
+  )
+}
 
-export default AcademicPeriodWeeksPresenter;
+export default AcademicPeriodWeeksPresenter

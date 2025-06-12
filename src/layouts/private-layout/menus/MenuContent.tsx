@@ -1,57 +1,57 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Box, Text, HStack, Icon } from "@chakra-ui/react";
-import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
-import { motion } from "framer-motion";
-import GetIconComponent from "./getIconComponent";
-import NavItem from "./NavItem";
-import "./menus_styles.css";
+import { useState, useEffect } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import { Box, Text, HStack, Icon } from "@chakra-ui/react"
+import { MdNavigateNext, MdNavigateBefore } from "react-icons/md"
+import { motion } from "framer-motion"
+import GetIconComponent from "./getIconComponent"
+import NavItem from "./NavItem"
+import "./menus_styles.css"
 
-import type { MenuItem } from "../../../types/menuItem";
-import { useSelector } from "react-redux";
-import type { RootState } from "@store/index";
-import { useDirection } from "@hooks/useDirection";
+import type { MenuItem } from "../../../types/menuItem"
+import { useSelector } from "react-redux"
+import type { RootState } from "@store/index"
+import { useDirection } from "@hooks/useDirection"
 
-const MotionBox = motion(Box);
+const MotionBox = motion(Box)
 
 const SidebarContent: React.FC = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const menuItems = useSelector(
     (state: RootState) => state.menuSlice.menuDataFilter
-  );
-  const [activeGroup, setActiveGroup] = useState<number | null>(null);
-  const location = useLocation();
+  )
+  const [activeGroup, setActiveGroup] = useState<number | null>(null)
+  const location = useLocation()
 
-  const { isRTL } = useDirection();
+  const { isRTL } = useDirection()
 
-  const t = (text: string) => text;
+  const t = (text: string) => text
 
   useEffect(() => {
-    menuItems.forEach((item) => {
+    menuItems.forEach(item => {
       if (item.children && isGroupActive(item.children)) {
-        setActiveGroup(item.menu_id);
+        setActiveGroup(item.menu_id)
       }
-    });
-  }, [location.pathname]);
+    })
+  }, [location.pathname])
 
   const handleGroupClick = (groupId: number) => {
-    setActiveGroup(activeGroup === groupId ? null : groupId);
-  };
+    setActiveGroup(activeGroup === groupId ? null : groupId)
+  }
 
   const isGroupActive = (children: MenuItem[]) => {
-    return children.some((child) => location.pathname === child.navLink);
-  };
+    return children.some(child => location.pathname === child.navLink)
+  }
 
   const handleNavigate = (link: string) => {
-    navigate(link);
-  };
+    navigate(link)
+  }
 
   return (
     <Box p={2}>
-      {menuItems.map((item) => {
-        const IconComponent = GetIconComponent(item.icon);
-        const hasChildren = item.children && item.children.length > 0;
-        const isActiveGroup = item.menu_id === activeGroup;
+      {menuItems.map(item => {
+        const IconComponent = GetIconComponent(item.icon)
+        const hasChildren = item.children && item.children.length > 0
+        const isActiveGroup = item.menu_id === activeGroup
 
         return (
           <Box key={item.menu_id} mb={2}>
@@ -59,9 +59,9 @@ const SidebarContent: React.FC = () => {
               //onClick={() => hasChildren && handleGroupClick(item.menu_id)}
               onClick={() => {
                 if (hasChildren) {
-                  handleGroupClick(item.menu_id);
+                  handleGroupClick(item.menu_id)
                 } else {
-                  handleNavigate(item.navLink);
+                  handleNavigate(item.navLink)
                 }
               }}
               display="flex"
@@ -150,10 +150,10 @@ const SidebarContent: React.FC = () => {
               </motion.div>
             )}
           </Box>
-        );
+        )
       })}
     </Box>
-  );
-};
+  )
+}
 
-export default SidebarContent;
+export default SidebarContent

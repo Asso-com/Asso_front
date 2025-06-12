@@ -1,22 +1,22 @@
-import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
-import React, { useState, type ReactNode } from "react";
-import Navbar from "./navbar/Navbar";
-import { Outlet } from "react-router-dom";
-import Sidebar from "./menus";
-import Module from "./modules";
+import { Box, Flex, useBreakpointValue } from "@chakra-ui/react"
+import { useState, type ReactNode } from "react"
+import Navbar from "./navbar/Navbar"
+import { Outlet } from "react-router-dom"
+import Sidebar from "./menus"
+import Module from "./modules"
 
 type LayoutProps = {
-  children?: ReactNode;
-};
+  children?: ReactNode
+}
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const [isSidebarOpen, setSidebarOpen] = useState<boolean>(true);
+const Layout: React.FC<LayoutProps> = ({}) => {
+  const [isSidebarOpen, setSidebarOpen] = useState<boolean>(true)
 
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isMobile = useBreakpointValue({ base: true, md: false })
 
   const toggleSidebar = () => {
-    setSidebarOpen((prev) => !prev);
-  };
+    setSidebarOpen(prev => !prev)
+  }
 
   return (
     <Flex height="100vh" direction="column" bg="#F6F6F6">
@@ -41,7 +41,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </Box>
       </Flex>
     </Flex>
-  );
-};
+  )
+}
 
-export default Layout;
+export default Layout

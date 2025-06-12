@@ -1,31 +1,30 @@
-import React from "react";
 import {
   Flex,
   FormControl,
   Box,
   FormErrorMessage,
   type FormControlProps,
-} from "@chakra-ui/react";
-import TextLabel from "../../ui/TextLabel";
-import { PhoneInput } from "react-international-phone";
-import "react-international-phone/style.css";
-import { useTranslation } from "react-i18next";
-import { type FieldInputProps } from "formik";
-import { useDirection } from "@hooks/useDirection";
+} from "@chakra-ui/react"
+import TextLabel from "../../ui/TextLabel"
+import { PhoneInput } from "react-international-phone"
+import "react-international-phone/style.css"
+import { useTranslation } from "react-i18next"
+import { type FieldInputProps } from "formik"
+import { useDirection } from "@hooks/useDirection"
 
 interface InputPhoneProps extends Omit<FormControlProps, "onChange"> {
-  label?: string;
-  labelDirection?: "top" | "left";
-  name: string;
-  type?: string;
-  helpText?: string;
-  isRequired?: boolean;
-  isInvalid?: boolean;
-  errorMessage?: string;
-  onChange?: (value: string) => void;
-  formikField?: Partial<FieldInputProps<any>>;
-  defaultCountry?: string;
-  value?: string;
+  label?: string
+  labelDirection?: "top" | "left"
+  name: string
+  type?: string
+  helpText?: string
+  isRequired?: boolean
+  isInvalid?: boolean
+  errorMessage?: string
+  onChange?: (value: string) => void
+  formikField?: Partial<FieldInputProps<any>>
+  defaultCountry?: string
+  value?: string
 }
 
 const InputPhone: React.FC<InputPhoneProps> = ({
@@ -43,9 +42,9 @@ const InputPhone: React.FC<InputPhoneProps> = ({
   value,
   ...inputProps
 }) => {
-  const { t } = useTranslation();
-  
-    const { isRTL } = useDirection();
+  const { t } = useTranslation()
+
+  const { isRTL } = useDirection()
 
   return (
     <FormControl isInvalid={isInvalid} isRequired={isRequired} {...inputProps}>
@@ -117,11 +116,11 @@ const InputPhone: React.FC<InputPhoneProps> = ({
           <PhoneInput
             defaultCountry={defaultCountry}
             value={formikField?.value ?? value}
-            onChange={(phone) => {
+            onChange={phone => {
               if (formikField?.onChange) {
-                formikField.onChange({ target: { name, value: phone } });
+                formikField.onChange({ target: { name, value: phone } })
               } else {
-                onChange?.(phone);
+                onChange?.(phone)
               }
             }}
             inputClassName="custom-phone-input"
@@ -133,7 +132,7 @@ const InputPhone: React.FC<InputPhoneProps> = ({
         <FormErrorMessage fontSize="sm">{t(errorMessage)}</FormErrorMessage>
       )}
     </FormControl>
-  );
-};
+  )
+}
 
-export default InputPhone;
+export default InputPhone

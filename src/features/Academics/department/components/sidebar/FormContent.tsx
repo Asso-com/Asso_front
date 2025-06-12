@@ -1,67 +1,67 @@
-import React, {
+import {
   useEffect,
   useState,
   forwardRef,
   useRef,
   useImperativeHandle,
-} from "react";
-import { Flex } from "@chakra-ui/react";
-import { Formik, type FormikProps } from "formik";
+} from "react"
+import { Flex } from "@chakra-ui/react"
+import { Formik, type FormikProps } from "formik"
 
-import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
-import createValidationSchema from "@utils/createValidationSchema";
-import type { Field } from "@/types/formTypes";
-import DepartmentFields from "../../constants/DepartmentFields";
-import { getDefaultFormValues } from "@utils/getDefaultValueByType";
+import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder"
+import createValidationSchema from "@utils/createValidationSchema"
+import type { Field } from "@/types/formTypes"
+import DepartmentFields from "../../constants/DepartmentFields"
+import { getDefaultFormValues } from "@utils/getDefaultValueByType"
 
 type FormValues = {
-  [key: string]: any;
-};
+  [key: string]: any
+}
 
 export type FormContentRef = {
-  submitForm: () => Promise<FormValues | null>;
-  resetForm: () => void;
-};
+  submitForm: () => Promise<FormValues | null>
+  resetForm: () => void
+}
 
 const FormContent = forwardRef<FormContentRef>((_, ref) => {
-  const [initialValues, setInitialValues] = useState<FormValues>({});
-  const formikRef = useRef<FormikProps<FormValues>>(null);
+  const [initialValues, setInitialValues] = useState<FormValues>({})
+  const formikRef = useRef<FormikProps<FormValues>>(null)
 
   useEffect(() => {
-    const defaultValues = getDefaultFormValues(DepartmentFields);
+    const defaultValues = getDefaultFormValues(DepartmentFields)
     setInitialValues({
       ...defaultValues,
       active: true,
-    });
-  }, []);
+    })
+  }, [])
 
-  const validationSchema = createValidationSchema(DepartmentFields);
+  const validationSchema = createValidationSchema(DepartmentFields)
 
   useImperativeHandle(ref, () => ({
     submitForm: async () => {
-      if (!formikRef.current) return null;
+      if (!formikRef.current) return null
 
       try {
-        await formikRef.current.submitForm();
+        await formikRef.current.submitForm()
 
         if (formikRef.current.isValid) {
           return {
             ...formikRef.current.values,
-          };
+          }
         }
       } catch (error) {
-        console.error("Form submission failed:", error);
+        console.error("Form submission failed:", error)
       }
-      return null;
+      return null
     },
     resetForm: () => {
       if (formikRef.current) {
         formikRef.current.resetForm({
           values: initialValues,
-        });
+        })
       }
     },
-  }));
+  }))
 
   return (
     <Formik
@@ -77,7 +77,7 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
         ))}
       </Flex>
     </Formik>
-  );
-});
+  )
+})
 
-export default FormContent;
+export default FormContent

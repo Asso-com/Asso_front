@@ -1,4 +1,4 @@
-import React, { type ReactNode } from "react";
+import { type ReactNode } from "react"
 import {
   Modal,
   ModalOverlay,
@@ -7,14 +7,14 @@ import {
   ModalCloseButton,
   ModalBody,
   Text,
-} from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
+} from "@chakra-ui/react"
+import { useTranslation } from "react-i18next"
 
 interface GenericModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
-  children: ReactNode;
+  isOpen: boolean
+  onClose: () => void
+  title?: string
+  children: ReactNode
   size?:
     | "xs"
     | "sm"
@@ -26,9 +26,9 @@ interface GenericModalProps {
     | "4xl"
     | "5xl"
     | "6xl"
-    | "full";
-  closeOnOverlayClick?: boolean;
-  bgColor?: string;
+    | "full"
+  closeOnOverlayClick?: boolean
+  bgColor?: string
 }
 
 const GenericModal: React.FC<GenericModalProps> = ({
@@ -40,7 +40,7 @@ const GenericModal: React.FC<GenericModalProps> = ({
   closeOnOverlayClick = false,
   bgColor = "white",
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <Modal
@@ -51,9 +51,7 @@ const GenericModal: React.FC<GenericModalProps> = ({
       isCentered
     >
       <ModalOverlay />
-      <ModalContent
-        bgColor={bgColor}
-      >
+      <ModalContent bgColor={bgColor} mx={[2, 0]}>
         {title && (
           <>
             <ModalHeader p={2}>
@@ -62,10 +60,10 @@ const GenericModal: React.FC<GenericModalProps> = ({
             <ModalCloseButton size="sm" />
           </>
         )}
-        <ModalBody p={4}>{children}</ModalBody>
+        <ModalBody p={[2, 4]}>{children}</ModalBody>
       </ModalContent>
     </Modal>
-  );
-};
+  )
+}
 
-export default GenericModal;
+export default GenericModal

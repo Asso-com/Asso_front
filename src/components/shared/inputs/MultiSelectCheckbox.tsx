@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Checkbox,
@@ -6,25 +5,25 @@ import {
   FormControl,
   FormErrorMessage,
   type CheckboxProps,
-} from "@chakra-ui/react";
-import TextLabel from "@components/ui/TextLabel";
+} from "@chakra-ui/react"
+import TextLabel from "@components/ui/TextLabel"
 
 export type Option = {
-  label: string;
-  value: string | number;
-};
+  label: string
+  value: string | number
+}
 
 interface MultiSelectCheckboxProps {
-  options: Option[];
-  selectedValues: (string | number)[];
-  onChange: (selected: (string | number)[]) => void;
-  label?: string;
-  isRequired?: boolean;
-  isInvalid?: boolean;
-  errorMessage?: string;
-  checkboxProps?: CheckboxProps;
-  isDisabled?: boolean;
-  isReadOnly?: boolean;
+  options: Option[]
+  selectedValues: (string | number)[]
+  onChange: (selected: (string | number)[]) => void
+  label?: string
+  isRequired?: boolean
+  isInvalid?: boolean
+  errorMessage?: string
+  checkboxProps?: CheckboxProps
+  isDisabled?: boolean
+  isReadOnly?: boolean
 }
 
 const MultiSelectCheckbox: React.FC<MultiSelectCheckboxProps> = ({
@@ -39,11 +38,11 @@ const MultiSelectCheckbox: React.FC<MultiSelectCheckboxProps> = ({
 }) => {
   const handleCheckboxChange = (value: string | number) => {
     if (selectedValues.includes(value)) {
-      onChange(selectedValues.filter((v) => v !== value));
+      onChange(selectedValues.filter(v => v !== value))
     } else {
-      onChange([...selectedValues, value]);
+      onChange([...selectedValues, value])
     }
-  };
+  }
 
   return (
     <FormControl isInvalid={isInvalid} isRequired={isRequired}>
@@ -60,7 +59,7 @@ const MultiSelectCheckbox: React.FC<MultiSelectCheckboxProps> = ({
         </Flex>
       )}
       <Flex gap={4} wrap="wrap">
-        {options.map((option) => (
+        {options.map(option => (
           <Checkbox
             key={option.value}
             value={String(option.value)}
@@ -76,7 +75,7 @@ const MultiSelectCheckbox: React.FC<MultiSelectCheckboxProps> = ({
         <FormErrorMessage>{errorMessage}</FormErrorMessage>
       )}
     </FormControl>
-  );
-};
+  )
+}
 
-export default MultiSelectCheckbox;
+export default MultiSelectCheckbox
