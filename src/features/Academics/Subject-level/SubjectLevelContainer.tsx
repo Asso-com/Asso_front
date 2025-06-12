@@ -1,11 +1,25 @@
-import React from 'react'
+import { useSelector } from 'react-redux';
+import type { RootState } from '@store/index';
+import useFetchSubjectLevel from './hooks/useFetchSubjectLevel';
+import SubjectLevelPresenter from './SubjectLevelPresenter';
 
 const SubjectLevelContainer = () => {
-  return (
-    <div>
-      SubjectLevelContainer
-    </div>
-  )
-}
+  const associationId = useSelector(
+    (state: RootState) => state.authSlice.associationId
+  );
+  const { data: wrapped, isLoading, isError, error } = useFetchSubjectLevel(associationId);
+  const subjectLevels = wrapped?.data ?? [];
+  const total = subjectLevels.length;
 
-export default SubjectLevelContainer
+  return (
+    <SubjectLevelPresenter
+      rows={subjectLevels}
+      total={total}
+      isLoading={isLoading}
+      isError={isError}
+      error={error ?? undefined}
+    />
+  );
+};
+
+export default SubjectLevelContainer;
