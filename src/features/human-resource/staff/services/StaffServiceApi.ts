@@ -73,7 +73,7 @@ const StaffServiceApi = {
                 throw new Error('Validation failed');
             }
             throw new Error('An unexpected error occurred.');
-            //console.log(err);
+
         }
     },
 

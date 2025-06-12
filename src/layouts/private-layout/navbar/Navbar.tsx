@@ -14,30 +14,31 @@ import {
   DrawerOverlay,
   DrawerBody,
   Text,
-} from "@chakra-ui/react"
-import { HamburgerIcon } from "@chakra-ui/icons"
-import { FaAlignLeft } from "react-icons/fa"
+  Icon,
+} from "@chakra-ui/react";
+import { HamburgerIcon } from "@chakra-ui/icons";
+import { FaAlignLeft, FaCalendarAlt } from "react-icons/fa";
 
-import appLogo from "../../../assets/logo/startnow.jpg"
+import appLogo from "../../../assets/logo/startnow.jpg";
 
-import UserDropDown from "./UserDropDown"
-import DropDownLanguage from "./DropDownLanguage"
-import AssociationList from "./AssociationList"
-import { FiMoreVertical } from "react-icons/fi"
-import { useTranslation } from "react-i18next"
-import ActivePeriod from "./ActivePeriod"
+import UserDropDown from "./UserDropDown";
+import DropDownLanguage from "./DropDownLanguage";
+import AssociationList from "./AssociationList";
+import { FiMoreVertical } from "react-icons/fi";
+import { useTranslation } from "react-i18next";
+import ActivePeriod from "./ActivePeriod";
 
 interface NavbarProps {
-  onToggleSidebar: () => void
-  isSidebarOpen: boolean
+  onToggleSidebar: () => void;
+  isSidebarOpen: boolean;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }) => {
-  const bgColor = useColorModeValue("white", "gray.800")
-  const borderColor = useColorModeValue("gray.200", "gray.700")
+  const bgColor = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.700");
 
-  const { t } = useTranslation()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { t } = useTranslation();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Box
@@ -76,9 +77,21 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }) => {
         </Flex>
 
         <Flex gap={2} alignItems="center">
+          <Flex
+            alignItems="center"
+            color="gray.600"
+            fontWeight="medium"
+            fontSize="md"
+            display={{ base: "none", md: "flex" }}
+          >
+            <Icon as={FaCalendarAlt} mr={1} />
+            <Text>12/06/2025</Text>
+          </Flex>
+
           <Box display={{ base: "none", md: "block" }}>
             <DropDownLanguage />
           </Box>
+
           <UserDropDown />
         </Flex>
 
@@ -98,7 +111,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }) => {
         <DrawerContent bg={bgColor}>
           <DrawerCloseButton size="lg" />
           <DrawerHeader borderBottom={`1px solid ${borderColor}`}>
-            <Text fontSize={"md"}>{t("Menu Options")}</Text>
+            <Text fontSize={"sm"}>{t("Menu Options")}</Text>
           </DrawerHeader>
           <DrawerBody py={2}>
             <VStack spacing={6} align="stretch">
@@ -110,7 +123,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }) => {
         </DrawerContent>
       </Drawer>
     </Box>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
