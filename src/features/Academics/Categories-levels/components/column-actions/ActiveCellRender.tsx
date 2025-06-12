@@ -1,16 +1,15 @@
-import React from "react";
-import { Box } from "@chakra-ui/react";
-import { MdOutlineToggleOn } from "react-icons/md";
-import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
-import { useSelector } from "react-redux";
-import type { ICellRendererParams } from "ag-grid-community";
-import type { RootState } from "@store/index";
+import { Box } from "@chakra-ui/react"
+import { MdOutlineToggleOn } from "react-icons/md"
+import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip"
+// import { useSelector } from "react-redux"
+import type { ICellRendererParams } from "ag-grid-community"
+// import type { RootState } from "@store/index"
 
 const ActiveCellRender: React.FC<ICellRendererParams> = ({ data }) => {
-  const isActive = data?.active;
-  const associationId = useSelector(
-    (state: RootState) => state.authSlice.associationId
-  );
+  const isActive = data?.active
+  // const associationId = useSelector(
+  //   (state: RootState) => state.authSlice.associationId
+  // )
 
   return (
     <Box display="flex" justifyContent="center" alignItems="center">
@@ -23,7 +22,7 @@ const ActiveCellRender: React.FC<ICellRendererParams> = ({ data }) => {
         size="sm"
       />
     </Box>
-  );
-};
+  )
+}
 
-export default ActiveCellRender;
+export default ActiveCellRender

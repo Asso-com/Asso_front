@@ -1,23 +1,22 @@
-import React from "react";
-import { Box } from "@chakra-ui/react";
-import { MdOutlineToggleOn } from "react-icons/md";
-import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
-import { useDispatch, useSelector } from "react-redux";
-import type { ICellRendererParams } from "ag-grid-community";
-import type { RootState } from "@store/index";
-import useActiveAcademicPeriod from "../../hooks/useActiveAcademicPeriod";
-import { showToast } from "@store/toastSlice";
+import { Box } from "@chakra-ui/react"
+import { MdOutlineToggleOn } from "react-icons/md"
+import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip"
+import { useDispatch, useSelector } from "react-redux"
+import type { ICellRendererParams } from "ag-grid-community"
+import type { RootState } from "@store/index"
+import useActiveAcademicPeriod from "../../hooks/useActiveAcademicPeriod"
+import { showToast } from "@store/toastSlice"
 
 const ToggelStatus: React.FC<ICellRendererParams> = ({ data }) => {
-  const isActive = data?.active;
+  const isActive = data?.active
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
-  );
+  )
 
   const { mutateAsync: activateAcademicPeriod } =
-    useActiveAcademicPeriod(associationId);
+    useActiveAcademicPeriod(associationId)
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const handleActivatePeriod = () => {
     if (data?.active) {
@@ -27,11 +26,11 @@ const ToggelStatus: React.FC<ICellRendererParams> = ({ data }) => {
           message: "You cannot deactivate an active Academic Period",
           type: "info",
         })
-      );
+      )
     } else {
-      activateAcademicPeriod(data?.id);
+      activateAcademicPeriod(data?.id)
     }
-  };
+  }
 
   return (
     <Box display="flex" justifyContent="center" alignItems="center">
@@ -45,7 +44,7 @@ const ToggelStatus: React.FC<ICellRendererParams> = ({ data }) => {
         onClick={handleActivatePeriod}
       />
     </Box>
-  );
-};
+  )
+}
 
-export default ToggelStatus;
+export default ToggelStatus

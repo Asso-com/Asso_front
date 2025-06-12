@@ -1,34 +1,29 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Box, SimpleGrid } from "@chakra-ui/react";
-import CustomAgGrid from "@components/shared/ag-grid/CustomAgGrid";
-import StatsHorizontal from "@components/shared/StatsHorizontal";
-import {
-  FaBook,
-  FaChalkboardTeacher,
-  FaCalendarAlt,
-  FaListAlt,
-} from "react-icons/fa";
-import HeaderActions from "./components/HeaderActions";
-import type { AgGridReact as AgGridReactType } from "ag-grid-react";
-import LevelCategoriesColumnDefs from "./constants/LevelCategoriesColumnDefs";
+import { useEffect, useRef, useState } from "react"
+import { Box, SimpleGrid } from "@chakra-ui/react"
+import CustomAgGrid from "@components/shared/ag-grid/CustomAgGrid"
+import StatsHorizontal from "@components/shared/StatsHorizontal"
+import { FaBook, FaChalkboardTeacher } from "react-icons/fa"
+import HeaderActions from "./components/HeaderActions"
+import type { AgGridReact as AgGridReactType } from "ag-grid-react"
+import LevelCategoriesColumnDefs from "./constants/LevelCategoriesColumnDefs"
 
 interface SubjectPresenterProps {
-  rows?: any[];
-  total?: number;
+  rows?: any[]
+  total?: number
 }
 
 const CategoriesLevelsPresenter = ({
   rows = [],
   total = 0,
 }: SubjectPresenterProps) => {
-  const gridRef = useRef<AgGridReactType>(null);
-  const [isGridInitialized, setIsGridInitialized] = useState(false);
+  const gridRef = useRef<AgGridReactType>(null)
+  const [isGridInitialized, setIsGridInitialized] = useState(false)
 
   useEffect(() => {
     if (gridRef.current) {
-      setIsGridInitialized(true);
+      setIsGridInitialized(true)
     }
-  }, [gridRef.current]);
+  }, [gridRef.current])
 
   return (
     <Box height="100%" display="flex" flexDirection="column" gap={2} p={2}>
@@ -73,7 +68,7 @@ const CategoriesLevelsPresenter = ({
         />
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default CategoriesLevelsPresenter;
+export default CategoriesLevelsPresenter

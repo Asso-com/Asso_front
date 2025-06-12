@@ -7,20 +7,18 @@ import ClassRoomServiceApi from '../services/ClassRoomServiceApi';
 const useCreateClassRoom = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
-
-    
-       return useMutation<any, Error, any>({
+    return useMutation<any, Error, any>({
         mutationFn: (payload: {
-          associationId: number;
-          name: string;
-          capacity: number;
-          description: string;
-          active: boolean
+            associationId: number;
+            name: string;
+            capacity: number;
+            description: string;
+            active: boolean
         }) => ClassRoomServiceApi.create(payload.associationId, {
-          name: payload.name,
-          capacity: payload.capacity,
-          description: payload.description,
-          active: payload.active
+            name: payload.name,
+            capacity: payload.capacity,
+            description: payload.description,
+            active: payload.active
         }),
         onSuccess: () => {
             queryClient.invalidateQueries({

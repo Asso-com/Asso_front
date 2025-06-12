@@ -11,7 +11,7 @@ import {
   Icon,
   Text,
   Divider,
-} from "@chakra-ui/react";
+} from "@chakra-ui/react"
 import {
   FaUserGraduate,
   FaChalkboardTeacher,
@@ -20,35 +20,34 @@ import {
   FaDollarSign,
   FaUsers,
   FaBookOpen,
-  FaChartLine,
   FaRegSmile,
-} from "react-icons/fa";
-import Chart from "react-apexcharts";
-import { useState, useEffect } from "react";
+} from "react-icons/fa"
+import Chart from "react-apexcharts"
+import { useState, useEffect } from "react"
 
 type MetricCardProps = {
-  label: string;
-  value: string;
-  icon: any;
-  color: string;
-  increase?: string;
-  decrease?: string;
-};
+  label: string
+  value: string
+  icon: any
+  color: string
+  increase?: string
+  decrease?: string
+}
 
 type ChartCardProps = {
-  title: string;
-  options: any;
-  series: any;
-  type: "bar" | "line" | "area" | "pie" | "radialBar";
-};
+  title: string
+  options: any
+  series: any
+  type: "bar" | "line" | "area" | "pie" | "radialBar"
+}
 
 const Dashboard = () => {
-  const [isMounted, setIsMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-    setIsMounted(true);
-    return () => setIsMounted(false);
-  }, []);
+    setIsMounted(true)
+    return () => setIsMounted(false)
+  }, [])
 
   // Charts data for "Renforcement Scolaire"
   const progressOptions = {
@@ -56,24 +55,24 @@ const Dashboard = () => {
     xaxis: { categories: ["Week 1", "Week 2", "Week 3", "Week 4"] },
     colors: ["#38A169"],
     stroke: { curve: "smooth" },
-  };
-  const progressSeries = [{ name: "Avg. Score (%)", data: [55, 62, 68, 74] }];
+  }
+  const progressSeries = [{ name: "Avg. Score (%)", data: [55, 62, 68, 74] }]
 
   const sessionAttendanceOptions = {
     chart: { id: "attendance", toolbar: { show: false } },
     xaxis: { categories: ["Mon", "Tue", "Wed", "Thu", "Fri"] },
     colors: ["#3182CE"],
-  };
+  }
   const sessionAttendanceSeries = [
     { name: "Attendance", data: [22, 20, 18, 25, 24] },
-  ];
+  ]
 
   const subjectDistributionOptions = {
     labels: ["Math", "Science", "Languages", "Other"],
     colors: ["#805AD5", "#48BB78", "#F6AD55", "#E53E3E"],
     legend: { position: "bottom" },
-  };
-  const subjectDistributionSeries = [40, 30, 20, 10];
+  }
+  const subjectDistributionSeries = [40, 30, 20, 10]
 
   const satisfactionOptions = {
     chart: { id: "satisfaction", toolbar: { show: false } },
@@ -81,10 +80,10 @@ const Dashboard = () => {
       categories: ["Very Satisfied", "Satisfied", "Neutral", "Unsatisfied"],
     },
     colors: ["#D69E2E"],
-  };
+  }
   const satisfactionSeries = [
     { name: "Parent Feedback", data: [35, 45, 10, 5] },
-  ];
+  ]
 
   return (
     <Box p={4} bg="white" minH="100%" borderRadius="xl">
@@ -216,8 +215,8 @@ const Dashboard = () => {
         </SimpleGrid>
       )}
     </Box>
-  );
-};
+  )
+}
 
 const MetricCard = ({
   label,
@@ -251,7 +250,7 @@ const MetricCard = ({
       </Box>
     </Flex>
   </Stat>
-);
+)
 
 const ChartCard = ({ title, options, series, type }: ChartCardProps) => (
   <Box bg="white" p={4} rounded="xl" shadow="lg">
@@ -266,6 +265,6 @@ const ChartCard = ({ title, options, series, type }: ChartCardProps) => (
       width="100%"
     />
   </Box>
-);
+)
 
-export default Dashboard;
+export default Dashboard

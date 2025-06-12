@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import { Form, Formik, type FormikHelpers } from "formik";
 

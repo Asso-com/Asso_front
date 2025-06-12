@@ -16,31 +16,28 @@ const StaffServiceApi = {
         }
     },
 
-update: async (staffId: string | number, data: any): Promise<any> => {
-    try {
-      if (!data.associationId) {
-        throw new Error("Association ID is required");
-      }
-      const response = await axiosInstance.put(`/api/v1/staff/${staffId}`, data);
-      return response.data;
-    } catch (err) {
-      const error = err as AxiosError;
-      if (error.response?.status === 400) {
-        const backendData = error.response.data as any;
-        if (backendData.errors && typeof backendData.errors === "object") {
-          const validationErrors = backendData.errors as Record<string, string>;
-          const message = Object.values(validationErrors).join(", ");
-          throw new Error(message);
+    update: async (staffId: string | number, data: any): Promise<any> => {
+        try {
+            const response = await axiosInstance.put(`/api/v1/staff/${staffId}`, data);
+            return response.data;
+        } catch (err) {
+            const error = err as AxiosError;
+            if (error.response?.status === 400) {
+                const backendData = error.response.data as any;
+                if (backendData.errors && typeof backendData.errors === "object") {
+                    const validationErrors = backendData.errors as Record<string, string>;
+                    const message = Object.values(validationErrors).join(", ");
+                    throw new Error(message);
+                }
+                if (typeof backendData === "object") {
+                    const message = Object.values(backendData).join(", ");
+                    throw new Error(message);
+                }
+                throw new Error("Validation failed");
+            }
+            throw err;
         }
-        if (typeof backendData === "object") {
-          const message = Object.values(backendData).join(", ");
-          throw new Error(message);
-        }
-        throw new Error("Validation failed");
-      }
-      throw err;
-    }
-  },
+    },
 
     getCreateByAssociationId: async (associationId: number): Promise<any> => {
         try {
@@ -53,19 +50,13 @@ update: async (staffId: string | number, data: any): Promise<any> => {
         }
     },
 
- 
-
-   create: async (data: any): Promise<any> => {
-    try {
-        if (!data.dateOfJoining || !data.associationId) {
-            throw new Error('Date of joining and association ID are required');
-        }
-
-        const response = await axiosInstance.post(
-            `/api/v1/staff`,
-            data
-        );
-        return response.data;
+    create: async (data: any): Promise<any> => {
+        try {
+            const response = await axiosInstance.post(
+                `/api/v1/staff`,
+                data
+            );
+            return response.data;
         } catch (err) {
             const error = err as AxiosError;
             if (error.response?.status === 400) {
@@ -85,22 +76,20 @@ update: async (staffId: string | number, data: any): Promise<any> => {
         }
     },
 
- 
-delete: async (staffId: string | number, associationId: number): Promise<void> => {
-   
 
-    try {
-        await axiosInstance.delete(
-            `/api/v1/staff/${staffId}/association/${associationId}`
-        );
-    } catch (error) {
-        const axiosError = error as AxiosError;
-        if (axiosError.response?.status === 400) {
-      throw new Error('Invalid ID format sent to server');
-    }
-        throw error;
-    }
-},
+    delete: async (staffId: string | number, associationId: number): Promise<void> => {
+        try {
+            await axiosInstance.delete(
+                `/api/v1/staff/${staffId}/association/${associationId}`
+            );
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            if (axiosError.response?.status === 400) {
+                throw new Error('Invalid ID format sent to server');
+            }
+            throw error;
+        }
+    },
 };
 
 export default StaffServiceApi;

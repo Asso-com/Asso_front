@@ -1,4 +1,4 @@
-import React, {
+import {
   useEffect,
   useState,
   forwardRef,
@@ -10,7 +10,7 @@ import { Formik, type FormikProps } from "formik";
 
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import createValidationSchema from "@utils/createValidationSchema";
-import type { Field } from "@/types/formTypes"; 
+import type { Field } from "@/types/formTypes";
 import { getDefaultFormValues } from "@utils/getDefaultValueByType";
 import StaffFields from "../../constants/StaffFields";
 

@@ -16,44 +16,39 @@ const ClassRoomServiceApi = {
         }
     },
 
- 
+    toggleStatus: async (classRoomId: number): Promise<{ success: boolean; message?: string }> => {
+        try {
+            const response = await axiosInstance.patch(
+                `/api/v1/class-rooms/${classRoomId}/toggle-status`
+            );
+            return response.data;
+        } catch (error) {
+            const axiosError = error as AxiosError<{
+                message?: string;
+                errors?: Record<string, string>;
+            }>;
 
-toggleStatus: async (classRoomId: number): Promise<{ success: boolean; message?: string }> => {
-  try {
-    const response = await axiosInstance.patch(
-      `/api/v1/class-rooms/${classRoomId}/toggle-status`
-    );
-    return {
-      success: true,
-      ...response.data
-    };
-  } catch (error) {
-    const axiosError = error as AxiosError<{
-      message?: string;
-      errors?: Record<string, string>;
-    }>;
-    
-    if (axiosError.response) {
-      const serverMessage = axiosError.response.data?.message || 
-                             (typeof axiosError.response.data === 'string' ? axiosError.response.data : undefined);
-      
-      throw new Error(
-        serverMessage || 
-        `Failed to toggle class room status (HTTP ${axiosError.response.status})`
-      );
-    }
-    
-    throw new Error('Network error while toggling class room status');
-  }
-},
+            if (axiosError.response) {
+                const serverMessage = axiosError.response.data?.message ||
+                    (typeof axiosError.response.data === 'string' ? axiosError.response.data : undefined);
 
-   create: async (associationId: number, data: any): Promise<any> => {
+                throw new Error(
+                    serverMessage ||
+                    `Failed to toggle class room status (HTTP ${axiosError.response.status})`
+                );
+            }
+
+            throw new Error('Network error while toggling class room status');
+        }
+    },
+
+    create: async (associationId: number, data: any): Promise<any> => {
         try {
             const payload = {
                 ...data,
                 associationId
             };
-            
+
             const response = await axiosInstance.post<unknown>(
                 `/api/v1/class-rooms`,
                 payload
@@ -74,7 +69,7 @@ toggleStatus: async (classRoomId: number): Promise<{ success: boolean; message?:
                 }
                 throw new Error('Validation failed');
             }
-            throw err;  
+            throw err;
         }
     },
 
@@ -112,20 +107,20 @@ toggleStatus: async (classRoomId: number): Promise<{ success: boolean; message?:
         }
     },
     delete: async (classroomId: string | number): Promise<void> => {
-   
 
-    try {
-        await axiosInstance.delete(
-            `/api/v1/class-rooms/${classroomId}`
-        );
-    } catch (error) {
-        const axiosError = error as AxiosError;
-        if (axiosError.response?.status === 400) {
-      throw new Error('Invalid ID format sent to server');
-    }
-        throw error;
-    }
-},
+
+        try {
+            await axiosInstance.delete(
+                `/api/v1/class-rooms/${classroomId}`
+            );
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            if (axiosError.response?.status === 400) {
+                throw new Error('Invalid ID format sent to server');
+            }
+            throw error;
+        }
+    },
 
 };
 

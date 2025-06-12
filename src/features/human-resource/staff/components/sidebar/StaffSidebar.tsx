@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import RigthSidebar from "@components/shared/RigthSidebar";
 import SidebarButtonsActions from "@components/shared/SidebarButtonsActions";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import FormContent from "./FormContent";
 
@@ -15,7 +15,7 @@ const StaffSidebar = () => {
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
-  const { mutateAsync: createStaff } = useCreateStaff(associationId);
+  const { mutateAsync: createStaff, isPending } = useCreateStaff(associationId);
 
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
@@ -28,7 +28,12 @@ const StaffSidebar = () => {
     const values = await formRef.current?.submitForm();
     if (values) {
       try {
-        createStaff(values);
+        const staffData = {
+          ...values,
+          associationId,
+          dateOfJoining: new Date().toISOString(),
+        };
+        createStaff(staffData);
         handleCloseSidebar();
       } catch (error) {}
     }
@@ -54,7 +59,7 @@ const StaffSidebar = () => {
           <SidebarButtonsActions
             onSubmitForm={handleSubmitForm}
             onClose={handleCloseSidebar}
-            // isLoading={isPending}
+            isLoading={isPending}
           />
         }
       >

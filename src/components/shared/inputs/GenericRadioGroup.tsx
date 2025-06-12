@@ -1,7 +1,5 @@
-import React from "react";
 import {
   FormControl,
-  FormLabel,
   RadioGroup,
   Radio,
   FormErrorMessage,
@@ -9,29 +7,28 @@ import {
   Box,
   Flex,
   Text,
-  type RadioGroupProps,
-} from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
-import TextLabel from "@components/ui/TextLabel";
+} from "@chakra-ui/react"
+import { useTranslation } from "react-i18next"
+import TextLabel from "@components/ui/TextLabel"
 
 type Option = {
-  label: string;
-  value: string | number | boolean;
-};
+  label: string
+  value: string | number | boolean
+}
 
 interface GenericRadioGroupProps {
-  label?: string;
-  options: Option[];
-  isRequired?: boolean;
-  isError?: boolean;
-  errorMessage?: string;
-  name: string;
-  value: string | number | boolean;
-  onChange: (value: string | number | boolean) => void;
-  onBlur?: React.FocusEventHandler<HTMLInputElement>;
-  direction?: "row" | "column";
-  isDisabled?: boolean;
-  isReadOnly?: boolean;
+  label?: string
+  options: Option[]
+  isRequired?: boolean
+  isError?: boolean
+  errorMessage?: string
+  name: string
+  value: string | number | boolean
+  onChange: (value: string | number | boolean) => void
+  onBlur?: React.FocusEventHandler<HTMLInputElement>
+  direction?: "row" | "column"
+  isDisabled?: boolean
+  isReadOnly?: boolean
 }
 
 const GenericRadioGroup: React.FC<GenericRadioGroupProps> = ({
@@ -47,7 +44,7 @@ const GenericRadioGroup: React.FC<GenericRadioGroupProps> = ({
   direction = "row",
   ...inputProps
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <FormControl isInvalid={isError} isRequired={isRequired} mb={2}>
@@ -63,19 +60,19 @@ const GenericRadioGroup: React.FC<GenericRadioGroupProps> = ({
       <RadioGroup
         name={name}
         value={value?.toString()}
-        onChange={(stringValue) => {
+        onChange={stringValue => {
           const selectedOption = options.find(
-            (option) => option.value.toString() === stringValue
-          );
+            option => option.value.toString() === stringValue
+          )
           if (selectedOption) {
-            onChange(selectedOption.value);
+            onChange(selectedOption.value)
           }
         }}
         onBlur={onBlur}
         {...inputProps}
       >
         <Stack direction={direction}>
-          {options.map((option) => (
+          {options.map(option => (
             <Radio
               key={option.value.toString()}
               value={option.value.toString()}
@@ -88,7 +85,7 @@ const GenericRadioGroup: React.FC<GenericRadioGroupProps> = ({
 
       {isError && <FormErrorMessage>{t(errorMessage)}</FormErrorMessage>}
     </FormControl>
-  );
-};
+  )
+}
 
-export default GenericRadioGroup;
+export default GenericRadioGroup

@@ -1,12 +1,11 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { Button, type ButtonProps, Flex } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next"
+import { Button, type ButtonProps, Flex } from "@chakra-ui/react"
 
 // Define props for the custom button
 interface CustomButtonProps extends ButtonProps {
-  label: string;
-  isLoading?: boolean;
-  disabled?: boolean;
+  label: string
+  isLoading?: boolean
+  disabled?: boolean
 }
 
 // Reusable CustomButton component
@@ -19,7 +18,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   type = "button",
   ...props
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <Button
@@ -36,14 +35,14 @@ const CustomButton: React.FC<CustomButtonProps> = ({
     >
       {isLoading ? t("Loading...") : t(label)}
     </Button>
-  );
-};
+  )
+}
 
 // Define props for the sidebar action buttons
 interface SidebarButtonsActionsProps {
-  onSubmitForm: () => void;
-  onClose: () => void;
-  isLoading?: boolean;
+  onSubmitForm: () => void
+  onClose: () => void
+  isLoading?: boolean
 }
 
 // SidebarButtonsActions component
@@ -68,7 +67,7 @@ const SidebarButtonsActions: React.FC<SidebarButtonsActionsProps> = ({
         isLoading={isLoading}
       />
     </Flex>
-  );
-};
+  )
+}
 
-export default SidebarButtonsActions;
+export default SidebarButtonsActions

@@ -6,7 +6,7 @@ const useFetchClassRoom = (associationId: number): UseQueryResult<any, Error> =>
     return useQuery<any, Error>({
         queryKey: ['classRoom', associationId],
         queryFn: async () => {
-            switchLoadingModal();  
+            switchLoadingModal();
             try {
                 const response = await ClassRoomServiceApi.getAll(associationId);
                 return response;
@@ -14,10 +14,10 @@ const useFetchClassRoom = (associationId: number): UseQueryResult<any, Error> =>
                 console.error("Error fetching classRoom:", err);
                 throw err;
             } finally {
-                switchLoadingModal(); 
+                switchLoadingModal();
             }
         },
-         
+
     });
 };
 

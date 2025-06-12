@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Image,
@@ -15,30 +14,30 @@ import {
   DrawerOverlay,
   DrawerBody,
   Text,
-} from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
-import { FaAlignLeft } from "react-icons/fa";
+} from "@chakra-ui/react"
+import { HamburgerIcon } from "@chakra-ui/icons"
+import { FaAlignLeft } from "react-icons/fa"
 
-import appLogo from "../../../assets/logo/startnow.jpg";
+import appLogo from "../../../assets/logo/startnow.jpg"
 
-import UserDropDown from "./UserDropDown";
-import DropDownLanguage from "./DropDownLanguage";
-import AssociationList from "./AssociationList";
-import { FiMoreVertical } from "react-icons/fi";
-import { useTranslation } from "react-i18next";
-import ActivePeriod from "./ActivePeriod";
+import UserDropDown from "./UserDropDown"
+import DropDownLanguage from "./DropDownLanguage"
+import AssociationList from "./AssociationList"
+import { FiMoreVertical } from "react-icons/fi"
+import { useTranslation } from "react-i18next"
+import ActivePeriod from "./ActivePeriod"
 
 interface NavbarProps {
-  onToggleSidebar: () => void;
-  isSidebarOpen: boolean;
+  onToggleSidebar: () => void
+  isSidebarOpen: boolean
 }
 
 const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }) => {
-  const bgColor = useColorModeValue("white", "gray.800");
-  const borderColor = useColorModeValue("gray.200", "gray.700");
+  const bgColor = useColorModeValue("white", "gray.800")
+  const borderColor = useColorModeValue("gray.200", "gray.700")
 
-  const { t } = useTranslation();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { t } = useTranslation()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <Box
@@ -111,7 +110,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }) => {
         </DrawerContent>
       </Drawer>
     </Box>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

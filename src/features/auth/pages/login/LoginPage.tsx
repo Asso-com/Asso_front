@@ -1,14 +1,14 @@
-// import React, { useEffect, useState } from "react";
-import { Box, Heading, Image, Link, useColorModeValue } from "@chakra-ui/react";
+// import  { useEffect, useState } from "react";
+import { Box, Heading, Image, Link, useColorModeValue } from "@chakra-ui/react"
 
-import logoApp from "../../../../assets/logo/logo_app.png";
+import logoApp from "../../../../assets/logo/logo_app.png"
 
-import { useTranslation } from "react-i18next";
-import LoginForm from "./LoginForm";
+import { useTranslation } from "react-i18next"
+import LoginForm from "./LoginForm"
 
 const LoginPage = () => {
-  const { t } = useTranslation();
-  const headingColor = useColorModeValue("gray.700", "gray.100");
+  const { t } = useTranslation()
+  const headingColor = useColorModeValue("gray.700", "gray.100")
 
   return (
     <Box
@@ -27,12 +27,7 @@ const LoginPage = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Image
-          src={logoApp}
-          maxH="200px"
-          alt="App Logo"
-          objectFit="cover"
-        />
+        <Image src={logoApp} maxH="200px" alt="App Logo" objectFit="cover" />
       </Box>
 
       <Box height="100%" bg="#fffff" p={{ base: "6", md: "8" }}>
@@ -59,7 +54,7 @@ const LoginPage = () => {
         </Link>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default LoginPage;
+export default LoginPage

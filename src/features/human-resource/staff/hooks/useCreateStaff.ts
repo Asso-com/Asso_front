@@ -3,41 +3,31 @@ import { showToast } from '@store/toastSlice';
 import { useDispatch } from 'react-redux';
 import StaffServiceApi from '../services/StaffServiceApi';
 
-interface StaffFormData {
-    firstName: string;
-    lastName: string;
-    email?: string;
-    mobileNumber?: string;
-    address: string;
-    city: string;
-    zipCode?: string;
-    state?: string;
-    comment?: string;
-    basicSalary: number;
-    jobCategory: string;
-    isActive: boolean;
-}
+// interface StaffFormData {
+//     firstName: string;
+//     lastName: string;
+//     email?: string;
+//     mobileNumber?: string;
+//     address: string;
+//     city: string;
+//     zipCode?: string;
+//     state?: string;
+//     comment?: string;
+//     basicSalary: number;
+//     jobCategory: string;
+//     isActive: boolean;
+// }
 
 const useCreateStaff = (associationId: number) => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
     return useMutation({
-        mutationFn: (formData: StaffFormData) => {
-             const staffData = {
-                ...formData,
-                associationId,
-                dateOfJoining: new Date().toISOString()  
-            };
-            
-            return StaffServiceApi.create(staffData);
-        },
+        mutationFn: (formData: any) => StaffServiceApi.create(formData),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ['staff', associationId],
-                exact: true
             });
-            
             dispatch(showToast({
                 title: 'Succès',
                 message: 'Le membre a été ajouté avec succès',
@@ -45,7 +35,7 @@ const useCreateStaff = (associationId: number) => {
             }));
         },
         onError: (error: Error) => {
-             dispatch(showToast({
+            dispatch(showToast({
                 title: 'Erreur',
                 message: error.message || "Échec de l'ajout du membre",
                 type: 'error'

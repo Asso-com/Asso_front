@@ -1,23 +1,22 @@
-import React from "react";
-import { Flex, FormControl, Box, FormErrorMessage } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
+import { Flex, FormControl, Box, FormErrorMessage } from "@chakra-ui/react"
+import { useTranslation } from "react-i18next"
 
-import BasicInput from "../../ui/BasicInput";
-import BasicTextArea from "../../ui/BasicTextArea";
-import TextLabel from "../../ui/TextLabel";
+import BasicInput from "../../ui/BasicInput"
+import BasicTextArea from "../../ui/BasicTextArea"
+import TextLabel from "../../ui/TextLabel"
 
 interface GenericInputProps {
-  labelDirection?: "top" | "left";
-  label?: string;
-  name: string;
-  type?: string;
-  helpText?: string;
-  isRequired?: boolean;
-  isInvalid?: boolean;
-  errorMessage?: string;
-  onChange?: (value: string) => void;
-  formikField?: any;
-  [key: string]: any;
+  labelDirection?: "top" | "left"
+  label?: string
+  name: string
+  type?: string
+  helpText?: string
+  isRequired?: boolean
+  isInvalid?: boolean
+  errorMessage?: string
+  onChange?: (value: string) => void
+  formikField?: any
+  [key: string]: any
 }
 
 const GenericInput: React.FC<GenericInputProps> = ({
@@ -33,7 +32,7 @@ const GenericInput: React.FC<GenericInputProps> = ({
   formikField = {},
   ...inputProps
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   const commonProps = {
     name,
@@ -42,14 +41,14 @@ const GenericInput: React.FC<GenericInputProps> = ({
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       onChange?.(e.target.value),
     ...inputProps,
-  };
+  }
 
   const renderInputField = () => {
     if (type === "textarea") {
-      return <BasicTextArea {...commonProps} formikField={formikField} />;
+      return <BasicTextArea {...commonProps} formikField={formikField} />
     }
-    return <BasicInput {...commonProps} formikField={formikField} />;
-  };
+    return <BasicInput {...commonProps} formikField={formikField} />
+  }
 
   return (
     <FormControl isInvalid={isInvalid} isRequired={isRequired}>
@@ -84,7 +83,7 @@ const GenericInput: React.FC<GenericInputProps> = ({
         <FormErrorMessage fontSize="sm">{t(errorMessage)}</FormErrorMessage>
       )}
     </FormControl>
-  );
-};
+  )
+}
 
-export default GenericInput;
+export default GenericInput

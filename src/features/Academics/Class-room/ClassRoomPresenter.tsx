@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import CustomAgGrid from "@components/shared/ag-grid/CustomAgGrid";
 import StatsHorizontal from "@components/shared/StatsHorizontal";

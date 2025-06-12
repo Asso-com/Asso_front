@@ -1,5 +1,4 @@
-import React from "react";
-import "./loader.css";
+import "./loader.css"
 
 const AppLoader = () => {
   return (
@@ -18,7 +17,7 @@ const AppLoader = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AppLoader;
+export default AppLoader

@@ -26,14 +26,19 @@ export const StaffFields: Field[] = [
         type: "email",
         label: "Email Address",
         placeholder: "example@domain.com",
-       
+        validationRules: {
+            required: true,
+            email: true
+        }
     },
     {
         name: "mobileNumber",
         type: "phone",
         label: "Mobile Number",
         placeholder: "Enter mobile number",
-        
+        validationRules: {
+            required: true,
+        }
     },
     {
         name: "address",
@@ -60,7 +65,7 @@ export const StaffFields: Field[] = [
         type: "text",
         label: "ZIP code",
         placeholder: "Enter zip code",
-         
+
     },
     {
         name: "state",
@@ -80,8 +85,6 @@ export const StaffFields: Field[] = [
             maxLength: 500
         }
     },
-   
-   
     {
         name: "basicSalary",
         type: "number",
@@ -109,10 +112,10 @@ export const StaffFields: Field[] = [
         }
     },
     {
-    name: "dateOfJoining",
-    label: "Date d'adhésion",
-    type: "date",
-  },
+        name: "dateOfJoining",
+        label: "Date d'adhésion",
+        type: "date",
+    },
     {
         name: "isActive",
         type: "checkbox",
