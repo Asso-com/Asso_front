@@ -17,12 +17,13 @@ import ListSessionsContainer from "@features/sessions/List-sessions/ListSessions
 import ListLevelContainer from "@features/Academics/list-level/ListLevelContainer";
 import ListSubjectContainer from "@features/Academics/Subject/ListSubjectContainer";
 import SubjectLevelContainer from "@features/Academics/Subject-level/SubjectLevelContainer";
-import ClassRoomContainer from "@features/Academics/Class-room/ClassRoomContainer";
 import ListPartnerContainer from "@features/Partner/list-partner/ListPartnerContainer";
 import LocationContainer from "@features/Partner/location/LocationContainer";
 import AcademicPeriodWeeksContainer from "@features/system-settings/academic-period-weeks/AcademicPeriodWeeksContainer";
 import DepartmentContainer from "@features/Academics/department/DepartmentContainer";
 import CategoriesLevelsContainer from "@features/Academics/Categories-levels/CategoriesLevelsContainer";
+import StaffContainer from "@features/human-resource/staff/StaffContainer";
+import ClassRoomContainer from "@features/Academics/Class-room/ClassRoomContainer";
 
 const protectedRoutes = [
   {
@@ -56,7 +57,7 @@ const protectedRoutes = [
       { path: "/Academics/CategoriesLevels", element: <CategoriesLevelsContainer /> },
       { path: "/Academics/Department", element: <DepartmentContainer /> },
      
-     
+      { path: "/HumanResource/listStaff", element: <StaffContainer /> }, 
     ],
   },
 ];

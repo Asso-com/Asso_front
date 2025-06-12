@@ -16,6 +16,39 @@ const LevelServiceApi = {
         }
     },
 
+ toggleStatus: async (
+    associationId: number, 
+    classRoomId: number
+): Promise<{ success: boolean; message?: string }> => {
+    try {
+        const response = await axiosInstance.put(
+            `/api/v1/class-rooms/association/${associationId}/class-rooms/${classRoomId}/toggle`
+        );
+        return {
+            success: true,
+            ...response.data
+        };
+    } catch (error) {
+        const axiosError = error as AxiosError<{
+            message?: string;
+            errors?: Record<string, string>;
+        }>;
+        
+        if (axiosError.response) {
+            // Erreur avec réponse du serveur
+            const serverMessage = axiosError.response.data?.message || 
+                               (typeof axiosError.response.data === 'string' ? axiosError.response.data : undefined);
+            
+            throw new Error(
+                serverMessage || 
+                `Failed to toggle class room status (HTTP ${axiosError.response.status})`
+            );
+        }
+        
+        throw new Error('Network error while toggling class room status');
+    }
+},
+
     create: async (data: any, associationId: number): Promise<any> => {
         try {
             const response = await axiosInstance.post<unknown>(
