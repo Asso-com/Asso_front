@@ -23,6 +23,7 @@ import LocationContainer from "@features/Partner/location/LocationContainer";
 import AcademicPeriodWeeksContainer from "@features/system-settings/academic-period-weeks/AcademicPeriodWeeksContainer";
 import DepartmentContainer from "@features/Academics/department/DepartmentContainer";
 import CategoriesLevelsContainer from "@features/Academics/Categories-levels/CategoriesLevelsContainer";
+import CoefficientSettingsContainer from "@features/system-settings/coefficients/CoefficientSettingsContainer.tsx";
 
 const protectedRoutes = [
   {
@@ -55,6 +56,8 @@ const protectedRoutes = [
       { path: "/Academics/ClassRoom", element: <ClassRoomContainer /> },
       { path: "/Academics/CategoriesLevels", element: <CategoriesLevelsContainer /> },
       { path: "/Academics/Department", element: <DepartmentContainer /> },
+
+      {path:"/Settings/GeneralSetting",element: <CoefficientSettingsContainer/>},
      
      
     ],
