@@ -1,4 +1,3 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
 import type { ColDef } from "ag-grid-community";
 
@@ -10,6 +9,7 @@ const getCoefficientColumnDefs = (): ColDef[] => {
       field: "id",
       headerName: t("ID"),
       width: 80,
+      hide:true
     },
     {
       field: "assiduity_coefficient",
@@ -35,6 +35,7 @@ const getCoefficientColumnDefs = (): ColDef[] => {
       field: "updated_at",
       headerName: t("Last Update"),
       minWidth: 200,
+      hide:true
     }
   ];
 };

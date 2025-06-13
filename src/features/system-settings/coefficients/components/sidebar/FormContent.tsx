@@ -1,135 +1,142 @@
-import React, { useRef } from "react";
-import { Button } from "@chakra-ui/react";
+import  { forwardRef, useRef, useEffect, useImperativeHandle, useState } from "react";
+import { Flex } from "@chakra-ui/react";
+import { Formik } from "formik";
+import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useToast } from "@chakra-ui/react";
-import type { RootState } from "@store/index";
-import RigthSidebar from "@components/shared/RigthSidebar";
-import SidebarButtonsActions from "@components/shared/SidebarButtonsActions";
-import FormContent from "./FormContent";
-import CoefficientServiceApi from "../../services/CoefficientServiceApi";
-import type { CoefficientType } from "../../types";
+import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 
-interface CoefficientSidebarProps {
-  onOpen?: () => void;
-  isOpen?: boolean;
-  onClose?: () => void;
-  initialData?: Partial<CoefficientType>;
+// Ne pas exporter ce type pour éviter les importations circulaires
+interface FormContentRef {
+  submitForm: () => Promise<any | null>;
+  resetForm: () => void;
 }
 
-const CoefficientSidebar: React.FC<CoefficientSidebarProps> = ({ 
-  onOpen: externalOnOpen, 
-  isOpen: externalIsOpen, 
-  onClose: externalOnClose, 
-  initialData 
-}) => {
+interface FormContentProps {
+  initialData?: any;
+}
+
+const FormContent = forwardRef<FormContentRef, FormContentProps>(({ initialData }, ref) => {
   const { t } = useTranslation();
-  const [internalIsOpen, setInternalIsOpen] = React.useState(false);
-  const associationId = useSelector((state: RootState) => state.authSlice.associationId);
-  const toast = useToast();
-  const queryClient = useQueryClient();
+  const formikRef = useRef<any>(null);
+  const [initialValues, setInitialValues] = useState({
+    assiduity_coefficient: "",
+    delay_before_attendance: "",
+    participation_coefficient: "",
+    quiz_coefficient: ""
+  });
   
-  // Utilisez any au lieu du type importé FormContentRef
-  const formRef = useRef<any>(null);
-
-  const isControlled = externalIsOpen !== undefined;
-  const isOpen = isControlled ? externalIsOpen : internalIsOpen;
-
-  const onOpen = () => {
-    if (isControlled) {
-      externalOnOpen?.();
-    } else {
-      setInternalIsOpen(true);
+  // Mettre à jour les valeurs initiales quand initialData change
+  useEffect(() => {
+    if (initialData) {
+      console.log("Setting form values with:", initialData);
+      setInitialValues({
+        assiduity_coefficient: initialData.assiduity_coefficient?.toString() || "",
+        delay_before_attendance: initialData.delay_before_attendance?.toString() || "",
+        participation_coefficient: initialData.participation_coefficient?.toString() || "",
+        quiz_coefficient: initialData.quiz_coefficient?.toString() || ""
+      });
     }
-  };
+  }, [initialData]);
 
-  const onClose = () => {
-    if (isControlled) {
-      externalOnClose?.();
-    } else {
-      setInternalIsOpen(false);
-    }
-  };
-
-  // Mutation pour enregistrer ou mettre à jour les coefficients
-  const { mutateAsync: saveMutation, isPending } = useMutation({
-    mutationFn: async (data: any) => {
-      if (initialData?.id) {
-        return CoefficientServiceApi.update(initialData.id, data);
-      } else {
-        return CoefficientServiceApi.create(data);
+  // Exposer les méthodes du formulaire via ref
+  useImperativeHandle(ref, () => ({
+    submitForm: async () => {
+      if (!formikRef.current) return null;
+      
+      try {
+        await formikRef.current.submitForm();
+        const { isValid, values } = formikRef.current;
+        
+        if (isValid) {
+          console.log("Form is valid, values:", values);
+          return {
+            ...values,
+            // Assurez-vous que les valeurs sont des nombres
+            assiduity_coefficient: parseFloat(values.assiduity_coefficient),
+            delay_before_attendance: parseFloat(values.delay_before_attendance),
+            participation_coefficient: parseFloat(values.participation_coefficient),
+            quiz_coefficient: parseFloat(values.quiz_coefficient)
+          };
+        }
+        return null;
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        return null;
       }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['coefficients', associationId] });
-      toast({
-        title: initialData?.id ? t("Updated") : t("Created"),
-        description: initialData?.id 
-          ? t("Coefficient settings updated successfully") 
-          : t("Coefficient settings created successfully"),
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-      });
-      onClose();
-    },
-    onError: (error: any) => {
-      toast({
-        title: t("Error"),
-        description: error.message || t("An unexpected error occurred"),
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "top-right",
-      });
-    },
+    resetForm: () => {
+      if (formikRef.current) {
+        formikRef.current.resetForm();
+      }
+    }
+  }));
+
+  const validationSchema = Yup.object({
+    assiduity_coefficient: Yup.number()
+      .typeError(t("Must be a number"))
+      .required(t("Required field"))
+      .min(0, t("Must be positive")),
+    delay_before_attendance: Yup.number()
+      .typeError(t("Must be a number"))
+      .required(t("Required field"))
+      .min(0, t("Must be positive")),
+    participation_coefficient: Yup.number()
+      .typeError(t("Must be a number"))
+      .required(t("Required field"))
+      .min(0, t("Must be positive")),
+    quiz_coefficient: Yup.number()
+      .typeError(t("Must be a number"))
+      .required(t("Required field"))
+      .min(0, t("Must be positive"))
   });
 
-  const handleSubmitForm = async () => {
-    if (!formRef.current) return;
-    
-    try {
-      const values = await formRef.current.submitForm();
-      if (values) {
-        await saveMutation(values);
-      }
-    } catch (error) {
-      console.error("Error submitting form:", error);
+  const fields = [
+    {
+      name: "assiduity_coefficient",
+      label: t("Assiduity Coefficient"),
+      type: "number",
+      placeholder: t("Enter assiduity coefficient"),
+    },
+    {
+      name: "delay_before_attendance",
+      label: t("Delay Before Attendance"),
+      type: "number",
+      placeholder: t("Enter delay before attendance"),
+    },
+    {
+      name: "participation_coefficient",
+      label: t("Participation Coefficient"),
+      type: "number",
+      placeholder: t("Enter participation coefficient"),
+    },
+    {
+      name: "quiz_coefficient",
+      label: t("Quiz Coefficient"),
+      type: "number",
+      placeholder: t("Enter quiz coefficient"),
     }
-  };
+  ];
 
   return (
-    <>
-      {!initialData && (
-        <Button
-          size="md"
-          fontSize="sm"
-          variant="outline"
-          colorScheme="primary"
-          onClick={onOpen}
-        >
-          {t("Add Coefficient")}
-        </Button>
-      )}
-
-      <RigthSidebar
-        isOpen={isOpen}
-        title={initialData ? t("Edit Coefficient") : t("Add Coefficient")}
-        onClose={onClose}
-        footer={
-          <SidebarButtonsActions
-            onSubmitForm={handleSubmitForm}
-            onClose={onClose}
-            isLoading={isPending}
-          />
-        }
-      >
-        <FormContent ref={formRef} initialData={initialData} />
-      </RigthSidebar>
-    </>
+    <Formik
+      innerRef={formikRef}
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      enableReinitialize={true}
+      onSubmit={(values) => {
+        console.log("Form submitted with values:", values);
+        // La soumission est gérée par la méthode submitForm exposée
+      }}
+    >
+      <Flex direction="column" gap={4}>
+        {fields.map((field) => (
+          <RenderFormBuilder key={field.name} field={field} />
+        ))}
+      </Flex>
+    </Formik>
   );
-};
+});
 
-export default CoefficientSidebar;
+FormContent.displayName = "FormContent";
+
+export default FormContent;

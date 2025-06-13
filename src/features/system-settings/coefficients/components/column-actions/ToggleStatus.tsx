@@ -9,6 +9,7 @@ interface ICellRendererParams {
 }
 
 const ToggleStatus: React.FC<ICellRendererParams> = ({ data, value }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const associationId = useSelector((state: RootState) => state.authSlice.associationId);
   
   const handleToggle = () => {

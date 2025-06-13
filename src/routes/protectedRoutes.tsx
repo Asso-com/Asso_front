@@ -57,7 +57,7 @@ const protectedRoutes = [
       { path: "/Academics/CategoriesLevels", element: <CategoriesLevelsContainer /> },
       { path: "/Academics/Department", element: <DepartmentContainer /> },
 
-      {path:"/Settings/GeneralSetting",element: <CoefficientSettingsContainer/>},
+      {path:"/Settings/CoefficientSetting",element: <CoefficientSettingsContainer/>},
      
      
     ],

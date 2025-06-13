@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Box, Spinner, Center, Text } from "@chakra-ui/react";
+import {  Spinner, Center, Text } from "@chakra-ui/react";
 import type { RootState } from "@store/index";
 import CoefficientPresenter from "./CoefficientPresenter";
 import useFetchCoefficients from "./hooks/useFetchCoefficients";

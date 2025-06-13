@@ -1,134 +1,99 @@
-import React, { useState, useRef } from 'react';
-
-import type { ICellRendererParams } from '@ag-grid-community/core';
-
-
-import { 
-  Flex, 
-  IconButton, 
-  useDisclosure, 
-  useToast,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
-  Button
-} from '@chakra-ui/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useSelector } from 'react-redux';
+import  { useState } from 'react';
+import { Flex } from '@chakra-ui/react';
+import { useDispatch } from "react-redux";
 import { useTranslation } from 'react-i18next';
-
+import { showToast } from "@store/toastSlice";
+import type { ICellRendererParams } from '@ag-grid-community/core';
+import { MdDelete, MdEdit } from 'react-icons/md'; 
+import { useQueryClient } from '@tanstack/react-query';
+import { useSelector } from 'react-redux';
 import type { RootState } from '@store/index';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
-import CoefficientSidebar from '../sidebar/CoefficientSidebar';
+import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
+import GenericModal from "@components/ui/GenericModal";
+import EditCoefficient from "./EditCoefficient";
+import { confirmAlert } from "@components/shared/confirmAlert";
 import CoefficientServiceApi from '../../services/CoefficientServiceApi';
-import type { CoefficientType } from '../../types';
+
+type ModalType = "editModal";
 
 const ColumnAction = (params: ICellRendererParams) => {
   const { t } = useTranslation();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const toast = useToast();
+  const dispatch = useDispatch();
+  const [modalsState, setModalsState] = useState<Record<ModalType, boolean>>({
+    editModal: false,
+  });
   const queryClient = useQueryClient();
   const associationId = useSelector((state: RootState) => state.authSlice.associationId);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const cancelRef = useRef<HTMLButtonElement>(null);
+  const rowData = params.data;
 
-  const rowData = params.data as CoefficientType;
-
-
-  const { mutate: deleteCoefficient, isPending } = useMutation({
-    mutationFn: () => CoefficientServiceApi.delete(rowData.id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['coefficients', associationId] });
-      toast({
-        title: t('Deleted'),
-        description: t('Coefficient settings deleted successfully'),
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-        position: 'top-right',
-      });
-      onClose();
-    },
-    onError: (error: any) => {
-      toast({
-        title: t('Error'),
-        description: error.message || t('Failed to delete coefficient settings'),
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-        position: 'top-right',
-      });
-    },
-  });
-
-  const handleDelete = () => {
-    onOpen();
+  const toggleModal = (modal: ModalType) => {
+    setModalsState((prevState) => ({
+      ...prevState,
+      [modal]: !prevState[modal],
+    }));
   };
 
-  const handleEdit = () => {
-    setIsEditOpen(true);
+  const handleDelete = async () => {
+    const isConfirmed = await confirmAlert({
+      title: t("Delete Coefficient"),
+      text: t("You won't be able to revert this!"),
+    });
+
+    if (isConfirmed && rowData?.id) {
+      try {
+        await CoefficientServiceApi.delete(rowData.id);
+        queryClient.invalidateQueries({ queryKey: ['coefficients', associationId] });
+        
+        dispatch(
+          showToast({
+            title: t("Deleted"),
+            message: t("Coefficient deleted successfully"),
+            type: "success",
+          })
+        );
+      } catch (error: any) {
+        dispatch(
+          showToast({
+            title: t("Error"),
+            message: error.message || t("Failed to delete coefficient"),
+            type: "error",
+          })
+        );
+      }
+    }
   };
 
   return (
-    <>
-      <Flex gap={2}>
-        <IconButton
-          aria-label="Edit"
-          icon={<FaEdit />}
-          size="sm"
-          colorScheme="blue"
-          onClick={handleEdit}
-        />
-        <IconButton
-          aria-label="Delete"
-          icon={<FaTrashAlt />}
-          size="sm"
-          colorScheme="red"
-          onClick={handleDelete}
-        />
-      </Flex>
-
-      <AlertDialog
-        isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              {t('Delete Coefficient')}
-            </AlertDialogHeader>
-
-            <AlertDialogBody>
-              {t('Are you sure you want to delete this coefficient setting?')}
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose} disabled={isPending}>
-                {t('Cancel')}
-              </Button>
-              <Button 
-                colorScheme="red" 
-                onClick={() => deleteCoefficient()} 
-                ml={3}
-                isLoading={isPending}
-              >
-                {t('Delete')}
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-
-      <CoefficientSidebar
-        isOpen={isEditOpen}
-        onClose={() => setIsEditOpen(false)}
-        initialData={rowData}
+    <Flex align="center" justify="center" gap={2} height="100%">
+      <GenericIconButtonWithTooltip
+        icon={<MdEdit size={22} />}
+        label={t("Edit")}
+        ariaLabel="edit_btn"
+        variant="ghost"
+        colorScheme="green"
+        size="sm"
+        onClick={() => toggleModal("editModal")}
       />
-    </>
+      
+      <GenericIconButtonWithTooltip
+        icon={<MdDelete size={22} />}
+        label={t("Delete")}
+        ariaLabel="delete_btn"
+        variant="ghost"
+        colorScheme="red"
+        size="sm"
+        onClick={handleDelete}
+      />
+
+      <GenericModal
+        isOpen={modalsState.editModal}
+        onClose={() => toggleModal("editModal")}
+        title={t("Edit Coefficient")}
+        size="xl"
+      >
+        <EditCoefficient details={rowData} onClose={() => toggleModal("editModal")} />
+      </GenericModal>
+    </Flex>
   );
 };
 

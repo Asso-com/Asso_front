@@ -10,17 +10,17 @@ import type { AgGridReact as AgGridReactType } from "ag-grid-react";
 
 interface CoefficientPresenterProps {
   rows: any[];
-  total: number;
+  
 }
 
-const CoefficientPresenter: React.FC<CoefficientPresenterProps> = ({ rows = [], total = 0 }) => {
+const CoefficientPresenter: React.FC<CoefficientPresenterProps> = ({ rows = [] }) => {
   const gridRef = useRef<AgGridReactType>(null);
   const [isGridInitialized, setIsGridInitialized] = useState(false);
   
   const columnDefs = getCoefficientColumnDefs();
 
   useEffect(() => {
-
+    // Simplification de la logique d'initialisation du grid
     const checkGridInitialization = () => {
       if (gridRef.current) {
         setIsGridInitialized(true);
@@ -28,8 +28,9 @@ const CoefficientPresenter: React.FC<CoefficientPresenterProps> = ({ rows = [], 
     };
     
     checkGridInitialization();
-  }, []); 
+  }, []); // Dépendance vide pour n'exécuter qu'une fois
 
+  // Calculs des moyennes pour les statistiques
   const avgAssiduity = rows.length > 0 
     ? rows.reduce((sum: number, row: any) => {
         const value = row?.assiduity_coefficient ? parseFloat(row.assiduity_coefficient) : 0;
@@ -64,7 +65,10 @@ const CoefficientPresenter: React.FC<CoefficientPresenterProps> = ({ rows = [], 
           borderColor={"green.500"}
         />
       </SimpleGrid>
+      
+      {/* HeaderActions conditionnel, comme dans SchoolYearPresenter */}
       {isGridInitialized && <HeaderActions gridRef={gridRef} />}
+      
       <CustomAgGrid
         ref={gridRef}
         rowData={rows}
@@ -81,12 +85,12 @@ const CoefficientPresenter: React.FC<CoefficientPresenterProps> = ({ rows = [], 
           },
         ]}
         onGridReady={() => setIsGridInitialized(true)}
-     
-        getRowId={(params) => {
-          return params.data?.id ? 
-            `coefficient-${params.data.id}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}` : 
-            `row-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        }}
+        // Identifiants de ligne uniques pour éviter les erreurs de duplication
+    getRowId={(params) => {
+  return params.data?.id ? 
+    `coefficient-${params.data.id}` : 
+    `new-row-${Math.random().toString(36).substring(2, 9)}`;
+}}
       />
     </Box>
   );

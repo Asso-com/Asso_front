@@ -369,8 +369,8 @@ const fakeMenuItems: MenuItem[] = [
         children: [
             {
                 menu_id: 151,
-                menu_description: "General Setting",
-                navLink: "/Settings/GeneralSetting",
+                menu_description: "Coefficient Setting",
+                navLink: "/Settings/CoefficientSetting",
                 icon: "FaAngleDoubleRight",
             },
             {
