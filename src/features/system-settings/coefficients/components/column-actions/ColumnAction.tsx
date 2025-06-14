@@ -1,37 +1,21 @@
-import  { useState } from 'react';
-import { Flex } from '@chakra-ui/react';
-import { useDispatch } from "react-redux";
-import { useTranslation } from 'react-i18next';
-import { showToast } from "@store/toastSlice";
-import type { ICellRendererParams } from '@ag-grid-community/core';
-import { MdDelete, MdEdit } from 'react-icons/md'; 
-import { useQueryClient } from '@tanstack/react-query';
-import { useSelector } from 'react-redux';
-import type { RootState } from '@store/index';
+import React, { useState } from "react";
+import { Flex } from "@chakra-ui/react";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
-import GenericModal from "@components/ui/GenericModal";
-import EditCoefficient from "./EditCoefficient";
+import { MdDelete, MdEdit } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { showToast } from "@store/toastSlice";
+import { useTranslation } from "react-i18next";
 import { confirmAlert } from "@components/shared/confirmAlert";
-import CoefficientServiceApi from '../../services/CoefficientServiceApi';
+import type { ICellRendererParams } from "ag-grid-community";
+import useDeleteCoefficient from "../../hooks/useDeleteCoefficient";
+import GenericModal from "@components/ui/GenericModal"; 
+import EditCoefficient from "./EditCoefficient";
 
-type ModalType = "editModal";
-
-const ColumnAction = (params: ICellRendererParams) => {
+const ColumnAction: React.FC<ICellRendererParams> = ({ data }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const [modalsState, setModalsState] = useState<Record<ModalType, boolean>>({
-    editModal: false,
-  });
-  const queryClient = useQueryClient();
-  const associationId = useSelector((state: RootState) => state.authSlice.associationId);
-  const rowData = params.data;
-
-  const toggleModal = (modal: ModalType) => {
-    setModalsState((prevState) => ({
-      ...prevState,
-      [modal]: !prevState[modal],
-    }));
-  };
+  const { mutateAsync: deleteCoefficient } = useDeleteCoefficient();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const handleDelete = async () => {
     const isConfirmed = await confirmAlert({
@@ -39,18 +23,9 @@ const ColumnAction = (params: ICellRendererParams) => {
       text: t("You won't be able to revert this!"),
     });
 
-    if (isConfirmed && rowData?.id) {
+    if (isConfirmed && data?.id) {
       try {
-        await CoefficientServiceApi.delete(rowData.id);
-        queryClient.invalidateQueries({ queryKey: ['coefficients', associationId] });
-        
-        dispatch(
-          showToast({
-            title: t("Deleted"),
-            message: t("Coefficient deleted successfully"),
-            type: "success",
-          })
-        );
+        await deleteCoefficient(data.id);
       } catch (error: any) {
         dispatch(
           showToast({
@@ -63,6 +38,8 @@ const ColumnAction = (params: ICellRendererParams) => {
     }
   };
 
+  const toggleEditModal = () => setIsEditModalOpen(!isEditModalOpen);
+
   return (
     <Flex align="center" justify="center" gap={2} height="100%">
       <GenericIconButtonWithTooltip
@@ -72,9 +49,8 @@ const ColumnAction = (params: ICellRendererParams) => {
         variant="ghost"
         colorScheme="green"
         size="sm"
-        onClick={() => toggleModal("editModal")}
+        onClick={toggleEditModal} 
       />
-      
       <GenericIconButtonWithTooltip
         icon={<MdDelete size={22} />}
         label={t("Delete")}
@@ -84,14 +60,13 @@ const ColumnAction = (params: ICellRendererParams) => {
         size="sm"
         onClick={handleDelete}
       />
-
       <GenericModal
-        isOpen={modalsState.editModal}
-        onClose={() => toggleModal("editModal")}
+        isOpen={isEditModalOpen}
+        onClose={toggleEditModal}
         title={t("Edit Coefficient")}
         size="xl"
       >
-        <EditCoefficient details={rowData} onClose={() => toggleModal("editModal")} />
+        <EditCoefficient details={data} onClose={toggleEditModal} />
       </GenericModal>
     </Flex>
   );

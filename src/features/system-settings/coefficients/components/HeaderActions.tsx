@@ -1,4 +1,3 @@
-
 import { Box, Text, Flex, HStack, Icon } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import ClearFilter from "@components/shared/ClearFilter";
@@ -8,7 +7,6 @@ import { FaPercent } from "react-icons/fa";
 
 const HeaderActions = ({ gridRef }: any) => {
   const { t } = useTranslation();
-  
   return (
     <Box w="100%" p={4} bg="white" boxShadow="md" borderRadius="md">
       <Flex
@@ -37,13 +35,10 @@ const HeaderActions = ({ gridRef }: any) => {
           </Text>
         </HStack>
 
-        {/* Filters Section */}
         <Flex alignItems="center" gap={2}>
           <ClearFilter gridRef={gridRef} />
           <QuickFilter gridRef={gridRef} />
         </Flex>
-        
-        {/* Toujours afficher le bouton d'ajout */}
         <CoefficientSidebar />
       </Flex>
     </Box>

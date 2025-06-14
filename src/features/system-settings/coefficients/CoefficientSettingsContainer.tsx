@@ -1,17 +1,13 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import {  Spinner, Center, Text } from "@chakra-ui/react";
-import type { RootState } from "@store/index";
 import CoefficientPresenter from "./CoefficientPresenter";
 import useFetchCoefficients from "./hooks/useFetchCoefficients";
+import { useSelector } from "react-redux";
+import type { RootState } from "@store/index";
+import { Spinner, Center, Text } from "@chakra-ui/react";
 
-const CoefficientContainer: React.FC = () => {
+const CoefficientSettingsContainer = () => {
   const associationId = useSelector((state: RootState) => state.authSlice.associationId);
-  console.log("Association ID:", associationId);
-  
   const { data, isLoading, error } = useFetchCoefficients(associationId);
-  console.log("Query result:", { data, isLoading, error });
-  
+
   if (isLoading) {
     return (
       <Center h="100%">
@@ -19,7 +15,7 @@ const CoefficientContainer: React.FC = () => {
       </Center>
     );
   }
-  
+
   if (error) {
     return (
       <Center h="100%">
@@ -28,12 +24,7 @@ const CoefficientContainer: React.FC = () => {
     );
   }
 
-  return (
-    <CoefficientPresenter 
-      rows={data || []} 
-      total={data?.length || 0} 
-    />
-  );
+  return <CoefficientPresenter rows={data || []} total={data?.length || 0} />;
 };
 
-export default CoefficientContainer;
+export default CoefficientSettingsContainer;
