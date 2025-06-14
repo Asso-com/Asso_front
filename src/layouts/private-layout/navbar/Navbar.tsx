@@ -85,7 +85,7 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }) => {
             display={{ base: "none", md: "flex" }}
           >
             <Icon as={FaCalendarAlt} mr={1} />
-            <Text>12/06/2025</Text>
+            <Text>14/06/2025</Text>
           </Flex>
 
           <Box display={{ base: "none", md: "block" }}>

@@ -1,5 +1,4 @@
 import { type ColDef } from "ag-grid-community";
-import { Badge, Flex } from "@chakra-ui/react";
 import ActiveCellRender from "../components/column-actions/ActiveCellRender";
 const ClassRoomColumnDefs: ColDef[] = [
   {

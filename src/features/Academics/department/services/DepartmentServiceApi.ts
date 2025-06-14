@@ -1,4 +1,3 @@
-import type { AxiosError } from "axios";
 import { axiosInstance } from "../../../../services/api-services/axiosInstance";
 import handleAxiosError from "@utils/handleAxiosError";
 
