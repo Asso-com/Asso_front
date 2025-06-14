@@ -3,31 +3,38 @@ import { useDispatch } from 'react-redux';
 import { showToast } from '@store/toastSlice';
 import DepartmentServiceApi from '../services/DepartmentServiceApi';
 
-const useActiveDepartment = (associationId: number) => {
+interface UpdateDepartmentParams {
+    departmentId: number;
+    data: any;
+}
+
+const useUpdateDepartment = (associationId: number) => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation({
-        mutationFn: (departmentId: number) =>
-            DepartmentServiceApi.toggelStatus(associationId, departmentId),
+    return useMutation<void, Error, UpdateDepartmentParams>({
+        mutationFn: ({ departmentId, data }) =>
+            DepartmentServiceApi.update(departmentId, associationId, data),
 
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['department', associationId] });
+            queryClient.invalidateQueries({
+                queryKey: ['department', associationId],
+            });
 
             dispatch(
                 showToast({
                     title: 'Success',
-                    message: 'Department status updated successfully.',
+                    message: 'Department updated successfully.',
                     type: 'success',
                 })
             );
         },
-        onError: (err) => {
-            const error = err.message as string;
+
+        onError: (error) => {
             dispatch(
                 showToast({
                     title: 'Error',
-                    message: error,
+                    message: error.message || 'Failed to update department.',
                     type: 'error',
                 })
             );
@@ -35,4 +42,4 @@ const useActiveDepartment = (associationId: number) => {
     });
 };
 
-export default useActiveDepartment;
+export default useUpdateDepartment;

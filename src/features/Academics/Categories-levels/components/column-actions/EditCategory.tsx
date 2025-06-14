@@ -1,16 +1,17 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import { Form, Formik, type FormikHelpers } from "formik";
+
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import createValidationSchema from "@utils/createValidationSchema";
 import type { Field } from "@/types/formTypes";
-import ClassRoomFields from "../../constants/ClassRoomFields";
 import FooterActions from "@components/shared/FooterActions";
 import { useSelector } from "react-redux";
 import type { RootState } from "@store/index";
-import useUpdateClassRoom from "@features/Academics/Class-room/hooks/useUpdateClassRoom";
+import useUpdateCategory from "../../hooks/useUpdateCategory";
+import LevelCategoriesFields from "../../constants/LevelCategoriesFields";
 
-interface EditClassRoomProps {
+interface EditCategoryProps {
   details?: Record<string, any>;
   onClose: () => void;
 }
@@ -19,30 +20,36 @@ interface FormValues {
   [key: string]: any;
 }
 
-const EditClassRoom: React.FC<EditClassRoomProps> = ({ details, onClose }) => {
+const EditCategory: React.FC<EditCategoryProps> = ({ details, onClose }) => {
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
 
-  const { mutateAsync: updateClassRoom, isPending } =
-    useUpdateClassRoom(associationId);
+  const { mutateAsync: updateCategory, isPending } =
+    useUpdateCategory(associationId);
 
   const initialValues: FormValues = useMemo(() => {
-    return ClassRoomFields.reduce((acc: FormValues, field: Field) => {
-      acc[field.name] = details?.[field.name] ?? "";
-      return acc;
-    }, {});
+    const values = LevelCategoriesFields.reduce(
+      (acc: FormValues, field: Field) => {
+        acc[field.name] = details?.[field.name] ?? "";
+        return acc;
+      },
+      {}
+    );
+    return values;
   }, [details]);
 
-  const validationSchema = createValidationSchema(ClassRoomFields);
+  const validationSchema = useMemo(
+    () => createValidationSchema(LevelCategoriesFields),
+    []
+  );
 
   const onSubmit = async (
     values: FormValues,
     { setSubmitting }: FormikHelpers<FormValues>
   ) => {
     try {
-      const classRoomId = details?.id;
-      await updateClassRoom({ classRoomId, data: values });
+      await updateCategory({ categoryId: details?.id, data: values });
       onClose();
     } catch (error) {
     } finally {
@@ -51,7 +58,7 @@ const EditClassRoom: React.FC<EditClassRoomProps> = ({ details, onClose }) => {
   };
 
   return (
-    <Box p={4}>
+    <Box p={2}>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -61,21 +68,21 @@ const EditClassRoom: React.FC<EditClassRoomProps> = ({ details, onClose }) => {
       >
         {({ isSubmitting, handleSubmit, dirty }) => (
           <Form>
-            <SimpleGrid columns={2} spacing={4} mt={2}>
-              {ClassRoomFields.filter((field) => field.name !== "active").map(
-                (field: Field) => (
-                  <RenderFormBuilder key={field.name} field={field} />
-                )
-              )}
+            <SimpleGrid columns={1} spacing={4} mb={2}>
+              {LevelCategoriesFields.filter(
+                (field) => field.name !== "active"
+              ).map((field: Field) => (
+                <RenderFormBuilder key={field.name} field={field} />
+              ))}
             </SimpleGrid>
 
             <FooterActions
               onClose={onClose}
               handleSave={handleSubmit}
-              isDisabled={!dirty}
+              isDisabled={!dirty || isSubmitting || isPending}
               isSaving={isSubmitting || isPending}
               cancelText="Cancel"
-              saveText="Edit ClassRoom"
+              saveText="Edit Category"
             />
           </Form>
         )}
@@ -84,4 +91,4 @@ const EditClassRoom: React.FC<EditClassRoomProps> = ({ details, onClose }) => {
   );
 };
 
-export default EditClassRoom;
+export default EditCategory;

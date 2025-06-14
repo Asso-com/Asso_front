@@ -1,6 +1,7 @@
 import { Badge, Flex } from "@chakra-ui/react";
 import { type ColDef } from "ag-grid-community";
 import ActiveCellRender from "../components/column-actions/ActiveCellRender";
+import StandardColumnCellRender from "@components/shared/shared-columns/StandardColumnCellRender";
 const LevelCategoriesColumnDefs: ColDef[] = [
   {
     headerName: "name",
@@ -29,22 +30,7 @@ const LevelCategoriesColumnDefs: ColDef[] = [
     resizable: true,
     minWidth: 100,
     maxWidth: 120,
-    cellRenderer: ({ value }: any) => (
-      <Flex gap={2} alignItems={"center"} p={2} height={"100%"}>
-        <Badge
-          colorScheme={value ? "blue" : "gray"}
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          fontSize="sm"
-          variant="outline"
-          px={2}
-          maxH="25px"
-        >
-          {value ? "Yes" : "No"}
-        </Badge>
-      </Flex>
-    ),
+    cellRenderer: StandardColumnCellRender,
     cellStyle: {
       display: "flex",
       justifyContent: "center",

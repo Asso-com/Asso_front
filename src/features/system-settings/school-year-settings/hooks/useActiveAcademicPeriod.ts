@@ -31,16 +31,16 @@ const useActivateAcademicPeriod = (associationId: number) => {
             );
         },
 
-        onError: (error: unknown) => {
-            console.error('Activation error:', error);
-            dispatch(
-                showToast({
-                    title: 'Error',
-                    message: 'Failed to activate Academic Period.',
-                    type: 'error',
-                })
-            );
-        },
+       onError: (err) => {
+      const error = err.message as string;
+      dispatch(
+        showToast({
+          title: 'Error',
+          message: error,
+          type: 'error',
+        })
+      );
+    },
     });
 };
 

@@ -40,11 +40,12 @@ const useCreateStaff = (associationId: number) => {
             );
         },
 
-        onError: (error: Error) => {
+        onError: (err) => {
+            const error = err.message as string;
             dispatch(
                 showToast({
                     title: 'Error',
-                    message: error.message || 'Failed to add staff member.',
+                    message: error,
                     type: 'error',
                 })
             );

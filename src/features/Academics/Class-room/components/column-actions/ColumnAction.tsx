@@ -27,7 +27,7 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
       try {
         await deleteClassRoom(params.data.id);
       } catch (error) {
-        // Error toast is handled by useDeleteClassRoom
+
       }
     }
   };

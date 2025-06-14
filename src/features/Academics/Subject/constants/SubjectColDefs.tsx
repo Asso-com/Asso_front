@@ -1,3 +1,4 @@
+import StandardColumnCellRender from "@components/shared/shared-columns/StandardColumnCellRender";
 import { type ColDef } from "ag-grid-community";
 const SubjectColDefs: ColDef[] = [
   {
@@ -29,6 +30,20 @@ const SubjectColDefs: ColDef[] = [
     minWidth: 250,
     flex: 2,
     cellStyle: { textAlign: "left" },
+  },
+  {
+    headerName: "Standard",
+    field: "standard",
+    sortable: true,
+    resizable: true,
+    minWidth: 100,
+    maxWidth: 120,
+    cellRenderer: StandardColumnCellRender,
+    cellStyle: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
   },
 ];
 

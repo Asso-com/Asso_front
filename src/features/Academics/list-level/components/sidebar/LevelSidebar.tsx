@@ -1,38 +1,47 @@
-import { Button } from "@chakra-ui/react"
-import RigthSidebar from "@components/shared/RigthSidebar"
-import SidebarButtonsActions from "@components/shared/SidebarButtonsActions"
-import { useRef, useState } from "react"
-import { useTranslation } from "react-i18next"
-import FormContent from "./FormContent"
+import { Button } from "@chakra-ui/react";
+import RigthSidebar from "@components/shared/RigthSidebar";
+import SidebarButtonsActions from "@components/shared/SidebarButtonsActions";
+import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import FormContent from "./FormContent";
 
-import type { FormContentRef } from "./FormContent"
-import type { RootState } from "@store/index"
-import { useSelector } from "react-redux"
-import useCreateLevel from "../../hooks/useCreateLevel"
+import type { FormContentRef } from "./FormContent";
+import type { RootState } from "@store/index";
+import { useSelector } from "react-redux";
+import useCreateLevel from "../../hooks/useCreateLevel";
+import type { NewLevel } from "../../types";
 
 const LevelSidebar = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
-  )
-  const { mutateAsync: createLevel } = useCreateLevel(associationId)
+  );
 
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false)
+  const { mutateAsync: createLevel, isPending } = useCreateLevel(associationId);
 
-  const handleCloseSidebar = () => setSidebarOpen(false)
-  const handleOpenSidebar = () => setSidebarOpen(true)
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
-  const formRef = useRef<FormContentRef>(null)
+  const handleCloseSidebar = () => setSidebarOpen(false);
+  const handleOpenSidebar = () => setSidebarOpen(true);
+
+  const formRef = useRef<FormContentRef>(null);
 
   const handleSubmitForm = async () => {
-    const values = await formRef.current?.submitForm()
+    const values = await formRef.current?.submitForm();
     if (values) {
+      const newLevel: NewLevel = {
+        name: String(values.name),
+        categoryId: Number(values.categoryId),
+        active: Boolean(values.active),
+      };
       try {
-        createLevel(values)
-        handleCloseSidebar()
-      } catch (error) {}
+        await createLevel(newLevel);
+        handleCloseSidebar();
+      } catch (error) {
+        console.error("Create level failed", error);
+      }
     }
-  }
+  };
 
   return (
     <>
@@ -48,20 +57,20 @@ const LevelSidebar = () => {
 
       <RigthSidebar
         isOpen={sidebarOpen}
-        title={"Add Level"}
+        title={t("Add Level")}
         onClose={handleCloseSidebar}
         footer={
           <SidebarButtonsActions
             onSubmitForm={handleSubmitForm}
             onClose={handleCloseSidebar}
-            // isLoading={isPending}
+            isLoading={isPending}
           />
         }
       >
         <FormContent ref={formRef} />
       </RigthSidebar>
     </>
-  )
-}
+  );
+};
 
-export default LevelSidebar
+export default LevelSidebar;

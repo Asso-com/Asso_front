@@ -4,14 +4,14 @@ export const ClassRoomFields: Field[] = [
     {
         name: "name",
         type: "text",
-        label: "ClassRoom",
-        placeholder: "ClassRoom",
+        label: "Name",
+        placeholder: "Name",
         validationRules: {
             required: true,
             maxLength: 100,
         },
     },
-      {
+    {
         name: "description",
         type: "text",
         label: "Description",
@@ -21,7 +21,7 @@ export const ClassRoomFields: Field[] = [
             maxLength: 100,
         },
     },
-{
+    {
         name: "capacity",
         type: "number",
         label: "Capacity",
@@ -39,7 +39,7 @@ export const ClassRoomFields: Field[] = [
             required: true,
         },
     },
- 
+
 ];
 
 export default ClassRoomFields;

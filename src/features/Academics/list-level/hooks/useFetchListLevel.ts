@@ -1,14 +1,12 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { switchLoadingModal } from '@components/shared/modal-overlay/ModalLoading'; 
 import LevelServiceApi from '../services/LevelServiceApi';
- 
-
 
 const useFetchLevel = (associationId: number): UseQueryResult<any, Error> => {
     return useQuery<any, Error>({
-        queryKey: ['Level', associationId],
+        queryKey: ['levels', associationId],
         queryFn: async () => {
-            switchLoadingModal(); // show loading modal
+            switchLoadingModal(); 
             try {
                 const response = await LevelServiceApi.getAll(associationId);
                 return response;
@@ -16,7 +14,7 @@ const useFetchLevel = (associationId: number): UseQueryResult<any, Error> => {
                 console.error("Error fetching list Level:", err);
                 throw err;
             } finally {
-                switchLoadingModal(); // hide loading modal
+                switchLoadingModal(); 
             }
         },
        

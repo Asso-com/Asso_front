@@ -2,25 +2,29 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { showToast } from '@store/toastSlice';
 import LevelServiceApi from '../services/LevelServiceApi';
-import type { NewLevel } from '../types';
 
+interface UpdateLevelParams {
+    levelId: number;
+    data: any;
+}
 
-const useCreateLevel = (associationId: number) => {
+const useUpdateLevel = (associationId: number) => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation<void, Error, NewLevel>({
-        mutationFn: (newLevel: NewLevel) =>
-            LevelServiceApi.create(newLevel),
+    return useMutation<void, Error, UpdateLevelParams>({
+        mutationFn: ({ levelId, data }) =>
+            LevelServiceApi.update(levelId, associationId, data),
 
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ['levels', associationId],
             });
+
             dispatch(
                 showToast({
                     title: 'Success',
-                    message: 'Level created successfully.',
+                    message: 'Level updated successfully.',
                     type: 'success',
                 })
             );
@@ -30,7 +34,7 @@ const useCreateLevel = (associationId: number) => {
             dispatch(
                 showToast({
                     title: 'Error',
-                    message: error.message || 'Failed to create Level.',
+                    message: error.message || 'Failed to update level.',
                     type: 'error',
                 })
             );
@@ -38,4 +42,4 @@ const useCreateLevel = (associationId: number) => {
     });
 };
 
-export default useCreateLevel;
+export default useUpdateLevel;

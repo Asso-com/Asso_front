@@ -1,41 +1,73 @@
-import { Flex } from "@chakra-ui/react"
-import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip"
-import { EditIcon } from "@chakra-ui/icons"
-// import { useSelector } from "react-redux"
-import type { ICellRendererParams } from "ag-grid-community"
-// import type { RootState } from "@store/index"
+import { useState } from "react";
+import { Flex } from "@chakra-ui/react";
+import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
+import { MdDelete, MdEdit } from "react-icons/md";
+import type { ICellRendererParams } from "ag-grid-community";
+import type { RootState } from "@store/index";
+import { confirmAlert } from "@components/shared/confirmAlert";
+import { useSelector } from "react-redux";
+import useDeleteSubject from "../../hooks/useDeleteSubject";
+import EditSubject from "./EditSubject";
+import GenericModal from "@components/ui/GenericModal";
 
-// type ModalType = "showDetails" | "editModal"
+const ColumnAction: React.FC<ICellRendererParams> = (params) => {
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
-const ColumnAction: React.FC<ICellRendererParams> = () => {
-  // const [modalsState, setModalsState] = useState<Record<ModalType, boolean>>({
-  //   showDetails: false,
-  //   editModal: false,
-  // })
-  // const associationId = useSelector(
-  //   (state: RootState) => state.authSlice.associationId
-  // )
+  const associationId = useSelector(
+    (state: RootState) => state.authSlice.associationId
+  );
 
-  // const toggleModal = (modal: ModalType) => {
-  //   setModalsState(prevState => ({
-  //     ...prevState,
-  //     [modal]: !prevState[modal],
-  //   }))
-  // }
+  const { mutateAsync: deleteSubject } = useDeleteSubject(associationId);
+
+  const handleDelete = async () => {
+    const isConfirmed = await confirmAlert({
+      title: "Delete Confirmation",
+      text: "You won't be able to revert this!",
+    });
+    if (isConfirmed) {
+      try {
+        deleteSubject(params.data.id);
+      } catch (error) {
+      }
+    }
+  };
+
+  const toggleEditModal = () => {
+    setEditModalOpen(!editModalOpen);
+  };
 
   return (
     <Flex align="center" justify="center" gap={2} height="100%">
       <GenericIconButtonWithTooltip
-        icon={<EditIcon boxSize={5} />}
+        icon={<MdEdit size={22} />}
         label="Edit"
         ariaLabel="edit_btn"
         variant="ghost"
         colorScheme="green"
         size="sm"
-        // onClick={() => toggleModal("editModal")}
+        onClick={toggleEditModal}
+        disabled={params.data.standard}
       />
+      <GenericIconButtonWithTooltip
+        icon={<MdDelete size={22} />}
+        label="Delete"
+        ariaLabel="delete_btn"
+        variant="ghost"
+        colorScheme="red"
+        size="sm"
+        onClick={handleDelete}
+        disabled={params.data.standard}
+      />
+      <GenericModal
+        isOpen={editModalOpen}
+        onClose={toggleEditModal}
+        title="Edit Subject"
+        size="md"
+      >
+        <EditSubject details={params.data} onClose={toggleEditModal} />
+      </GenericModal>
     </Flex>
-  )
-}
+  );
+};
 
-export default ColumnAction
+export default ColumnAction;

@@ -5,92 +5,112 @@ import {
   useRef,
   useImperativeHandle,
   useMemo,
-} from "react"
-import { Flex } from "@chakra-ui/react"
-import { Formik, type FormikProps } from "formik"
+} from "react";
+import { Flex } from "@chakra-ui/react";
+import { Formik, type FormikProps } from "formik";
 
-import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder"
+import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
+import createValidationSchema from "@utils/createValidationSchema";
+import type { Field } from "@/types/formTypes";
+import { useSelector } from "react-redux";
+import type { RootState } from "@store/index";
+import LevelFields from "../../constants/LevelFields";
+import useFetchCategoriesByAssociation from "@features/Academics/Categories-levels/hooks/useFetchCategoriesByAssociation";
 
-import createValidationSchema from "@utils/createValidationSchema"
-import type { Field } from "@/types/formTypes"
-import { useSelector } from "react-redux"
-import type { RootState } from "@store/index"
-import LevelFields from "../../constants/LevelFields"
-
-// Define the shape of your form values dynamically from Field[]
 type FormValues = {
-  [key: string]: any
-}
+  [key: string]: any;
+};
 
 export type FormContentRef = {
-  submitForm: () => Promise<FormValues | null>
-  resetForm: () => void
-}
+  submitForm: () => Promise<FormValues | null>;
+  resetForm: () => void;
+};
 
 const FormContent = forwardRef<FormContentRef>((_, ref) => {
-  const [initialValues, setInitialValues] = useState<FormValues>({})
-  const formikRef = useRef<FormikProps<FormValues>>(null)
+  const [initialValues, setInitialValues] = useState<FormValues>({});
+  const [formFields, setFormFields] = useState<Field[]>(LevelFields);
+  const formikRef = useRef<FormikProps<FormValues>>(null);
+
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
-  )
+  );
+
+  const { data: categories } = useFetchCategoriesByAssociation(associationId);
+
+  const mapOptions = (data: any[], valueKey: string, labelKey: string) =>
+    data?.map((item) => ({
+      value: item[valueKey],
+      label: item[labelKey],
+    })) || [];
+
+  const categoriesOptions = useMemo(
+    () => mapOptions(categories, "id", "name"),
+    [categories]
+  );
+
+  useEffect(() => {
+    setFormFields((prevFields) =>
+      prevFields.map((field) =>
+        field.name === "categoryId"
+          ? { ...field, options: categoriesOptions }
+          : field
+      )
+    );
+  }, [categoriesOptions]);
 
   useEffect(() => {
     const defaultValues = LevelFields.reduce(
       (acc: FormValues, field: Field) => {
-        acc[field.name] = ""
-        return acc
+        acc[field.name] = "";
+        return acc;
       },
       {}
-    )
+    );
     setInitialValues({
       ...defaultValues,
       active: true,
-    })
-  }, [])
+    });
+  }, []);
 
   const validationSchema = useMemo(
     () => createValidationSchema(LevelFields),
-    [LevelFields]
-  )
+    []
+  );
 
   useImperativeHandle(ref, () => ({
     submitForm: async () => {
-      if (!formikRef.current?.dirty) return null
-      try {
-        formikRef.current.handleSubmit()
-        if (formikRef.current.isValid) {
-          return {
-            ...formikRef.current.values,
-            associationId: associationId,
-          }
-        }
-      } catch (error) {
-        console.error("Form submission failed:", error)
+      if (!formikRef.current) return null;
+      await formikRef.current.submitForm();
+      if (formikRef.current.isValid && formikRef.current.dirty) {
+        return {
+          ...formikRef.current.values,
+          associationId: associationId,
+        };
       }
-      return null
+      return null;
     },
     resetForm: () => {
       if (formikRef.current) {
-        formikRef.current.resetForm({ values: formikRef.current.values })
+        formikRef.current.resetForm();
       }
     },
-  }))
+  }));
 
   return (
     <Formik
       innerRef={formikRef}
       initialValues={initialValues}
       validationSchema={validationSchema}
-      // enableReinitialize
+      enableReinitialize
       onSubmit={() => {}}
     >
       <Flex direction="column" gap={4}>
-        {LevelFields.map((field: Field) => (
+        {formFields.map((field: Field) => (
           <RenderFormBuilder key={field.name} field={field} />
         ))}
       </Flex>
     </Formik>
-  )
-})
+  );
+});
 
-export default FormContent
+export default FormContent;

@@ -1,12 +1,12 @@
-import { Box, Text, Flex, HStack, Icon } from "@chakra-ui/react"
-import { useTranslation } from "react-i18next"
-import ClearFilter from "@components/shared/ClearFilter"
-import QuickFilter from "@components/shared/QuickFilter"
-import { FaBook } from "react-icons/fa"
-import SubjectSidebar from "./sidebar/SubjectSidebar"
+import { Box, Text, Flex, HStack, Icon } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
+import ClearFilter from "@components/shared/ClearFilter";
+import QuickFilter from "@components/shared/QuickFilter";
+import { FaBook } from "react-icons/fa";
+import SubjectSidebar from "./sidebar/SubjectSidebar";
 
 const HeaderActions = ({ gridRef }: any) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   return (
     <Box w="100%" p={2} bg="white" boxShadow="md" borderRadius="md">
       <Flex
@@ -43,7 +43,7 @@ const HeaderActions = ({ gridRef }: any) => {
         <SubjectSidebar />
       </Flex>
     </Box>
-  )
-}
+  );
+};
 
-export default HeaderActions
+export default HeaderActions;

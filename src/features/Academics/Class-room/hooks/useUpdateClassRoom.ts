@@ -31,11 +31,12 @@ const useUpdateClassRoom = (associationId: number) => {
       );
     },
 
-    onError: (error: Error) => {
+    onError: (err) => {
+      const error = err.message as string;
       dispatch(
         showToast({
           title: 'Error',
-          message: error.message || 'Failed to update ClassRoom.',
+          message: error,
           type: 'error',
         })
       );

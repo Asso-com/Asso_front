@@ -1,76 +1,76 @@
-import { Box, Flex } from "@chakra-ui/react"
-import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip"
-import { EditIcon } from "@chakra-ui/icons"
-import { useDispatch } from "react-redux"
-import { showToast } from "@store/toastSlice"
-import { MdOutlineToggleOff, MdOutlineToggleOn } from "react-icons/md"
-import type { ICellRendererParams } from "ag-grid-community"
-// import type { RootState } from "@store/index"
+import { useState } from "react";
+import { Flex } from "@chakra-ui/react";
+import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
+import { MdDelete, MdEdit } from "react-icons/md";
+import type { ICellRendererParams } from "ag-grid-community";
+import type { RootState } from "@store/index";
+import { confirmAlert } from "@components/shared/confirmAlert";
+import { useSelector } from "react-redux";
+import GenericModal from "@components/ui/GenericModal";
+import EditCategory from "./EditCategory";
+import useDeleteCategory from "../../hooks/useDeleteCategory";
 
-// type ModalType = "showDetails" | "editModal"
+const ColumnAction: React.FC<ICellRendererParams> = (params) => {
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
-const ColumnAction: React.FC<ICellRendererParams> = params => {
-  // const [modalsState, setModalsState] = useState<Record<ModalType, boolean>>({
-  //   showDetails: false,
-  //   editModal: false,
-  // })
-  // const associationId = useSelector(
-  //   (state: RootState) => state.authSlice.associationId
-  // )
+  const associationId = useSelector(
+    (state: RootState) => state.authSlice.associationId
+  );
 
-  const dispatch = useDispatch()
+  const { mutateAsync: deleteCategory } = useDeleteCategory(associationId);
 
-  // const toggleModal = (modal: ModalType) => {
-  //   setModalsState(prevState => ({
-  //     ...prevState,
-  //     [modal]: !prevState[modal],
-  //   }))
-  // }
-
-  const handleActivatePeriod = () => {
-    if (params?.data?.active) {
-      dispatch(
-        showToast({
-          title: "Information",
-          message: "You cannot deactivate an active Categorie Level",
-          type: "info",
-        })
-      )
-    } else {
+  const handleDelete = async () => {
+    const isConfirmed = await confirmAlert({
+      title: "Delete Confirmation",
+      text: "You won't be able to revert this!",
+    });
+    if (isConfirmed) {
+      try {
+        await deleteCategory(params.data.id);
+      } catch (error) {
+        console.error("Failed to delete category:", error);
+      }
     }
-  }
+  };
+
+  const toggleEditModal = () => {
+    setEditModalOpen((prev) => !prev);
+  };
+
+  const isDisabled = params.data.standard;
 
   return (
     <Flex align="center" justify="center" gap={2} height="100%">
-      <Box>
-        <GenericIconButtonWithTooltip
-          icon={
-            params?.data?.active ? (
-              <MdOutlineToggleOn size={36} />
-            ) : (
-              <MdOutlineToggleOff size={36} />
-            )
-          }
-          label={params?.data?.active ? "Activate" : "Deactivate"}
-          ariaLabel={"activate_btn"}
-          variant="none"
-          color={params?.data?.active ? "green" : "gray"}
-          size="sm"
-          onClick={handleActivatePeriod}
-        />
-      </Box>
-
       <GenericIconButtonWithTooltip
-        icon={<EditIcon boxSize={5} />}
+        icon={<MdEdit size={22} />}
         label="Edit"
         ariaLabel="edit_btn"
         variant="ghost"
         colorScheme="green"
         size="sm"
-        // onClick={() => toggleModal("editModal")}
+        onClick={toggleEditModal}
+        disabled={isDisabled}
       />
+      <GenericIconButtonWithTooltip
+        icon={<MdDelete size={22} />}
+        label="Delete"
+        ariaLabel="delete_btn"
+        variant="ghost"
+        colorScheme="red"
+        size="sm"
+        onClick={handleDelete}
+        disabled={isDisabled}
+      />
+      <GenericModal
+        isOpen={editModalOpen}
+        onClose={toggleEditModal}
+        title="Edit Category Level"
+        size="md"
+      >
+        <EditCategory details={params.data} onClose={toggleEditModal} />
+      </GenericModal>
     </Flex>
-  )
-}
+  );
+};
 
-export default ColumnAction
+export default ColumnAction;

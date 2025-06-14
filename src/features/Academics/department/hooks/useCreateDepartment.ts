@@ -10,7 +10,7 @@ const useCreateDepartment = (associationId: number) => {
 
     return useMutation<any, Error, any>({
         mutationFn: (newDepartment: any) =>
-            DepartmentServiceApi.create(newDepartment ,associationId),
+            DepartmentServiceApi.create(newDepartment, associationId),
 
         onSuccess: () => {
             queryClient.invalidateQueries({
@@ -25,11 +25,12 @@ const useCreateDepartment = (associationId: number) => {
             );
         },
 
-        onError: () => {
+        onError: (err) => {
+            const error = err.message as string;
             dispatch(
                 showToast({
                     title: 'Error',
-                    message: 'Failed to create department.',
+                    message: error,
                     type: 'error',
                 })
             );

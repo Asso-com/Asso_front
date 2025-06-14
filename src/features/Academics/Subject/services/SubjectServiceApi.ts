@@ -1,3 +1,4 @@
+import handleAxiosError from "@utils/handleAxiosError";
 import { axiosInstance } from "../../../../services/api-services/axiosInstance";
 import type { SubjectRequest } from "../types";
 
@@ -10,7 +11,7 @@ const SubjectServiceApi = {
             );
             return response.data;
         } catch (error) {
-            throw error;
+            handleAxiosError(error);
         }
     },
 
@@ -22,9 +23,33 @@ const SubjectServiceApi = {
             );
             return response.data;
         } catch (error) {
-            throw error;
+            handleAxiosError(error);
         }
-    }
+    },
+
+
+    update: async (id: number, associationId: number, data: any): Promise<any> => {
+        try {
+            const response = await axiosInstance.put<any>(
+                `/api/v1/subjects/${id}/association/${associationId}`,
+                data
+            );
+            return response.data;
+        } catch (error) {
+            handleAxiosError(error);
+        }
+    },
+
+    delete: async (id: number, associationId: number): Promise<any> => {
+        try {
+            const response = await axiosInstance.delete<any>(
+                `/api/v1/subjects/${id}/association/${associationId}`,
+            );
+            return response.data;
+        } catch (error) {
+            handleAxiosError(error);
+        }
+    },
 };
 
 export default SubjectServiceApi;

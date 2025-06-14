@@ -1,27 +1,35 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { showToast } from '@store/toastSlice';
-import DepartmentServiceApi from '../services/DepartmentServiceApi';
+import CategoriesLevelServiceApi from '../services/CategoriesLevelServiceApi';
 
-const useActiveDepartment = (associationId: number) => {
+interface UpdateCategoryParams {
+    categoryId: number;
+    data: any;
+}
+
+const useUpdateCategory = (associationId: number) => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation({
-        mutationFn: (departmentId: number) =>
-            DepartmentServiceApi.toggelStatus(associationId, departmentId),
+    return useMutation<void, Error, UpdateCategoryParams>({
+        mutationFn: ({ categoryId, data }) =>
+            CategoriesLevelServiceApi.update(categoryId, associationId, data),
 
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['department', associationId] });
+            queryClient.invalidateQueries({
+                queryKey: ['categories', associationId],
+            });
 
             dispatch(
                 showToast({
                     title: 'Success',
-                    message: 'Department status updated successfully.',
+                    message: 'Category updated successfully.',
                     type: 'success',
                 })
             );
         },
+
         onError: (err) => {
             const error = err.message as string;
             dispatch(
@@ -35,4 +43,4 @@ const useActiveDepartment = (associationId: number) => {
     });
 };
 
-export default useActiveDepartment;
+export default useUpdateCategory;

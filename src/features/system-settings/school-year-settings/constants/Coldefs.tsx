@@ -11,6 +11,7 @@ const academicYearColumnDefs: ColDef[] = [
     resizable: true,
     minWidth: 120,
     flex: 1,
+    cellStyle: { textAlign: "left" },
   },
   {
     headerName: "Description",
@@ -20,9 +21,10 @@ const academicYearColumnDefs: ColDef[] = [
     resizable: true,
     minWidth: 250,
     flex: 2,
+    cellStyle: { textAlign: "left" },
   },
   {
-     headerName: "Active",
+    headerName: "Active",
     field: "active",
     sortable: true,
     resizable: true,
@@ -43,6 +45,7 @@ const academicYearColumnDefs: ColDef[] = [
     resizable: true,
     minWidth: 150,
     flex: 1,
+    cellStyle: { textAlign: "left" },
   },
   {
     headerName: "Start Date",

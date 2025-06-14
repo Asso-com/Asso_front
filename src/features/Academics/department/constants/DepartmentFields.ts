@@ -8,7 +8,7 @@ export const DepartmentFields: Field[] = [
         placeholder: "Department",
         validationRules: {
             required: true,
-            maxLength: 100,
+            maxLength: 80,
         },
     },
 

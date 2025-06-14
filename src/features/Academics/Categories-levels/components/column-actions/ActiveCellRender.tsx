@@ -1,15 +1,25 @@
-import { Box } from "@chakra-ui/react"
-import { MdOutlineToggleOn } from "react-icons/md"
-import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip"
-// import { useSelector } from "react-redux"
-import type { ICellRendererParams } from "ag-grid-community"
-// import type { RootState } from "@store/index"
+import { Box } from "@chakra-ui/react";
+import { MdOutlineToggleOn } from "react-icons/md";
+import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
+import type { ICellRendererParams } from "ag-grid-community";
+import { useSelector } from "react-redux";
+import useToggleActive from "../../hooks/useToggelActive";
+import type { RootState } from "@store/index";
 
 const ActiveCellRender: React.FC<ICellRendererParams> = ({ data }) => {
-  const isActive = data?.active
-  // const associationId = useSelector(
-  //   (state: RootState) => state.authSlice.associationId
-  // )
+  const isActive = data?.active;
+  const categoryId = data?.id;
+
+  const associationId = useSelector(
+    (state: RootState) => state.authSlice.associationId
+  );
+
+  const { mutateAsync: toggleStatus } = useToggleActive(associationId);
+
+  const handleToggleStatus = async () => {
+    if (!categoryId) return;
+    await toggleStatus(categoryId);
+  };
 
   return (
     <Box display="flex" justifyContent="center" alignItems="center">
@@ -20,9 +30,10 @@ const ActiveCellRender: React.FC<ICellRendererParams> = ({ data }) => {
         variant="none"
         color={isActive ? "secondary.500" : "blackAlpha.600"}
         size="sm"
+        onClick={handleToggleStatus}
       />
     </Box>
-  )
-}
+  );
+};
 
-export default ActiveCellRender
+export default ActiveCellRender;

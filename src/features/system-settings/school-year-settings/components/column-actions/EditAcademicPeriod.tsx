@@ -1,16 +1,17 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import { Form, Formik, type FormikHelpers } from "formik";
+
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import createValidationSchema from "@utils/createValidationSchema";
 import type { Field } from "@/types/formTypes";
-import ClassRoomFields from "../../constants/ClassRoomFields";
 import FooterActions from "@components/shared/FooterActions";
 import { useSelector } from "react-redux";
 import type { RootState } from "@store/index";
-import useUpdateClassRoom from "@features/Academics/Class-room/hooks/useUpdateClassRoom";
+import useUpdateAcademicPeriod from "../../hooks/useUpdateAcademicPeriod";
+import UpdateAcademicPeriodFields from "../../constants/UpdateAcademicPeriodFields";
 
-interface EditClassRoomProps {
+interface EditDepartementProps {
   details?: Record<string, any>;
   onClose: () => void;
 }
@@ -19,39 +20,51 @@ interface FormValues {
   [key: string]: any;
 }
 
-const EditClassRoom: React.FC<EditClassRoomProps> = ({ details, onClose }) => {
+const EditAcademicPeriod: React.FC<EditDepartementProps> = ({
+  details,
+  onClose,
+}) => {
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
 
-  const { mutateAsync: updateClassRoom, isPending } =
-    useUpdateClassRoom(associationId);
+  const { mutateAsync: updatePeriodAcademic, isPending } =
+    useUpdateAcademicPeriod(associationId);
 
   const initialValues: FormValues = useMemo(() => {
-    return ClassRoomFields.reduce((acc: FormValues, field: Field) => {
-      acc[field.name] = details?.[field.name] ?? "";
-      return acc;
-    }, {});
+    return UpdateAcademicPeriodFields.reduce(
+      (acc: FormValues, field: Field) => {
+        acc[field.name] = details?.[field.name] ?? "";
+        return acc;
+      },
+      {}
+    );
   }, [details]);
 
-  const validationSchema = createValidationSchema(ClassRoomFields);
+  const validationSchema = useMemo(
+    () => createValidationSchema(UpdateAcademicPeriodFields),
+    []
+  );
 
   const onSubmit = async (
     values: FormValues,
     { setSubmitting }: FormikHelpers<FormValues>
   ) => {
     try {
-      const classRoomId = details?.id;
-      await updateClassRoom({ classRoomId, data: values });
+      await updatePeriodAcademic({
+        academicPeriodId: details?.id,
+        data: values,
+      });
       onClose();
     } catch (error) {
+      console.error("Failed to update academic period:", error);
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <Box p={4}>
+    <Box p={2}>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -61,21 +74,18 @@ const EditClassRoom: React.FC<EditClassRoomProps> = ({ details, onClose }) => {
       >
         {({ isSubmitting, handleSubmit, dirty }) => (
           <Form>
-            <SimpleGrid columns={2} spacing={4} mt={2}>
-              {ClassRoomFields.filter((field) => field.name !== "active").map(
-                (field: Field) => (
-                  <RenderFormBuilder key={field.name} field={field} />
-                )
-              )}
+            <SimpleGrid columns={1} spacing={4} mb={2}>
+              {UpdateAcademicPeriodFields.map((field: Field) => (
+                <RenderFormBuilder key={field.name} field={field} />
+              ))}
             </SimpleGrid>
-
             <FooterActions
               onClose={onClose}
               handleSave={handleSubmit}
-              isDisabled={!dirty}
+              isDisabled={!dirty || isSubmitting || isPending}
               isSaving={isSubmitting || isPending}
               cancelText="Cancel"
-              saveText="Edit ClassRoom"
+              saveText="Update Academic Period"
             />
           </Form>
         )}
@@ -83,5 +93,4 @@ const EditClassRoom: React.FC<EditClassRoomProps> = ({ details, onClose }) => {
     </Box>
   );
 };
-
-export default EditClassRoom;
+export default EditAcademicPeriod;

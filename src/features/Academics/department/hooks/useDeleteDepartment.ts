@@ -3,31 +3,33 @@ import { useDispatch } from 'react-redux';
 import { showToast } from '@store/toastSlice';
 import DepartmentServiceApi from '../services/DepartmentServiceApi';
 
-const useActiveDepartment = (associationId: number) => {
+const useDeleteDepartment = (associationId: number) => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation({
+    return useMutation<void, Error, number>({
         mutationFn: (departmentId: number) =>
-            DepartmentServiceApi.toggelStatus(associationId, departmentId),
+            DepartmentServiceApi.delete(departmentId, associationId),
 
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['department', associationId] });
+            queryClient.invalidateQueries({
+                queryKey: ['department', associationId],
+            });
 
             dispatch(
                 showToast({
                     title: 'Success',
-                    message: 'Department status updated successfully.',
+                    message: 'Department deleted successfully.',
                     type: 'success',
                 })
             );
         },
-        onError: (err) => {
-            const error = err.message as string;
+
+        onError: (error) => {
             dispatch(
                 showToast({
                     title: 'Error',
-                    message: error,
+                    message: error.message || 'Failed to delete department.',
                     type: 'error',
                 })
             );
@@ -35,4 +37,4 @@ const useActiveDepartment = (associationId: number) => {
     });
 };
 
-export default useActiveDepartment;
+export default useDeleteDepartment;

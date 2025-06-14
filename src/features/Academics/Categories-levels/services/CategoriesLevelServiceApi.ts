@@ -1,5 +1,5 @@
-import type { AxiosError } from "axios";
 import { axiosInstance } from "../../../../services/api-services/axiosInstance";
+import handleAxiosError from "@utils/handleAxiosError";
 
 const CategoriesLevelServiceApi = {
   getAll: async (associationId: number): Promise<any> => {
@@ -9,7 +9,52 @@ const CategoriesLevelServiceApi = {
       );
       return response.data;
     } catch (error) {
-      throw error;
+      handleAxiosError(error);
+    }
+  },
+
+  getCreateByAssociationId: async (associationId: number): Promise<any> => {
+    try {
+      const response = await axiosInstance.get<any>(
+        `/api/v1/level-categories/association/${associationId}/created`,
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  },
+
+  toggelStatus: async (associationId: number, categoryId: number): Promise<any> => {
+    try {
+      const response = await axiosInstance.patch<any>(
+        `/api/v1/level-categories/association/${associationId}/category/${categoryId}/toggle`,
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  },
+
+  update: async (id: number, associationId: number, data: any): Promise<any> => {
+    try {
+      const response = await axiosInstance.put<any>(
+        `/api/v1/level-categories/association/${associationId}/category/${id}`,
+        data
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  },
+
+  delete: async (id: number, associationId: number): Promise<any> => {
+    try {
+      const response = await axiosInstance.delete<any>(
+        `/api/v1/level-categories/association/${associationId}/category/${id}`,
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
     }
   },
 
@@ -20,28 +65,8 @@ const CategoriesLevelServiceApi = {
         data
       );
       return response.data;
-    } catch (err) {
-      const error = err as AxiosError;
-
-      if (error.response?.status === 400) {
-        const backendData = error.response.data as any;
-
-        if (backendData.errors && typeof backendData.errors === "object") {
-          const validationErrors = backendData.errors as Record<string, string>;
-          const message = Object.values(validationErrors).join(", ");
-          throw new Error(message);
-        }
-
-        if (typeof backendData === "object") {
-          const message = Object.values(backendData).join(", ");
-          throw new Error(message);
-        }
-
-        throw new Error("Validation failed");
-      }
-
-      console.error("API Error:", error);
-      throw new Error("An unexpected error occurred.");
+    } catch (error) {
+      handleAxiosError(error);
     }
   },
 };

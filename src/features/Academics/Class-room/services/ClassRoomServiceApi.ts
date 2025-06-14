@@ -1,5 +1,5 @@
-import type { AxiosError } from "axios";
 import { axiosInstance } from "../../../../services/api-services/axiosInstance";
+import handleAxiosError from "@utils/handleAxiosError";
 
 
 const ClassRoomServiceApi = {
@@ -12,7 +12,7 @@ const ClassRoomServiceApi = {
             );
             return response.data;
         } catch (error) {
-            throw error;
+            handleAxiosError(error);
         }
     },
 
@@ -23,22 +23,7 @@ const ClassRoomServiceApi = {
             );
             return response.data;
         } catch (error) {
-            const axiosError = error as AxiosError<{
-                message?: string;
-                errors?: Record<string, string>;
-            }>;
-
-            if (axiosError.response) {
-                const serverMessage = axiosError.response.data?.message ||
-                    (typeof axiosError.response.data === 'string' ? axiosError.response.data : undefined);
-
-                throw new Error(
-                    serverMessage ||
-                    `Failed to toggle class room status (HTTP ${axiosError.response.status})`
-                );
-            }
-
-            throw new Error('Network error while toggling class room status');
+            handleAxiosError(error);
         }
     },
 
@@ -53,22 +38,8 @@ const ClassRoomServiceApi = {
                 payload
             );
             return response.data;
-        } catch (err) {
-            const error = err as AxiosError;
-            if (error.response?.status === 400) {
-                const backendData = error.response.data as any;
-                if (backendData.errors && typeof backendData.errors === 'object') {
-                    const validationErrors = backendData.errors as Record<string, string>;
-                    const message = Object.values(validationErrors).join(', ');
-                    throw new Error(message);
-                }
-                if (typeof backendData === 'object') {
-                    const message = Object.values(backendData).join(', ');
-                    throw new Error(message);
-                }
-                throw new Error('Validation failed');
-            }
-            throw err;
+        } catch (error) {
+            handleAxiosError(error);
         }
     },
 
@@ -87,22 +58,8 @@ const ClassRoomServiceApi = {
                 }
             );
             return response.data;
-        } catch (err) {
-            const error = err as AxiosError;
-            if (error.response?.status === 400) {
-                const backendData = error.response.data as any;
-                if (backendData.errors && typeof backendData.errors === 'object') {
-                    const validationErrors = backendData.errors as Record<string, string>;
-                    const message = Object.values(validationErrors).join(', ');
-                    throw new Error(message);
-                }
-                if (typeof backendData === 'object') {
-                    const message = Object.values(backendData).join(', ');
-                    throw new Error(message);
-                }
-                throw new Error('Validation failed');
-            }
-            throw err;
+        } catch (error) {
+            handleAxiosError(error);
         }
     },
     delete: async (classroomId: string | number): Promise<void> => {
@@ -111,11 +68,7 @@ const ClassRoomServiceApi = {
                 `/api/v1/class-rooms/${classroomId}`
             );
         } catch (error) {
-            const axiosError = error as AxiosError;
-            if (axiosError.response?.status === 400) {
-                throw new Error('Invalid ID format sent to server');
-            }
-            throw error;
+            handleAxiosError(error);
         }
     },
 

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { showToast } from '@store/toastSlice';
-import { useDispatch } from 'react-redux'; 
+import { useDispatch } from 'react-redux';
 import CategoriesLevelServiceApi from '../services/CategoriesLevelServiceApi';
 
 const useCreateCategoriesLevels = (associationId: number) => {
@@ -9,7 +9,7 @@ const useCreateCategoriesLevels = (associationId: number) => {
 
     return useMutation<any, Error, any>({
         mutationFn: (newCategoriesLevels: any) =>
-            CategoriesLevelServiceApi.create(newCategoriesLevels ,associationId),
+            CategoriesLevelServiceApi.create(newCategoriesLevels, associationId),
 
         onSuccess: () => {
             queryClient.invalidateQueries({
@@ -24,11 +24,12 @@ const useCreateCategoriesLevels = (associationId: number) => {
             );
         },
 
-        onError: () => {
+        onError: (err) => {
+            const error = err.message as string;
             dispatch(
                 showToast({
                     title: 'Error',
-                    message: 'Failed to create categorie Level.',
+                    message: error,
                     type: 'error',
                 })
             );

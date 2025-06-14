@@ -1,17 +1,20 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import { Form, Formik, type FormikHelpers } from "formik";
+import { useSelector } from "react-redux";
 
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
-import createValidationSchema from "@utils/createValidationSchema";
-import type { Field } from "@/types/formTypes";
-import DepartmentFields from "../../constants/DepartmentFields";
 import FooterActions from "@components/shared/FooterActions";
-import { useSelector } from "react-redux";
-import type { RootState } from "@store/index";
-import useUpdateDepartment from "../../hooks/useUpdateDepartment";
+import createValidationSchema from "@utils/createValidationSchema";
 
-interface EditDepartementProps {
+import type { Field } from "@/types/formTypes";
+import type { RootState } from "@store/index";
+
+import useUpdateSubject from "../../hooks/useUpdateSubject";
+import SubjectFields from "../../constants/SubjectFields";
+import useFetchDepartementByAssociation from "@features/Academics/department/hooks/useFetchDepartementByAssociation";
+
+interface EditLevelProps {
   details?: Record<string, any>;
   onClose: () => void;
 }
@@ -20,28 +23,47 @@ interface FormValues {
   [key: string]: any;
 }
 
-const EditDepartement: React.FC<EditDepartementProps> = ({
-  details,
-  onClose,
-}) => {
+const EditSubject: React.FC<EditLevelProps> = ({ details, onClose }) => {
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
 
-  const { mutateAsync: updateDepartment, isPending } =
-    useUpdateDepartment(associationId);
+  const { mutateAsync: updateSubject, isPending } =
+    useUpdateSubject(associationId);
+
+  const [formFields, setFormFields] = useState<Field[]>(SubjectFields);
+
+  const { data: departments } = useFetchDepartementByAssociation(associationId);
+
+  const departmentsOptions = useMemo(
+    () =>
+      departments?.map((item: any) => ({
+        value: item.id,
+        label: item.name,
+      })) || [],
+    [departments]
+  );
+
+  useEffect(() => {
+    setFormFields((prevFields) =>
+      prevFields.map((field) =>
+        field.name === "departmentId"
+          ? { ...field, options: departmentsOptions }
+          : field
+      )
+    );
+  }, [departmentsOptions]);
 
   const initialValues: FormValues = useMemo(() => {
-    const values = DepartmentFields.reduce((acc: FormValues, field: Field) => {
+    return formFields.reduce((acc: FormValues, field: Field) => {
       acc[field.name] = details?.[field.name] ?? "";
       return acc;
     }, {});
-    return values;
-  }, [details]);
+  }, [details, formFields]);
 
   const validationSchema = useMemo(
-    () => createValidationSchema(DepartmentFields),
-    []
+    () => createValidationSchema(formFields),
+    [formFields]
   );
 
   const onSubmit = async (
@@ -49,9 +71,13 @@ const EditDepartement: React.FC<EditDepartementProps> = ({
     { setSubmitting }: FormikHelpers<FormValues>
   ) => {
     try {
-      await updateDepartment({ departmentId: details?.id, data: values });
+      await updateSubject({
+        subjectId: details?.id,
+        data: values,
+      });
       onClose();
     } catch (error) {
+      console.error("Update level failed", error);
     } finally {
       setSubmitting(false);
     }
@@ -69,19 +95,20 @@ const EditDepartement: React.FC<EditDepartementProps> = ({
         {({ isSubmitting, handleSubmit, dirty }) => (
           <Form>
             <SimpleGrid columns={1} spacing={4} mb={2}>
-              {DepartmentFields.filter((field) => field.name !== "active").map(
-                (field: Field) => (
+              {formFields
+                .filter((field) => field.name !== "active")
+                .map((field) => (
                   <RenderFormBuilder key={field.name} field={field} />
-                )
-              )}
+                ))}
             </SimpleGrid>
+
             <FooterActions
               onClose={onClose}
               handleSave={handleSubmit}
               isDisabled={!dirty || isSubmitting || isPending}
               isSaving={isSubmitting || isPending}
               cancelText="Cancel"
-              saveText="Edit Department"
+              saveText="Edit Subject"
             />
           </Form>
         )}
@@ -90,4 +117,4 @@ const EditDepartement: React.FC<EditDepartementProps> = ({
   );
 };
 
-export default EditDepartement;
+export default EditSubject;

@@ -25,11 +25,12 @@ const useDeleteStaff = (associationId: number) => {
             );
         },
 
-        onError: (error: Error) => {
+        onError: (err) => {
+            const error = err.message as string;
             dispatch(
                 showToast({
                     title: 'Error',
-                    message: error.message || 'Failed to delete staff member.',
+                    message: error,
                     type: 'error',
                 })
             );

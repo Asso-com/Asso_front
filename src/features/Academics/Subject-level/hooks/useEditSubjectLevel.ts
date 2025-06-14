@@ -10,7 +10,7 @@ export function useEditSubjectLevel() {
   return useMutation({
     mutationFn: (payload: CreateSubjectLevelDto) =>
       SubjectLevelServiceApi.updateSubjects(payload),
-      
+
     onSuccess: (response) => {
       if (response.status === "success") {
         toast({
