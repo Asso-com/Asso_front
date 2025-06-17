@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import FooterActions from "@components/shared/FooterActions";
 import createValidationSchema from "@utils/createValidationSchema";
-import { getDefaultFormValues } from "@utils/getDefaultValueByType";
 
 import type { Field } from "@/types/formTypes";
 import type { RootState } from "@store/index";
@@ -74,14 +73,14 @@ const EditSubjectLevel: React.FC<EditSubjectLevelProps> = ({ details, onClose })
         label: "Niveau",
         type: "select",
         options: levelOptions,
-        validation: { required: true },
+        validationRules: { required: true },
       },
       {
         name: "subjectIds",
         label: "Matières",
         type: "multi-select-checkbox",
         options: subjectOptions,
-        validation: { required: true },
+        validationRules: { required: true },
       },
     ];
 

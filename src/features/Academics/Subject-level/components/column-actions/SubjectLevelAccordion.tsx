@@ -29,7 +29,7 @@ interface Props {
   associationId: number 
 }
 
-export const SubjectLevelAccordion = ({ levels, filterText = '', associationId }: Props) => {
+export const SubjectLevelAccordion = ({ levels, associationId }: Props) => {
   const bgExpanded = useColorModeValue('blue.50', 'blue.900')
   const bgHover = useColorModeValue('gray.50', 'gray.700')
   const borderColor = useColorModeValue('gray.200', 'gray.600')
