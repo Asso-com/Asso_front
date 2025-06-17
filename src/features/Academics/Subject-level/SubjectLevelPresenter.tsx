@@ -15,7 +15,9 @@ import { MdBlock } from 'react-icons/md';
 import StatsHorizontal from '@components/shared/StatsHorizontal';
 import HeaderActions from "./components/HeaderActions";
 import { SubjectLevelAccordion } from './components/column-actions/SubjectLevelAccordion';
-import type { SubjectLevelItem, LevelWithSubjects} from './types/subject.types.ts';
+import type { SubjectLevelItem, LevelWithSubjects } from './types/subject.types.ts';
+import { useSelector } from 'react-redux';
+import type { RootState } from '@store/index';
 
 interface SubjectLevelPresenterProps {
   rows: SubjectLevelItem[] | LevelWithSubjects[]; // Accept both formats
@@ -33,23 +35,7 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
   error,
 }) => {
   const [filterText, setFilterText] = useState('');
-
-  // Debug logging to understand the data structure
-  React.useEffect(() => {
-    console.log('SubjectLevelPresenter - rows:', rows);
-    console.log('SubjectLevelPresenter - total:', total);
-    if (rows && rows.length > 0) {
-      console.log('First row structure:', rows[0]);
-      const firstItem = rows[0];
-      if (isLevelWithSubjects(firstItem)) {
-        console.log('Data format: LevelWithSubjects');
-      } else if (isSubjectLevelItem(firstItem)) {
-        console.log('Data format: SubjectLevelItem');
-      } else {
-        console.log('Data format: Unknown');
-      }
-    }
-  }, [rows, total]);
+  const associationId = useSelector((state: RootState) => state.authSlice.associationId);
 
   const bgGradient = useColorModeValue(
     'linear(to-br, gray.50, white)',
@@ -73,86 +59,102 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
            !Array.isArray(item.subjects);
   };
 
+  // Fixed filtering logic for SubjectLevelPresenter
   const filteredRows = useMemo(() => {
-    // Safety check: ensure rows is an array and not undefined
     if (!rows || !Array.isArray(rows) || rows.length === 0) {
       return [];
     }
 
-    // Determine data format by checking the first item
     const firstItem = rows[0];
-    
+    const normalize = (str: string) =>
+      str.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().trim();
+
+    const normalizedFilter = normalize(filterText);
+
     if (isLevelWithSubjects(firstItem)) {
-      // Data is already in LevelWithSubjects format
       if (!filterText.trim()) {
         return rows as LevelWithSubjects[];
       }
 
       // Filter levels based on level name or subject names
-      return (rows as LevelWithSubjects[])
+      const result = (rows as LevelWithSubjects[])
         .map((levelItem) => {
-          // Safety checks
           if (!levelItem?.level || !Array.isArray(levelItem.subjects)) {
             return null;
           }
 
-          // Filter subjects within this level
+          const levelName = levelItem.level.name || '';
+          const normalizedLevelName = normalize(levelName);
+
+          // Always filter subjects regardless of level match
           const filteredSubjects = levelItem.subjects.filter((subject) => {
-            if (!subject?.name) return false;
-            return subject.name.toLowerCase().includes(filterText.toLowerCase());
+            if (!subject?.name) {
+              return false;
+            }
+            const normalizedSubjectName = normalize(subject.name);
+            return normalizedSubjectName.includes(normalizedFilter);
           });
 
-          // Also check if level name matches the filter
-          const levelNameMatches = levelItem.level.name?.toLowerCase().includes(filterText.toLowerCase());
+          const levelMatches = normalizedLevelName.includes(normalizedFilter);
+          const hasMatchingSubjects = filteredSubjects.length > 0;
 
-          // Include this level if either the level name matches or it has matching subjects
-          if (levelNameMatches || filteredSubjects.length > 0) {
+          if (levelMatches) {
             return {
               ...levelItem,
-              subjects: levelNameMatches ? levelItem.subjects : filteredSubjects
+              subjects: levelItem.subjects || []
+            };
+          } else if (hasMatchingSubjects) {
+            return {
+              ...levelItem,
+              subjects: filteredSubjects
             };
           }
 
           return null;
         })
-        .filter((item): item is LevelWithSubjects => item !== null);
+        .filter((item): item is LevelWithSubjects => {
+          return item !== null && 
+                 item.level && 
+                 Array.isArray(item.subjects) && 
+                 item.subjects.length > 0;
+        });
+
+      return result;
     } 
     else if (isSubjectLevelItem(firstItem)) {
-      // Data is in SubjectLevelItem format, need to transform
       const subjectLevelRows = rows as SubjectLevelItem[];
-      
-      if (!filterText.trim()) {
-        // Group SubjectLevelItems by level to create LevelWithSubjects
-        const levelMap = new Map<number, LevelWithSubjects>();
-        
-        subjectLevelRows.forEach((item) => {
-          // Safety checks for required properties
-          if (!item?.level || !item?.subject || 
-              typeof item.level.id !== 'number' || 
-              typeof item.subject.id !== 'number') {
-            console.warn('Invalid SubjectLevelItem structure:', item);
-            return; // Skip this item
-          }
 
-          const levelId = item.level.id;
-          if (!levelMap.has(levelId)) {
-            levelMap.set(levelId, {
-              id: levelId,
-              level: {
-                id: item.level.id,
-                name: item.level.name || 'Unknown Level',
-                code: '',
-                order: 0,
-                active: true,
-                categoryId: 0,
-                categoryName: '',
-                standard: true
-              },
-              subjects: []
-            });
-          }
-          
-          const levelEntry = levelMap.get(levelId)!;
+      // Group SubjectLevelItems by level to create LevelWithSubjects
+      const levelMap = new Map<number, LevelWithSubjects>();
+
+      subjectLevelRows.forEach((item) => {
+        if (!item?.level || !item?.subject || 
+            typeof item.level.id !== 'number' || 
+            typeof item.subject.id !== 'number') {
+          return;
+        }
+
+        const levelId = item.level.id;
+        if (!levelMap.has(levelId)) {
+          levelMap.set(levelId, {
+            id: levelId,
+            level: {
+              id: item.level.id,
+              name: item.level.name || 'Unknown Level',
+              code: '',
+              order: 0,
+              active: true,
+              categoryId: 0,
+              categoryName: '',
+              standard: true
+            },
+            subjects: []
+          });
+        }
+
+        const levelEntry = levelMap.get(levelId)!;
+        const subjectExists = levelEntry.subjects.some(s => s.id === item.subject.id);
+        if (!subjectExists) {
           levelEntry.subjects.push({
             id: item.subject.id,
             code: '',
@@ -161,62 +163,55 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
             departmentName: '',
             standard: true
           });
-        });
-        
-        return Array.from(levelMap.values());
+        }
+      });
+
+      const allLevels = Array.from(levelMap.values());
+
+      if (!filterText.trim()) {
+        return allLevels;
       }
 
-      // Filter with search text for SubjectLevelItem format
-      const levelMap = new Map<number, LevelWithSubjects>();
-      
-      subjectLevelRows
-        .filter((item) => {
-          // Safety checks before filtering
-          if (!item?.level || !item?.subject) {
-            return false;
-          }
-          
-          const subjectTitle = item.subject.title || '';
-          const levelName = item.level.name || '';
-          
-          return subjectTitle.toLowerCase().includes(filterText.toLowerCase()) ||
-                 levelName.toLowerCase().includes(filterText.toLowerCase());
-        })
-        .forEach((item) => {
-          const levelId = item.level.id;
-          if (!levelMap.has(levelId)) {
-            levelMap.set(levelId, {
-              id: levelId,
-              level: {
-                id: item.level.id,
-                name: item.level.name || 'Unknown Level',
-                code: '',
-                order: 0,
-                active: true,
-                categoryId: 0,
-                categoryName: '',
-                standard: true
-              },
-              subjects: []
-            });
-          }
-          
-          const levelEntry = levelMap.get(levelId)!;
-          levelEntry.subjects.push({
-            id: item.subject.id,
-            code: '',
-            name: item.subject.title || 'Unknown Subject',
-            departmentId: 0,
-            departmentName: '',
-            standard: true
+      // Filter the grouped levels with the same logic as above
+      const result = allLevels
+        .map((levelItem) => {
+          const levelName = levelItem.level.name || '';
+          const normalizedLevelName = normalize(levelName);
+
+          const filteredSubjects = levelItem.subjects.filter((subject) => {
+            if (!subject?.name) return false;
+            const normalizedSubjectName = normalize(subject.name);
+            return normalizedSubjectName.includes(normalizedFilter);
           });
+
+          const levelMatches = normalizedLevelName.includes(normalizedFilter);
+          const hasMatchingSubjects = filteredSubjects.length > 0;
+
+          if (levelMatches) {
+            return {
+              ...levelItem,
+              subjects: levelItem.subjects || []
+            };
+          } else if (hasMatchingSubjects) {
+            return {
+              ...levelItem,
+              subjects: filteredSubjects
+            };
+          }
+
+          return null;
+        })
+        .filter((item): item is LevelWithSubjects => {
+          return item !== null && 
+                 item.level && 
+                 Array.isArray(item.subjects) && 
+                 item.subjects.length > 0;
         });
-      
-      return Array.from(levelMap.values());
+
+      return result;
     }
 
     // Unknown format, return empty array
-    console.warn('Unknown data format:', firstItem);
     return [];
   }, [rows, filterText]);
 
@@ -259,7 +254,7 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
             icon={HiOutlineOfficeBuilding}
             color="blue.500"
             stats={total.toString()}
-            statTitle="Total des Niveaux"
+            statTitle="Total Levels"
             borderLeft="6px solid"
             borderColor="blue.500"
             bg="white"
@@ -272,7 +267,11 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
         <HeaderActions onFilterChange={setFilterText} />
 
         {/* Content */}
-        <SubjectLevelAccordion levels={filteredRows} filterText={filterText} />
+        <SubjectLevelAccordion 
+          levels={filteredRows} 
+          filterText={filterText} 
+          associationId={associationId} 
+        />
 
         {filteredRows.length === 0 && (
           <Center py={20}>
@@ -280,6 +279,7 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
               <Icon as={FaGraduationCap} boxSize={16} color="gray.400" />
               <Text fontSize="xl" color="gray.500" textAlign="center">
                 Aucun programme disponible pour le moment
+                {filterText && ` (filtre: "${filterText}")`}
               </Text>
             </VStack>
           </Center>

@@ -6,8 +6,26 @@ export interface Subject {
   departmentName: string;
   standard: boolean;
 }
+
+export interface Level {
+  id: number;
+  code: string;
+  name: string;
+  order: number;
+  active: boolean;
+  categoryId: number;
+  categoryName: string;
+  standard: boolean;
+}
+
+
+export interface LevelWithSubjects {
+  id: number; // This is the associationId that links level to subjects
+  level: Level; // The actual level object
+  subjects: Subject[]; // Array of subjects for this level
+}
 export interface LevelSubjectResponse {
-  id: number; // ✅ Association ID
+  id: number; // Association ID
   level: {
     id: number;
     name: string;
@@ -26,21 +44,4 @@ export interface SubjectLevelItem {
     title: string;
   };
   associationId: number;
-};
-
-export interface Level {
-  id: number;
-  code: string;
-  name: string;
-  order: number;
-  active: boolean;
-  categoryId: number;
-  categoryName: string;
-  standard: boolean;
-}
-
-export interface LevelWithSubjects {
-  id: number;
-  level: Level;
-  subjects: Subject[];
 }

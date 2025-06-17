@@ -1,33 +1,20 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { switchLoadingModal } from '@components/shared/modal-overlay/ModalLoading';
-import LevelSubjectServiceApi from '../services/SubjectLevelServiceApi';
-import type { SubjectLevelItem } from '../types/subject.types.ts'; 
-
-interface WrappedSubjectLevelResponse {
-  status: 'success' | 'error';
-  data?: SubjectLevelItem[];
-  message?: string;
-}
+import SubjectLevelServiceApi from '../services/SubjectLevelServiceApi';
+import type { SubjectLevelItem } from '../types/subject.types.ts';
 
 const useFetchSubjectLevel = (
   associationId: number
-): UseQueryResult<WrappedSubjectLevelResponse, Error> => {
-  return useQuery<WrappedSubjectLevelResponse, Error>({
+): UseQueryResult<SubjectLevelItem[], Error> => {
+  return useQuery<SubjectLevelItem[], Error>({
     queryKey: ['subject-levels', associationId],
-    queryFn: async (): Promise<WrappedSubjectLevelResponse> => {
+    queryFn: async (): Promise<SubjectLevelItem[]> => {
       switchLoadingModal();
       try {
-        const response = await LevelSubjectServiceApi.getAll(associationId);
-        
-        const wrappedResponse: WrappedSubjectLevelResponse = {
-          status: 'success',
-          data: response.data,
-          message: 'Data fetched successfully'
-        };
-        
-        return wrappedResponse;
+        const response = await SubjectLevelServiceApi.getAll(associationId);
+        return response;
       } catch (err) {
-        console.error('Erreur hook fetch:', err);
+        console.error('Fetch error:', err);
         throw err;
       } finally {
         switchLoadingModal();

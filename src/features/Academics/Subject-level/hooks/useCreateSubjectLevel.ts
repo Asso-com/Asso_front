@@ -1,34 +1,40 @@
-import { useMutation } from "@tanstack/react-query";
-import SubjectLevelServiceApi from "../services/SubjectLevelServiceApi";
-import type { CreateSubjectLevelDto } from "../services/SubjectLevelServiceApi";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useDispatch } from 'react-redux';
+import { showToast } from '@store/toastSlice';
+import SubjectLevelServiceApi from '../services/SubjectLevelServiceApi';
+import type { CreateSubjectLevelDto } from '../services/SubjectLevelServiceApi';
 
-type UseCreateSubjectLevelOptions = {
-  onSuccess?: (data: any) => void;
-  onError?: (message: string) => void;
-};
+const useCreateSubjectLevel = (associationId: number) => {
+    const queryClient = useQueryClient();
+    const dispatch = useDispatch();
 
-const useCreateSubjectLevel = (options?: UseCreateSubjectLevelOptions) => {
-  return useMutation({
-    mutationFn: async (payload: CreateSubjectLevelDto) => {
-      const response = await SubjectLevelServiceApi.create(payload);
-      if (response.status === "error") {
-        throw new Error(response.message ?? "Une erreur s'est produite");
-      }
-      return response.data;
-    },
-    onSuccess: (data) => {
-      if (options?.onSuccess) {
-        options.onSuccess(data);
-      }
-    },
-    onError: (error: Error) => {
-      if (options?.onError) {
-        options.onError(error.message);
-      } else {
-        console.error("Erreur lors de la création du niveau-matière :", error.message);
-      }
-    },
-  });
+    return useMutation<void, Error, CreateSubjectLevelDto>({
+        mutationFn: (payload) =>
+            SubjectLevelServiceApi.create(payload),
+
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['subject-levels', associationId] });
+
+            dispatch(
+                showToast({
+                    title: 'Success',
+                    message: 'Subject level association created successfully.',
+                    type: 'success',
+                })
+            );
+        },
+
+        onError: (err) => {
+            const error = err.message as string;
+            dispatch(
+                showToast({
+                    title: 'Error',
+                    message: error,
+                    type: 'error',
+                })
+            );
+        },
+    });
 };
 
 export default useCreateSubjectLevel;

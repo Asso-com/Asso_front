@@ -7,14 +7,15 @@ const SubjectLevelContainer = () => {
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
+
   const {
-    data: wrapped,
+    data: subjectLevels = [],
     isLoading,
     isError,
     error,
   } = useFetchSubjectLevel(associationId);
-  const subjectLevels = wrapped?.data ?? [];
-  const total = subjectLevels.length;
+
+  const total = Array.isArray(subjectLevels) ? subjectLevels.length : 0;
 
   return (
     <SubjectLevelPresenter

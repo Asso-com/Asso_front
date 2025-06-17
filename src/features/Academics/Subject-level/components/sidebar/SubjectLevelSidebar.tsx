@@ -4,10 +4,9 @@ import SidebarButtonsActions from "@components/shared/SidebarButtonsActions";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import FormContent from "./FormContent";
-import { showToast } from "@store/toastSlice";
 import type { FormContentRef } from "./FormContent";
 import type { RootState } from "@store/index";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import useCreateSubjectLevel from "../../hooks/useCreateSubjectLevel";
 
 const SubjectLevelSidebar = () => {
@@ -16,31 +15,10 @@ const SubjectLevelSidebar = () => {
     (state: RootState) => state.authSlice.associationId
   );
 
-  const dispatch = useDispatch();
-
-  const { mutateAsync: createSubjectLevel, isPending } = useCreateSubjectLevel({
-    onSuccess: () => {
-      dispatch(
-        showToast({
-          title: "Succès",
-          message: "L'association niveau-matières a été créée.",
-          type: "success",
-        })
-      );
-    },
-    onError: (message) => {
-      dispatch(
-        showToast({
-          title: "Erreur",
-          message,
-          type: "error",
-        })
-      );
-    },
-  });
+  // Remove the onSuccess and onError callbacks - they're handled in the hook
+  const { mutateAsync: createSubjectLevel, isPending } = useCreateSubjectLevel(associationId);
 
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-
   const handleCloseSidebar = () => setSidebarOpen(false);
   const handleOpenSidebar = () => setSidebarOpen(true);
 
@@ -50,16 +28,16 @@ const SubjectLevelSidebar = () => {
     const values = await formRef.current?.submitForm();
     if (values) {
       try {
-        // The form values should contain levelId and subjectIds
-        // Add associationId to complete the CreateSubjectLevelDto
         const payload = {
           levelId: values.levelId,
           subjectIds: values.subjectIds,
           associationId
         };
         await createSubjectLevel(payload);
+        // Close sidebar only on success
         handleCloseSidebar();
       } catch (error) {
+        // Error is already handled by the hook
         console.error("Error creating subject level:", error);
       }
     }
@@ -77,7 +55,6 @@ const SubjectLevelSidebar = () => {
       >
         {t("Add Subject Level")}
       </Button>
-
       <RigthSidebar
         isOpen={sidebarOpen}
         title={t("Add Subject Level")}

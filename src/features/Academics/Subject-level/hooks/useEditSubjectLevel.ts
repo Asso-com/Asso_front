@@ -1,46 +1,38 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useToast } from "@chakra-ui/react";
-import type { CreateSubjectLevelDto } from "../services/SubjectLevelServiceApi"
+import { useDispatch } from "react-redux";
+import { showToast } from "@store/toastSlice";
+import type { CreateSubjectLevelDto } from "../services/SubjectLevelServiceApi";
 import SubjectLevelServiceApi from "../services/SubjectLevelServiceApi";
 
-export function useEditSubjectLevel() {
+export function useEditSubjectLevel(associationId: number) {
   const queryClient = useQueryClient();
-  const toast = useToast();
+  const dispatch = useDispatch();
 
-  return useMutation({
-    mutationFn: (payload: CreateSubjectLevelDto) =>
+  return useMutation<void, Error, CreateSubjectLevelDto>({
+    mutationFn: (payload) =>
       SubjectLevelServiceApi.updateSubjects(payload),
 
-    onSuccess: (response) => {
-      if (response.status === "success") {
-        toast({
-          title: "Matières mises à jour avec succès.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["subject-levels", response.data?.associationId],
-        });
-      } else {
-        toast({
-          title: "Échec de la mise à jour",
-          description: response.message,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['subject-levels', associationId] });
+
+      dispatch(
+        showToast({
+          title: 'Success',
+          message: 'Subject level association updated successfully.',
+          type: 'success',
+        })
+      );
     },
 
-    onError: () => {
-      toast({
-        title: "Erreur",
-        description: "Une erreur réseau s'est produite.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+    onError: (err) => {
+      const error = err.message as string;
+      dispatch(
+        showToast({
+          title: 'Error',
+          message: error,
+          type: 'error',
+        })
+      );
     },
   });
 }
