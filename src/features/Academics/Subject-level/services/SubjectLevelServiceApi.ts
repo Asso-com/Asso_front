@@ -8,6 +8,12 @@ export type CreateSubjectLevelDto = {
   subjectIds: (number | string)[];
 };
 
+// Tu peux ajouter un type pour la structure retournée si elle est connue, sinon `any`
+export type SubjectLevelSelectOption = {
+  value: number | string;
+  label: string;
+};
+
 const SubjectLevelServiceApi = {
   getAll: async (associationId: number): Promise<SubjectLevelItem[]> => {
     try {
@@ -18,6 +24,18 @@ const SubjectLevelServiceApi = {
       return response.data;
     } catch (error) {
       handleAxiosError(error);
+    }
+  },
+
+  getSelectOptions: async (associationId: number): Promise<SubjectLevelSelectOption[]> => {
+    try {
+      const response = await axiosInstance.get<SubjectLevelSelectOption[]>(
+        `/api/v1/level-subjects/select/association/${associationId}`
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+      return []; // Par sécurité pour éviter undefined
     }
   },
 
@@ -45,7 +63,11 @@ const SubjectLevelServiceApi = {
     }
   },
 
-  delete: async (levelId: number | string, subjectId: number | string, associationId: number | string): Promise<any> => {
+  delete: async (
+    levelId: number | string,
+    subjectId: number | string,
+    associationId: number | string
+  ): Promise<any> => {
     try {
       const response = await axiosInstance.delete<any>(
         `/api/v1/level-subjects/level/${levelId}/subject/${subjectId}/association/${associationId}`

@@ -8,21 +8,16 @@ import {
 } from '@chakra-ui/react';
 import { FaGraduationCap } from 'react-icons/fa';
 
-interface BaseLevel {
-  id: number;
-  name: string;
-}
-
 interface BaseHeaderProps {
-  level: BaseLevel;
-  icon?: React.ComponentType;
+    title: string;
+    icon?: React.ComponentType;
   iconColor?: string;
   size?: string;
   children?: React.ReactNode;
 }
 
 export const BaseHeader: React.FC<BaseHeaderProps> = ({ 
-  level, 
+  title, 
   icon = FaGraduationCap,
   iconColor,
   size = "sm",
@@ -37,12 +32,10 @@ export const BaseHeader: React.FC<BaseHeaderProps> = ({
       </Box>
       
       <Heading size={size} color={textColor} fontWeight="semibold">
-        {level.name}
+        {title}
       </Heading>
       
       {children}
     </HStack>
   );
 };
-
-export type { BaseLevel };

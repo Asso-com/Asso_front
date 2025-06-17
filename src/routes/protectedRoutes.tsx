@@ -25,7 +25,8 @@ import CategoriesLevelsContainer from "@features/Academics/Categories-levels/Cat
 import StaffContainer from "@features/human-resource/staff/StaffContainer";
 import ClassRoomContainer from "@features/Academics/Class-room/ClassRoomContainer";
 import CoefficientSettingsContainer from "@features/system-settings/coefficients/CoefficientSettingsContainer.tsx";
-
+import LessonContainer from "@features/Lesson-plan/Lesson/LessonContainer.tsx";
+import TopicContainer from "@features/Lesson-plan/Topic/TopicContainer.tsx";
 const protectedRoutes = [
   {
     element: <ProtectedLayout />,
@@ -49,9 +50,12 @@ const protectedRoutes = [
       { path: "/Sessions/SessionSchedule", element: <SessionScheduleContainer /> }, 
     
       { path: "/Partner/listPartner", element: <ListPartnerContainer /> },
-      { path: "/Partner/location", element: <LocationContainer /> },
-      
-      { path: "/Academics/listLevel", element: <ListLevelContainer /> }, 
+      { path: "/Partner/location", element: <LocationContainer /> },  
+
+      { path: "/LessonPlan/Lesson", element: <LessonContainer /> },
+      { path: "/LessonPlan/Topic", element: <TopicContainer /> },
+
+      { path: "/Academics/listLevel", element: <ListLevelContainer /> },
       { path: "/Academics/listSubject", element: <ListSubjectContainer /> },
       { path: "/Academics/SubjectLevel", element: <SubjectLevelContainer /> },
       { path: "/Academics/ClassRoom", element: <ClassRoomContainer /> },

@@ -151,7 +151,7 @@ export const SubjectLevelAccordion = ({ levels, associationId }: Props) => {
                       >
                         <Flex w="full" align="center">
                           <BaseHeader 
-                            level={level.level}
+                            title={level.level.name}
                             icon={FaGraduationCap}
                             size="sm"
                           />
