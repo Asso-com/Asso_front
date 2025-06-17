@@ -52,11 +52,11 @@ const LessonSidebar = () => {
         colorScheme="primary"
         onClick={handleOpenSidebar}
       >
-        {t("Créer une leçon")}
+        {t("Add Lesson")}
       </Button>
       <RigthSidebar
         isOpen={sidebarOpen}
-        title={t("Créer une leçon")}
+        title={t("Add Lesson")}
         onClose={handleCloseSidebar}
         footer={
           <SidebarButtonsActions

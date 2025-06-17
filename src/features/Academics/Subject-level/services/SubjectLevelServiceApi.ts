@@ -8,7 +8,6 @@ export type CreateSubjectLevelDto = {
   subjectIds: (number | string)[];
 };
 
-// Tu peux ajouter un type pour la structure retournée si elle est connue, sinon `any`
 export type SubjectLevelSelectOption = {
   value: number | string;
   label: string;

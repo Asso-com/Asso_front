@@ -161,7 +161,7 @@ export const SubjectLevelAccordion = ({ levels, associationId }: Props) => {
                               e.stopPropagation()
                               handleEditLevel(level.level.id, level.subjects, level.level.name)
                             }}
-                            title="Modifier le niveau"
+                            title="Modify Level"
                             cursor="pointer"
                             _hover={{ transform: 'scale(1.1)' }}
                             transition="all 0.2s"

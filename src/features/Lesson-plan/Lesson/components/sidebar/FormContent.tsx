@@ -103,9 +103,8 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
 
   if (errorSubjectLevels) {
     return (
-      <Text color="red.500">
-        Erreur lors du chargement des niveaux de matières. Veuillez
-        réessayer.
+      <Text color="red.500">  
+      Error loading levels or subjects. Please try again.
       </Text>
     );
   }

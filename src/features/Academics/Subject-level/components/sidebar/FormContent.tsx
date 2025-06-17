@@ -62,13 +62,13 @@ const FormContent = forwardRef<FormContentRef, FormContentProps>(
       const dynamicFields: Field[] = [
         {
           name: "levelId",
-          label: "Niveau",
+          label: "Level",
           type: "select",
           options: levelOptions,
         },
         {
           name: "subjectIds",
-          label: "Matières",
+          label: "Subjects",
           type: "multi-select-checkbox",
           options: subjectOptions,
         },
@@ -119,8 +119,7 @@ const FormContent = forwardRef<FormContentRef, FormContentProps>(
     if (errorLevels || errorSubjects) {
       return (
         <Text color="red.500">
-          Erreur lors du chargement des niveaux ou des matières. Veuillez
-          réessayer.
+        Error loading levels or subjects. Please try again.
         </Text>
       );
     }

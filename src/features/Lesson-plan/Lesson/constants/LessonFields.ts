@@ -4,18 +4,18 @@ import type { Field } from "@/types/formTypes";
 const LessonFields: Field[] = [
   {
     name: "levelSubjectId",
-    label: "Niveau/Matière",
-    placeholder: "Choisir un niveau et une matière",
+    label: "Level/Subject",
+    placeholder: "Choose a level and a subject",
     type: "select",
-    options: [], // sera rempli dynamiquement
+    options: [], 
     validationRules: {
       required: true,
     },
   },
   {
     name: "lessonNames",
-    label: "Noms des leçons",
-    placeholder: "Saisir les noms des leçons",
+    label: "Lessons Names",
+    placeholder: "Enter lesson names",
     type: "string-array",
     validationRules: {
       required: true,
