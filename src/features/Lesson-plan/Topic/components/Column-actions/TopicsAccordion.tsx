@@ -23,85 +23,89 @@ import {
 import { FaChevronUp, FaChevronDown, FaBook, FaGraduationCap, FaBookOpen } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
 import GenericModal from "@components/ui/GenericModal";
-import EditLessons from './EditLessons';
+import EditTopics from './EditTopics';
 import { BaseCard } from '@components/shared/Cards/BaseCard';
+import useDeleteTopicById from '../../hooks/useDeleteTopicById';
 import { BaseHeader } from '@components/shared/Cards/BaseHeader';
-import useDeleteLessonById from '../../hooks/useDeleteLessonById';
 
-interface Lesson {
+interface Topic {
   id: number;
-  name: string;
+  description: string;
   sortedOrder: number;
 }
 
-export interface LessonLevelItem {
-  levelSubjectId: number;
-  level: string;
-  subject: string;
-  lessons: Lesson[];
+export interface LessonItem {
+  lessonId: number;
+  lessonName: string;
+  levelSubject: string;
+  topics: Topic[];
 }
 
 interface Props {
   associationId: number;
-  data: LessonLevelItem[];
+  data: LessonItem[];
   searchTerm: string;
 }
 
-const LessonAccordion = ({ associationId, data, searchTerm }: Props) => {
-  const { mutate: deleteLesson } = useDeleteLessonById(associationId);
+const TopicAccordion = ({ associationId, data, searchTerm }: Props) => {
+  const { mutate: deleteTopic } = useDeleteTopicById();
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [selectedLessonGroup, setSelectedLessonGroup] = useState<{
-    levelSubjectId: number;
-    lessons: Lesson[];
-    subjectName: string;
+  const [selectedTopicGroup, setSelectedTopicGroup] = useState<{
+    lessonId: number;
+    topics: Topic[];
+    lessonName: string;
   } | null>(null);
 
-  const handleEditLessons = (levelSubjectId: number, currentLessons: Lesson[], subjectName: string) => {
-    setSelectedLessonGroup({ levelSubjectId, lessons: currentLessons, subjectName });
+  const handleEditTopics = (lessonId: number, currentTopics: Topic[], lessonName: string) => {
+    setSelectedTopicGroup({
+      lessonId,
+      topics: currentTopics.map(topic => ({ ...topic })),
+      lessonName,
+    });
     setEditModalOpen(true);
   };
 
   const toggleEditModal = () => {
     setEditModalOpen(!editModalOpen);
-    if (!editModalOpen) setSelectedLessonGroup(null);
+    if (!editModalOpen) setSelectedTopicGroup(null);
   };
 
-  const handleDeleteLesson = (lessonId: number) => {
-    deleteLesson(lessonId);
+  const handleDeleteTopic = (topicId: number) => {
+    deleteTopic(topicId);
   };
 
-  const normalize = (str: string) => 
-    str.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const normalize = (str: string) =>
+    str.toLowerCase().trim().normalize('NFD').replace(/\u0300-\u036f/g, '');
 
   const filteredGroups = useMemo(() => {
     if (!searchTerm.trim()) {
       return data
-        .filter(group => group.lessons?.length > 0)
-        .map(group => ({
-          ...group,
-          lessons: [...group.lessons].sort((a, b) => a.sortedOrder - b.sortedOrder)
+        .filter(lesson => lesson.topics?.length > 0)
+        .map(lesson => ({
+          ...lesson,
+          topics: [...lesson.topics].sort((a, b) => a.sortedOrder - b.sortedOrder),
         }));
     }
 
     const normalizedSearch = normalize(searchTerm);
     return data
-      .filter(group => group.lessons?.length > 0)
-      .filter(group => 
-        normalize(group.subject).includes(normalizedSearch) || 
-        normalize(group.level).includes(normalizedSearch)
+      .filter(lesson => lesson.topics?.length > 0)
+      .filter(lesson =>
+        normalize(lesson.lessonName).includes(normalizedSearch) ||
+        normalize(lesson.levelSubject).includes(normalizedSearch)
       )
-      .map(group => ({
-        ...group,
-        lessons: [...group.lessons].sort((a, b) => a.sortedOrder - b.sortedOrder)
+      .map(lesson => ({
+        ...lesson,
+        topics: [...lesson.topics].sort((a, b) => a.sortedOrder - b.sortedOrder),
       }));
   }, [data, searchTerm]);
 
-  const groupedByLevel = useMemo(() => {
-    return filteredGroups.reduce((acc, group) => {
-      if (!acc[group.level]) acc[group.level] = [];
-      acc[group.level].push(group);
+  const groupedByLevelSubject = useMemo(() => {
+    return filteredGroups.reduce((acc, lesson) => {
+      if (!acc[lesson.levelSubject]) acc[lesson.levelSubject] = [];
+      acc[lesson.levelSubject].push(lesson);
       return acc;
-    }, {} as Record<string, LessonLevelItem[]>);
+    }, {} as Record<string, LessonItem[]>);
   }, [filteredGroups]);
 
   if (data.length === 0) return <EmptyState />;
@@ -109,19 +113,23 @@ const LessonAccordion = ({ associationId, data, searchTerm }: Props) => {
   return (
     <Container maxW="full" p={0}>
       <VStack spacing={8} align="stretch">
-        {Object.entries(groupedByLevel).map(([level, groups]) => {
-          const totalLessons = groups.reduce((sum, group) => sum + group.lessons.length, 0);
+        {Object.entries(groupedByLevelSubject).map(([levelSubject, lessons]) => {
+          const totalTopics = lessons.reduce((sum, lesson) => sum + lesson.topics.length, 0);
           return (
-            <HStack key={level} align="stretch" spacing={6}>
-              <LevelSidebar level={level} totalSubjects={groups.length} totalLessons={totalLessons} />
+            <HStack key={levelSubject} align="stretch" spacing={6}>
+              <LevelSidebar
+                levelSubject={levelSubject}
+                totalLessons={lessons.length}
+                totalTopics={totalTopics}
+              />
               <Box flex={1}>
                 <VStack spacing={3} align="stretch">
-                  {groups.map(group => (
-                    <SubjectSection
-                      key={group.levelSubjectId}
-                      group={group}
-                      onEditLessons={handleEditLessons}
-                      onDeleteLesson={handleDeleteLesson}
+                  {lessons.map(lesson => (
+                    <LessonSection
+                      key={lesson.lessonId}
+                      lesson={lesson}
+                      onEditTopics={handleEditTopics}
+                      onDeleteTopic={handleDeleteTopic}
                       searchTerm={searchTerm}
                     />
                   ))}
@@ -135,15 +143,15 @@ const LessonAccordion = ({ associationId, data, searchTerm }: Props) => {
       <GenericModal
         isOpen={editModalOpen}
         onClose={toggleEditModal}
-        title={`Edit Lessons - ${selectedLessonGroup?.subjectName ?? ''}`}
+        title={`Edit Topics - ${selectedTopicGroup?.lessonName ?? ''}`}
         size="lg"
       >
-        {selectedLessonGroup && (
-          <EditLessons
+        {selectedTopicGroup && (
+          <EditTopics
             details={{
-              levelSubjectId: selectedLessonGroup.levelSubjectId,
-              lessons: selectedLessonGroup.lessons,
-              subjectName: selectedLessonGroup.subjectName
+              lessonId: selectedTopicGroup.lessonId,
+              topics: selectedTopicGroup.topics,
+              lessonName: selectedTopicGroup.lessonName,
             }}
             associationId={associationId}
             onClose={toggleEditModal}
@@ -155,15 +163,15 @@ const LessonAccordion = ({ associationId, data, searchTerm }: Props) => {
   );
 };
 
-const SubjectSection = ({ 
-  group, 
-  onEditLessons,
-  onDeleteLesson,
-  searchTerm 
-}: { 
-  group: LessonLevelItem;
-  onEditLessons: (levelSubjectId: number, currentLessons: Lesson[], subjectName: string) => void;
-  onDeleteLesson: (lessonId: number) => void;
+const LessonSection = ({
+  lesson,
+  onEditTopics,
+  onDeleteTopic,
+  searchTerm,
+}: {
+  lesson: LessonItem;
+  onEditTopics: (lessonId: number, currentTopics: Topic[], lessonName: string) => void;
+  onDeleteTopic: (topicId: number) => void;
   searchTerm: string;
 }) => {
   const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
@@ -172,17 +180,15 @@ const SubjectSection = ({
   const hoverBorderColor = useColorModeValue('blue.300', 'blue.500');
   const iconColor = useColorModeValue('blue.600', 'blue.300');
 
-  const handleEditLessons = (e: React.MouseEvent) => {
+  const handleEditTopicsClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onEditLessons(group.levelSubjectId, group.lessons, group.subject);
+    onEditTopics(lesson.lessonId, lesson.topics, lesson.lessonName);
   };
 
-  const normalize = (str: string) => 
-    str.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  
-  const isHighlighted = searchTerm.trim() && 
-    (normalize(group.subject).includes(normalize(searchTerm)) || 
-     normalize(group.level).includes(normalize(searchTerm)));
+  const normalize = (str: string) => str.toLowerCase().trim().normalize('NFD').replace(/\u0300-\u036f/g, '');
+  const isHighlighted = searchTerm.trim() &&
+    (normalize(lesson.lessonName).includes(normalize(searchTerm)) ||
+     normalize(lesson.levelSubject).includes(normalize(searchTerm)));
 
   return (
     <Card
@@ -196,13 +202,8 @@ const SubjectSection = ({
     >
       <CardHeader>
         <Flex align="center" justify="space-between">
-          <BaseHeader 
-            title={group.subject}
-            icon={FaBook}
-            iconColor={iconColor}
-            size="md"
-          >
-            <Badge 
+          <BaseHeader title={lesson.lessonName} icon={FaBook} iconColor={iconColor} size="md">
+            <Badge
               bg={useColorModeValue('blue.100', 'blue.700')}
               color={useColorModeValue('blue.700', 'blue.200')}
               borderRadius="full"
@@ -211,22 +212,20 @@ const SubjectSection = ({
               fontSize="xs"
               ml={2}
             >
-              {group.lessons.length}
+              {lesson.topics.length}
             </Badge>
           </BaseHeader>
-          
           <HStack spacing={3}>
-            <Tooltip label="Edit lessons">
+            <Tooltip label="Edit topics">
               <IconButton
-                aria-label="Edit lessons"
+                aria-label="Edit topics"
                 icon={<MdEdit />}
                 size="sm"
                 variant="ghost"
                 color={useColorModeValue('gray.600', 'gray.300')}
-                onClick={handleEditLessons}
+                onClick={handleEditTopicsClick}
               />
             </Tooltip>
-            
             <Tooltip label={isOpen ? "Collapse" : "Expand"}>
               <IconButton
                 aria-label="Toggle section"
@@ -240,27 +239,29 @@ const SubjectSection = ({
           </HStack>
         </Flex>
       </CardHeader>
-      
       <Collapse in={isOpen} animateOpacity>
         <CardBody pt={0}>
           <Divider mb={4} />
           <SimpleGrid columns={{ base: 1, sm: 2, md: 5 }} spacing={3}>
-            {group.lessons.map((lesson) => (
+            {lesson.topics.map((topic) => (
               <BaseCard
-                key={lesson.id}
-                item={lesson}
+                key={topic.id}
+                item={{
+                  id: topic.id,
+                  name: topic.description,
+                }}
                 deleteConfig={{
-                  onDelete: (lessonId) => onDeleteLesson(lessonId),
-                  deleteTitle: "Delete lesson",
+                  onDelete: () => onDeleteTopic(topic.id),
+                  deleteTitle: "Delete topic",
                   deleteMessage: (name: string) => `Are you sure you want to delete "${name}"?`,
                   confirmText: "Yes, delete",
                   cancelText: "Cancel",
                   canDelete: true,
                 }}
                 cardConfig={{
-                  color: 'blue',
+                  color: 'green',
                   showCode: false,
-                  onClick: () => console.log("Clicked lesson:", lesson.name)
+                  onClick: () => console.log("Clicked topic:", topic.description),
                 }}
               />
             ))}
@@ -271,14 +272,10 @@ const SubjectSection = ({
   );
 };
 
-const LevelSidebar = ({ 
-  level, 
-  totalSubjects, 
-  totalLessons 
-}: { 
-  level: string;
-  totalSubjects: number;
+const LevelSidebar = ({ levelSubject, totalLessons, totalTopics }: {
+  levelSubject: string;
   totalLessons: number;
+  totalTopics: number;
 }) => {
   const borderColor = useColorModeValue('blue.200', 'blue.600');
   const textColor = useColorModeValue('gray.700', 'gray.200');
@@ -307,12 +304,11 @@ const LevelSidebar = ({
           >
             <FaGraduationCap size={24} />
           </Center>
-          
           <Text fontSize="sm" fontWeight="700" color={textColor} textAlign="center">
-            {level}
+            {levelSubject}
           </Text>
         </VStack>
-        
+
         <Box
           w="full"
           bg={statsBg}
@@ -324,21 +320,21 @@ const LevelSidebar = ({
           <VStack spacing={3}>
             <VStack spacing={1}>
               <Text fontSize="2xl" fontWeight="700" color={useColorModeValue('blue.600', 'blue.400')}>
-                {totalSubjects}
-              </Text>
-              <Text fontSize="xs" color={useColorModeValue('gray.500', 'gray.400')}>
-                Subject{totalSubjects > 1 ? 's' : ''}
-              </Text>
-            </VStack>
-            
-            <Divider borderColor={borderColor} />
-            
-            <VStack spacing={1}>
-              <Text fontSize="2xl" fontWeight="700" color={useColorModeValue('blue.600', 'blue.400')}>
                 {totalLessons}
               </Text>
               <Text fontSize="xs" color={useColorModeValue('gray.500', 'gray.400')}>
                 Lesson{totalLessons > 1 ? 's' : ''}
+              </Text>
+            </VStack>
+
+            <Divider borderColor={borderColor} />
+
+            <VStack spacing={1}>
+              <Text fontSize="2xl" fontWeight="700" color={useColorModeValue('blue.600', 'blue.400')}>
+                {totalTopics}
+              </Text>
+              <Text fontSize="xs" color={useColorModeValue('gray.500', 'gray.400')}>
+                Topic{totalTopics > 1 ? 's' : ''}
               </Text>
             </VStack>
           </VStack>
@@ -350,9 +346,9 @@ const LevelSidebar = ({
 
 const EmptyState = () => (
   <Container maxW="full" p={0}>
-    <Alert 
-      status="info" 
-      borderRadius="lg" 
+    <Alert
+      status="info"
+      borderRadius="lg"
       p={8}
       flexDirection="column"
       alignItems="center"
@@ -362,7 +358,7 @@ const EmptyState = () => (
         <FaBookOpen size={48} />
       </Center>
       <Text fontSize="lg" fontWeight="600" mb={2}>
-        No lessons available
+        No topics available
       </Text>
       <Text color={useColorModeValue('blue.600', 'blue.400')}>
         No content available for this association.
@@ -371,4 +367,4 @@ const EmptyState = () => (
   </Container>
 );
 
-export default LessonAccordion;
+export default TopicAccordion;

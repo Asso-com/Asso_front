@@ -20,7 +20,7 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '@store/index';
 
 interface SubjectLevelPresenterProps {
-  rows: SubjectLevelItem[] | LevelWithSubjects[]; // Accept both formats
+  rows: SubjectLevelItem[] | LevelWithSubjects[]; 
   total: number;
   isLoading: boolean;
   isError: boolean;
@@ -42,7 +42,6 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
     'linear(to-br, gray.800, gray.900)'
   );
 
-  // Helper function to check if data is in LevelWithSubjects format
   const isLevelWithSubjects = (item: any): item is LevelWithSubjects => {
     return item && 
            typeof item === 'object' && 
@@ -50,7 +49,6 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
            Array.isArray(item.subjects);
   };
 
-  // Helper function to check if data is in SubjectLevelItem format
   const isSubjectLevelItem = (item: any): item is SubjectLevelItem => {
     return item && 
            typeof item === 'object' && 
@@ -59,7 +57,6 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
            !Array.isArray(item.subjects);
   };
 
-  // Fixed filtering logic for SubjectLevelPresenter
   const filteredRows = useMemo(() => {
     if (!rows || !Array.isArray(rows) || rows.length === 0) {
       return [];
@@ -76,7 +73,6 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
         return rows as LevelWithSubjects[];
       }
 
-      // Filter levels based on level name or subject names
       const result = (rows as LevelWithSubjects[])
         .map((levelItem) => {
           if (!levelItem?.level || !Array.isArray(levelItem.subjects)) {
@@ -86,7 +82,6 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
           const levelName = levelItem.level.name || '';
           const normalizedLevelName = normalize(levelName);
 
-          // Always filter subjects regardless of level match
           const filteredSubjects = levelItem.subjects.filter((subject) => {
             if (!subject?.name) {
               return false;
@@ -124,7 +119,6 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
     else if (isSubjectLevelItem(firstItem)) {
       const subjectLevelRows = rows as SubjectLevelItem[];
 
-      // Group SubjectLevelItems by level to create LevelWithSubjects
       const levelMap = new Map<number, LevelWithSubjects>();
 
       subjectLevelRows.forEach((item) => {
@@ -172,7 +166,6 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
         return allLevels;
       }
 
-      // Filter the grouped levels with the same logic as above
       const result = allLevels
         .map((levelItem) => {
           const levelName = levelItem.level.name || '';
@@ -210,8 +203,6 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
 
       return result;
     }
-
-    // Unknown format, return empty array
     return [];
   }, [rows, filterText]);
 
@@ -265,7 +256,6 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
 
         {/* Header avec filtre */}
         <HeaderActions onFilterChange={setFilterText} />
-
         {/* Content */}
         <SubjectLevelAccordion 
           levels={filteredRows} 

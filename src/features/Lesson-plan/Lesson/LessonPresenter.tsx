@@ -2,14 +2,13 @@ import React, { useState, useMemo } from 'react';
 import {
   Box,
   SimpleGrid,
-  useColorModeValue,
 } from '@chakra-ui/react';
 import { HiOutlineOfficeBuilding } from 'react-icons/hi';
 import { FaGraduationCap ,FaBook, FaBookOpen  } from 'react-icons/fa';
 import StatsHorizontal from '@components/shared/StatsHorizontal';
 import HeaderActions from "./components/HeaderActions";
 import LessonAccordion from './components/Column-actions/LessonAccordion';
-import type { LessonLevelItem } from './types/lesson.types';
+import type { LessonLevelItem } from './components/Column-actions/LessonAccordion';
 import { useSelector } from 'react-redux';
 import type { RootState } from '@store/index';
 
@@ -20,7 +19,7 @@ const LessonPresenter: React.FC<LessonPresenterProps> = ({
   rows,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState('all');
+  const [filterType] = useState('all');
   const associationId = useSelector((state: RootState) => state.authSlice.associationId);
   const normalize = (str: string) =>
     str.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().trim();
@@ -40,7 +39,7 @@ const LessonPresenter: React.FC<LessonPresenterProps> = ({
 
   const stats = useMemo(() => {
     const totalGroups = filteredRows.length;
-    const totalLessons = filteredRows.reduce((sum, group) => sum + (group.lessons?.length || 0), 0);
+    const totalLessons = filteredRows.reduce((sum, group) => sum + (group.lessons?.length ?? 0), 0);
     const totalSubjects = new Set(filteredRows.map(group => group.subject)).size;
     const totalLevels = new Set(filteredRows.map(group => group.level)).size;
     
@@ -101,7 +100,6 @@ const LessonPresenter: React.FC<LessonPresenterProps> = ({
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           filterType={filterType}
-          onFilterTypeChange={setFilterType}
         />
         <LessonAccordion 
           associationId={associationId}

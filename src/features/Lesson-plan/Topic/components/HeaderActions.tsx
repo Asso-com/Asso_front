@@ -1,3 +1,4 @@
+// HeaderActionsTopics.tsx
 import React from 'react';
 import {
   Box,
@@ -7,18 +8,18 @@ import {
   Icon,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { FaBook } from 'react-icons/fa';
+import { FaBookOpen } from 'react-icons/fa';
 import SearchFilter from '@/components/shared/CardFilter';
-import LessonSidebar from './sidebar/LessonSidebar';
+import TopicSidebar from './sidebar/TopicSidebar';
 
-interface HeaderActionsProps {
+interface HeaderActionsTopicsProps {
   onFilterChange?: (value: string) => void;
   searchTerm?: string;
   onSearchChange?: (value: string) => void;
   filterType?: string;
 }
 
-const HeaderActions: React.FC<HeaderActionsProps> = ({
+const HeaderActions: React.FC<HeaderActionsTopicsProps> = ({
   onFilterChange,
   searchTerm = '',
   onSearchChange,
@@ -26,13 +27,16 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const handleFilterChange = (value: string) => {
-    // Call both callbacks for backward compatibility
-    if (onFilterChange) {
-      onFilterChange(value);
-    }
+  // Separate the search and filter logic
+  const handleSearchChange = (value: string) => {
     if (onSearchChange) {
       onSearchChange(value);
+    }
+  };
+
+  const handleFilterChange = (value: string) => {
+    if (onFilterChange) {
+      onFilterChange(value);
     }
   };
 
@@ -58,37 +62,36 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({
           spacing={3}
           px={3}
           py={2}
-          bg="blue.50"
+          bg="green.50"
           borderRadius="lg"
           borderWidth="1px"
-          borderColor="blue.100"
-          _dark={{ bg: 'blue.900', borderColor: 'blue.700' }}
+          borderColor="green.100"
+          _dark={{ bg: 'green.900', borderColor: 'green.700' }}
           flexShrink={0}
         >
-          <Icon as={FaBook} boxSize={5} color="blue.500" />
+          <Icon as={FaBookOpen} boxSize={5} color="green.500" />
           <Text
             fontSize="md"
             fontWeight="bold"
-            color="blue.700"
+            color="green.700"
             letterSpacing="wide"
             whiteSpace="nowrap"
-            _dark={{ color: 'blue.300' }}
+            _dark={{ color: 'green.300' }}
           >
-            {t('Lessons List')}
+            {t('Topics List')}
           </Text>
         </HStack>
 
         {/* Search Filter */}
         <SearchFilter
-          onFilterChange={handleFilterChange}
-          placeholder="Search lessons by name, subject, or level..."
+          onFilterChange={handleSearchChange} // Fixed: use search handler
+          placeholder="Search by lesson name or subject level..."
           isFilterActive={isFilterActive}
           value={searchTerm}
           width={{ base: "100%", sm: "300px", md: "25vw" }}
         />
 
-        {/* Sidebar */}
-        <LessonSidebar />
+        <TopicSidebar />
       </Flex>
     </Box>
   );

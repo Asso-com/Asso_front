@@ -32,12 +32,16 @@ interface FormValues {
   [key: string]: any;
 }
 
-const EditSubjectLevel: React.FC<EditSubjectLevelProps> = ({ details, onClose }) => {
+const EditSubjectLevel: React.FC<EditSubjectLevelProps> = ({
+  details,
+  onClose,
+}) => {
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
 
-  const { mutateAsync: updateSubjectLevel, isPending } = useEditSubjectLevel(associationId);
+  const { mutateAsync: updateSubjectLevel, isPending } =
+    useEditSubjectLevel(associationId);
 
   const [formFields, setFormFields] = useState<Field[]>([]);
 
@@ -70,14 +74,14 @@ const EditSubjectLevel: React.FC<EditSubjectLevelProps> = ({ details, onClose })
     const dynamicFields: Field[] = [
       {
         name: "levelId",
-        label: "Niveau",
+        label: "Level",
         type: "select",
         options: levelOptions,
         validationRules: { required: true },
       },
       {
         name: "subjectIds",
-        label: "Matières",
+        label: "Subjects",
         type: "multi-select-checkbox",
         options: subjectOptions,
         validationRules: { required: true },
@@ -117,7 +121,7 @@ const EditSubjectLevel: React.FC<EditSubjectLevelProps> = ({ details, onClose })
         subjectIds: values.subjectIds,
         associationId,
       };
-      
+
       await updateSubjectLevel(payload);
       onClose();
     } catch (error) {
