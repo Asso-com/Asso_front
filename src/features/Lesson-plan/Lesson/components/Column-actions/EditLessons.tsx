@@ -255,7 +255,7 @@ const EditLessons: React.FC<EditLessonsProps> = ({
         <Alert status="info" borderRadius="md" bg={dragOverBg}>
           <AlertIcon />
           <Text fontSize="sm">
-            Drag lessons to reorder, edit names, or add new ones. Empty lessons will be removed on save.
+            Drag lessons to reorder, add new ones.
           </Text>
         </Alert>
       </VStack>
