@@ -3,7 +3,7 @@ import {
   Box,
   SimpleGrid,
 } from '@chakra-ui/react';
-import { HiOutlineOfficeBuilding } from 'react-icons/hi';
+// import { HiOutlineOfficeBuilding } from 'react-icons/hi';
 import { FaGraduationCap, FaBook, FaBookOpen } from 'react-icons/fa';
 import StatsHorizontal from '@components/shared/StatsHorizontal';
 import HeaderActions from "./components/HeaderActions";

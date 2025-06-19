@@ -1,16 +1,10 @@
 // HeaderActionsTopics.tsx
-import React from 'react';
-import {
-  Box,
-  Text,
-  Flex,
-  HStack,
-  Icon,
-} from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
-import { FaBookOpen } from 'react-icons/fa';
-import SearchFilter from '@/components/shared/CardFilter';
-import TopicSidebar from './sidebar/TopicSidebar';
+import React from "react";
+import { Box, Text, Flex, HStack, Icon } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
+import { FaBookOpen } from "react-icons/fa";
+import SearchFilter from "@/components/shared/CardFilter";
+import TopicSidebar from "./sidebar/TopicSidebar";
 
 interface HeaderActionsTopicsProps {
   onFilterChange?: (value: string) => void;
@@ -20,10 +14,10 @@ interface HeaderActionsTopicsProps {
 }
 
 const HeaderActions: React.FC<HeaderActionsTopicsProps> = ({
-  onFilterChange,
-  searchTerm = '',
+  // onFilterChange,
+  searchTerm = "",
   onSearchChange,
-  filterType = 'all'
+  filterType = "all",
 }) => {
   const { t } = useTranslation();
 
@@ -34,22 +28,22 @@ const HeaderActions: React.FC<HeaderActionsTopicsProps> = ({
     }
   };
 
-  const handleFilterChange = (value: string) => {
-    if (onFilterChange) {
-      onFilterChange(value);
-    }
-  };
+  // const handleFilterChange = (value: string) => {
+  //   if (onFilterChange) {
+  //     onFilterChange(value);
+  //   }
+  // };
 
-  const isFilterActive = searchTerm.trim().length > 0 || filterType !== 'all';
+  const isFilterActive = searchTerm.trim().length > 0 || filterType !== "all";
 
   return (
-    <Box 
-      w="100%" 
-      p={4} 
-      bg="white" 
-      boxShadow="md" 
-      borderRadius="md" 
-      _dark={{ bg: 'gray.800' }}
+    <Box
+      w="100%"
+      p={4}
+      bg="white"
+      boxShadow="md"
+      borderRadius="md"
+      _dark={{ bg: "gray.800" }}
     >
       <Flex
         direction={{ base: "column", md: "row" }}
@@ -66,7 +60,7 @@ const HeaderActions: React.FC<HeaderActionsTopicsProps> = ({
           borderRadius="lg"
           borderWidth="1px"
           borderColor="green.100"
-          _dark={{ bg: 'green.900', borderColor: 'green.700' }}
+          _dark={{ bg: "green.900", borderColor: "green.700" }}
           flexShrink={0}
         >
           <Icon as={FaBookOpen} boxSize={5} color="green.500" />
@@ -76,9 +70,9 @@ const HeaderActions: React.FC<HeaderActionsTopicsProps> = ({
             color="green.700"
             letterSpacing="wide"
             whiteSpace="nowrap"
-            _dark={{ color: 'green.300' }}
+            _dark={{ color: "green.300" }}
           >
-            {t('Topics List')}
+            {t("Topics List")}
           </Text>
         </HStack>
 

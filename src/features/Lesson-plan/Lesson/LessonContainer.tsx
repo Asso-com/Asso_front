@@ -11,20 +11,20 @@ const LessonContainer = () => {
 
   const {
     data: lessonLevels = [],
-    isLoading,
-    isError,
-    error,
+    // isLoading,
+    // isError,
+    // error,
   } = useFetchLessons(associationId);
 
-  const total = Array.isArray(lessonLevels) ? lessonLevels.length : 0;
+  // const total = Array.isArray(lessonLevels) ? lessonLevels.length : 0;
 
   return (
     <LessonPresenter
       rows={lessonLevels}
-      total={total}
-      isLoading={isLoading}
-      isError={isError}
-      error={error ?? undefined}
+      //total={total}
+      // isLoading={isLoading}
+      // isError={isError}
+      //error={error ?? undefined}
     />
   );
 };
