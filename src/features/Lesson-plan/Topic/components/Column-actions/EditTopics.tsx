@@ -119,7 +119,6 @@ const EditTopics: React.FC<EditTopicsProps> = ({
   const textColor = useColorModeValue('gray.700', 'gray.200');
   const dragOverBg = useColorModeValue('blue.50', 'blue.900');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
-  const addTopicColor = useColorModeValue('blue.500', 'blue.300');
   const dragHandleColor = useColorModeValue('gray.500', 'gray.400');
 
   const initialValues: FormValues = useMemo(() => ({
@@ -162,7 +161,7 @@ const EditTopics: React.FC<EditTopicsProps> = ({
       };
 
       await updateTopics(payload);
-queryClient.invalidateQueries({ queryKey: ['topics', associationId] });
+      queryClient.invalidateQueries({ queryKey: ['topics', associationId] });
       onSuccess();
       onClose();
     } catch (error) {
@@ -198,16 +197,6 @@ queryClient.invalidateQueries({ queryKey: ['topics', associationId] });
 
     setFieldValue('topics', updatedItems);
   };
-
-  const handleAddTopic = (values: FormValues, setFieldValue: any) => {
-    const newTopic: EditableTopic = {
-      id: `new-${Date.now()}`, // Unique temporary ID
-      description: '',
-      sortedOrder: values.topics.length + 1,
-      isNew: true,
-    };
-    setFieldValue('topics', [...values.topics, newTopic]);
-};
 
   const hasChanges = (values: FormValues): boolean => {
     const currentTopics = values.topics.filter(t => t.description.trim() !== '');
@@ -260,7 +249,7 @@ queryClient.invalidateQueries({ queryKey: ['topics', associationId] });
         <Alert status="info" borderRadius="md" bg={dragOverBg}>
           <AlertIcon />
           <Text fontSize="sm">
-            Drag topics to reorder, add new ones.
+            Drag topics to reorder them.
           </Text>
         </Alert>
       </VStack>
@@ -297,20 +286,6 @@ queryClient.invalidateQueries({ queryKey: ['topics', associationId] });
                   )}
                 </Droppable>
               </DragDropContext>
-
-              <Box mb={4}>
-                <Text
-                  as="button"
-                  type="button"
-                  color={addTopicColor}
-                  fontSize="sm"
-                  fontWeight="600"
-                  onClick={() => handleAddTopic(values, setFieldValue)}
-                  _hover={{ textDecoration: 'underline' }}
-                >
-                  + Add New Topic
-                </Text>
-              </Box>
 
               <FooterActions
                 onClose={onClose}

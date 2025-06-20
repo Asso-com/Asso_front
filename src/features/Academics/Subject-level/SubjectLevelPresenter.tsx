@@ -43,24 +43,15 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
   );
 
   const isLevelWithSubjects = (item: any): item is LevelWithSubjects => {
-    return item && 
-           typeof item === 'object' && 
-           item.level && 
-           Array.isArray(item.subjects);
+    return item && typeof item === 'object' && item.level && Array.isArray(item.subjects);
   };
 
   const isSubjectLevelItem = (item: any): item is SubjectLevelItem => {
-    return item && 
-           typeof item === 'object' && 
-           item.level && 
-           item.subject && 
-           !Array.isArray(item.subjects);
+    return item && typeof item === 'object' && item.level && item.subject && !Array.isArray(item.subjects);
   };
 
   const filteredRows = useMemo(() => {
-    if (!rows || !Array.isArray(rows) || rows.length === 0) {
-      return [];
-    }
+    if (!rows || !Array.isArray(rows) || rows.length === 0) return [];
 
     const firstItem = rows[0];
     const normalize = (str: string) =>
@@ -69,67 +60,29 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
     const normalizedFilter = normalize(filterText);
 
     if (isLevelWithSubjects(firstItem)) {
-      if (!filterText.trim()) {
-        return rows as LevelWithSubjects[];
-      }
+      if (!filterText.trim()) return rows as LevelWithSubjects[];
 
-      const result = (rows as LevelWithSubjects[])
+      return (rows as LevelWithSubjects[])
         .map((levelItem) => {
-          if (!levelItem?.level || !Array.isArray(levelItem.subjects)) {
-            return null;
-          }
-
           const levelName = levelItem.level.name || '';
-          const normalizedLevelName = normalize(levelName);
+          const filteredSubjects = levelItem.subjects.filter(subject =>
+            normalize(subject.name || '').includes(normalizedFilter)
+          );
+          const levelMatches = normalize(levelName).includes(normalizedFilter);
 
-          const filteredSubjects = levelItem.subjects.filter((subject) => {
-            if (!subject?.name) {
-              return false;
-            }
-            const normalizedSubjectName = normalize(subject.name);
-            return normalizedSubjectName.includes(normalizedFilter);
-          });
-
-          const levelMatches = normalizedLevelName.includes(normalizedFilter);
-          const hasMatchingSubjects = filteredSubjects.length > 0;
-
-          if (levelMatches) {
-            return {
-              ...levelItem,
-              subjects: levelItem.subjects || []
-            };
-          } else if (hasMatchingSubjects) {
-            return {
-              ...levelItem,
-              subjects: filteredSubjects
-            };
-          }
-
+          if (levelMatches) return { ...levelItem };
+          if (filteredSubjects.length > 0) return { ...levelItem, subjects: filteredSubjects };
           return null;
         })
-        .filter((item): item is LevelWithSubjects => {
-          return item !== null && 
-                 item.level && 
-                 Array.isArray(item.subjects) && 
-                 item.subjects.length > 0;
-        });
+        .filter((item): item is LevelWithSubjects => !!item && item.subjects.length > 0);
+    }
 
-      return result;
-    } 
-    else if (isSubjectLevelItem(firstItem)) {
-      const subjectLevelRows = rows as SubjectLevelItem[];
-
+    if (isSubjectLevelItem(firstItem)) {
       const levelMap = new Map<number, LevelWithSubjects>();
 
-      subjectLevelRows.forEach((item) => {
-        if (!item?.level || !item?.subject || 
-            typeof item.level.id !== 'number' || 
-            typeof item.subject.id !== 'number') {
-          return;
-        }
-
+      (rows as SubjectLevelItem[]).forEach((item) => {
         const levelId = item.level.id;
-        if (!levelMap.has(levelId)) {
+         if (!levelMap.has(levelId)) {
           levelMap.set(levelId, {
             id: levelId,
             level: {
@@ -145,10 +98,8 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
             subjects: []
           });
         }
-
         const levelEntry = levelMap.get(levelId)!;
-        const subjectExists = levelEntry.subjects.some(s => s.id === item.subject.id);
-        if (!subjectExists) {
+        if (!levelEntry.subjects.find(s => s.id === item.subject.id)) {
           levelEntry.subjects.push({
             id: item.subject.id,
             code: '',
@@ -160,49 +111,16 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
         }
       });
 
-      const allLevels = Array.from(levelMap.values());
-
-      if (!filterText.trim()) {
-        return allLevels;
-      }
-
-      const result = allLevels
-        .map((levelItem) => {
-          const levelName = levelItem.level.name || '';
-          const normalizedLevelName = normalize(levelName);
-
-          const filteredSubjects = levelItem.subjects.filter((subject) => {
-            if (!subject?.name) return false;
-            const normalizedSubjectName = normalize(subject.name);
-            return normalizedSubjectName.includes(normalizedFilter);
-          });
-
-          const levelMatches = normalizedLevelName.includes(normalizedFilter);
-          const hasMatchingSubjects = filteredSubjects.length > 0;
-
-          if (levelMatches) {
-            return {
-              ...levelItem,
-              subjects: levelItem.subjects || []
-            };
-          } else if (hasMatchingSubjects) {
-            return {
-              ...levelItem,
-              subjects: filteredSubjects
-            };
-          }
-
-          return null;
-        })
-        .filter((item): item is LevelWithSubjects => {
-          return item !== null && 
-                 item.level && 
-                 Array.isArray(item.subjects) && 
-                 item.subjects.length > 0;
-        });
-
-      return result;
+      return Array.from(levelMap.values()).filter(levelItem => {
+        const levelName = levelItem.level.name || '';
+        const filteredSubjects = levelItem.subjects.filter(subject =>
+          normalize(subject.name || '').includes(normalizedFilter)
+        );
+        const levelMatches = normalize(levelName).includes(normalizedFilter);
+        return levelMatches || filteredSubjects.length > 0;
+      });
     }
+
     return [];
   }, [rows, filterText]);
 
@@ -237,10 +155,16 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
   }
 
   return (
-    <Box minH="100vh">
-      <Box height="100%" display="flex" flexDirection="column" gap={4} p={1}>
-        {/* Stats Section */}
-        <SimpleGrid columns={{ base: 1 }} spacing={8}>
+    <Box h="100vh" display="flex" flexDirection="column" overflow="hidden">
+      {/* Sticky Stats */}
+      <Box
+        flexShrink={0}
+        py={1}
+        px={1}
+        boxShadow="sm"
+        _dark={{ bg: 'gray.900' }}
+      >
+        <SimpleGrid columns={{ base: 1 }} spacing={4}>
           <StatsHorizontal
             icon={HiOutlineOfficeBuilding}
             color="blue.500"
@@ -253,14 +177,25 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
             _dark={{ bg: 'gray.800' }}
           />
         </SimpleGrid>
+      </Box>
 
-        {/* Header avec filtre */}
+      {/* Sticky Filter/Header */}
+      <Box
+        flexShrink={0}
+        py={1}
+        px={1}
+        boxShadow="sm"
+        _dark={{ bg: 'gray.900' }}
+      >
         <HeaderActions onFilterChange={setFilterText} />
-        {/* Content */}
-        <SubjectLevelAccordion 
-          levels={filteredRows} 
-          filterText={filterText} 
-          associationId={associationId} 
+      </Box>
+
+      {/* Scrollable Accordion Content */}
+      <Box flex={1} overflow="auto" p={1}>
+        <SubjectLevelAccordion
+          levels={filteredRows}
+          filterText={filterText}
+          associationId={associationId}
         />
 
         {filteredRows.length === 0 && (

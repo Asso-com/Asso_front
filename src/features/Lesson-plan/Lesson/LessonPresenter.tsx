@@ -15,12 +15,14 @@ import type { RootState } from '@store/index';
 interface LessonPresenterProps {
   rows: LessonLevelItem[];
 }
+
 const LessonPresenter: React.FC<LessonPresenterProps> = ({
   rows,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType] = useState('all');
   const associationId = useSelector((state: RootState) => state.authSlice.associationId);
+  
   const normalize = (str: string) =>
     str.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().trim();
 
@@ -33,7 +35,7 @@ const LessonPresenter: React.FC<LessonPresenterProps> = ({
     return rows.filter((item) => {
       const levelMatch = normalize(item.level).includes(normalizedSearch);
       const subjectMatch = normalize(item.subject).includes(normalizedSearch);
-            return levelMatch || subjectMatch;
+      return levelMatch || subjectMatch;
     });
   }, [rows, searchTerm]);
 
@@ -47,9 +49,20 @@ const LessonPresenter: React.FC<LessonPresenterProps> = ({
   }, [filteredRows]);
 
   return (
-    <Box minH="100vh">
-      <Box height="100%" display="flex" flexDirection="column" gap={4} p={1}>
-        {/* Stats Section */}
+    <Box 
+      h="100vh" 
+      display="flex" 
+      flexDirection="column"
+      overflow="hidden" // Prevent page scrolling
+    >
+      {/* Fixed Stats Section */}
+      <Box
+        flexShrink={0} // Prevent shrinking
+        _dark={{ bg: 'gray.900' }}
+        py={1}
+        px={1}
+        boxShadow="sm"
+      >
         <SimpleGrid columns={{ base: 1, md: 4 }} spacing={4}>
           <StatsHorizontal
             icon={HiOutlineOfficeBuilding}
@@ -58,7 +71,6 @@ const LessonPresenter: React.FC<LessonPresenterProps> = ({
             statTitle="Lesson Groups"
             borderLeft="6px solid"
             borderColor="blue.500"
-            bg="white"
             boxShadow="lg"
             _dark={{ bg: 'gray.800' }}
           />
@@ -96,19 +108,37 @@ const LessonPresenter: React.FC<LessonPresenterProps> = ({
             _dark={{ bg: 'gray.800' }}
           />
         </SimpleGrid>
+      </Box>
+
+      {/* Fixed Header Actions Section */}
+      <Box
+        flexShrink={0} // Prevent shrinking
+        _dark={{ bg: 'gray.900' }}
+        py={1}
+        px={1}
+        boxShadow="sm"
+      >
         <HeaderActions
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           filterType={filterType}
         />
+      </Box>
+
+      {/* Scrollable Content Section */}
+      <Box 
+        flex={1} // Take remaining space
+        overflow="auto" // Enable scrolling only in this section
+        p={1}
+      >
         <LessonAccordion 
           associationId={associationId}
           data={filteredRows}
           searchTerm={searchTerm}
         />
-
       </Box>
     </Box>
   );
 };
+
 export default LessonPresenter;

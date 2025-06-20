@@ -58,9 +58,21 @@ const TopicPresenter: React.FC<TopicPresenterProps> = ({ rows }) => {
   }, [filteredRows]);
 
   return (
-    <Box minH="100vh">
-      <Box height="100%" display="flex" flexDirection="column" gap={4} p={1}>
-        {/* Stats Section */}
+    <Box 
+      h="100vh" 
+      display="flex" 
+      flexDirection="column"
+      overflow="hidden" // Prevent page scrolling
+    >
+      {/* Fixed Stats Section */}
+      <Box
+        flexShrink={0} // Prevent shrinking
+        _dark={{ bg: 'gray.900' }}
+        py={1}
+        px={1}
+        borderColor="gray.200"
+        boxShadow="sm"
+      >
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
           <StatsHorizontal
             icon={FaGraduationCap}
@@ -96,16 +108,30 @@ const TopicPresenter: React.FC<TopicPresenterProps> = ({ rows }) => {
             _dark={{ bg: 'gray.800' }}
           />
         </SimpleGrid>
+      </Box>
 
-        {/* Header filter and search */}
+      {/* Fixed Header Actions Section */}
+      <Box
+        flexShrink={0} // Prevent shrinking
+        _dark={{ bg: 'gray.900' }}
+        py={1}
+        px={1}
+        boxShadow="sm"
+      >
         <HeaderActions
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           filterType={filterType}
-          onFilterChange={setFilterType} // Added missing prop
+          onFilterChange={setFilterType}
         />
+      </Box>
 
-        {/* Accordion list */}
+      {/* Scrollable Content Section */}
+      <Box 
+        flex={1} // Take remaining space
+        overflow="auto" // Enable scrolling only in this section
+        p={1}
+      >
         <TopicAccordion
           associationId={associationId}
           data={filteredRows}
