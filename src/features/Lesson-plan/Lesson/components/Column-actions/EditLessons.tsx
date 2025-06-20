@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
   Box,
   SimpleGrid,
@@ -8,7 +8,6 @@ import {
   Alert,
   HStack,
   AlertIcon,
-  Button,
 } from '@chakra-ui/react';
 import { Formik, Form } from 'formik';
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
@@ -29,11 +28,6 @@ interface Lesson {
   sortedOrder: number;
 }
 
-interface EditableLesson extends Lesson {
-  id: number | string;
-  isNew?: boolean;
-}
-
 interface EditLessonsProps {
   details: {
     levelSubjectId: number;
@@ -46,10 +40,21 @@ interface EditLessonsProps {
 }
 
 interface FormValues {
-  lessons: EditableLesson[];
+  lessons: Lesson[];
 }
 
-interface LessonItemProps {
+interface DroppableAreaProps {
+  provided: any;
+  snapshot: any;
+  formFields: ExtendedField[];
+  bgColor: string;
+  borderColor: string;
+  dragOverBg: string;
+  dragHandleColor: string;
+  textColor: string;
+}
+
+const LessonItem: React.FC<{
   field: ExtendedField;
   provided: any;
   snapshot: any;
@@ -58,21 +63,7 @@ interface LessonItemProps {
   dragOverBg: string;
   dragHandleColor: string;
   textColor: string;
-  onRemove?: () => void;
-}
-
-// Moved LessonItem outside of parent component and fixed type intersection
-const LessonItem: React.FC<LessonItemProps> = ({ 
-  field, 
-  provided, 
-  snapshot, 
-  bgColor, 
-  borderColor, 
-  dragOverBg, 
-  dragHandleColor, 
-  textColor,
-  onRemove 
-}) => (
+}> = ({ field, provided, snapshot, bgColor, borderColor, dragOverBg, dragHandleColor, textColor }) => (
   <Box
     ref={provided.innerRef}
     {...provided.draggableProps}
@@ -95,14 +86,74 @@ const LessonItem: React.FC<LessonItemProps> = ({
       >
         <Text fontSize="lg">☰</Text>
       </Box>
-      <RenderFormBuilder key={field.name} field={field} />
-      {onRemove && (
-        <Button size="sm" colorScheme="red" onClick={onRemove}>
-          Remove
-        </Button>
-      )}
+      <RenderFormBuilder field={field} />
     </HStack>
   </Box>
+);
+
+const DraggableLesson: React.FC<{
+  field: ExtendedField;
+  index: number;
+  bgColor: string;
+  borderColor: string;
+  dragOverBg: string;
+  dragHandleColor: string;
+  textColor: string;
+}> = ({ field, index, bgColor, borderColor, dragOverBg, dragHandleColor, textColor }) => (
+  <Draggable
+    key={`lesson-${field.lessonId}`}
+    draggableId={`lesson-${field.lessonId}`}
+    index={index}
+  >
+    {(provided, snapshot) => (
+      <LessonItem
+        field={field}
+        provided={provided}
+        snapshot={snapshot}
+        bgColor={bgColor}
+        borderColor={borderColor}
+        dragOverBg={dragOverBg}
+        dragHandleColor={dragHandleColor}
+        textColor={textColor}
+      />
+    )}
+  </Draggable>
+);
+
+const DroppableArea: React.FC<DroppableAreaProps> = ({
+  provided,
+  snapshot,
+  formFields,
+  bgColor,
+  borderColor,
+  dragOverBg,
+  dragHandleColor,
+  textColor,
+}) => (
+  <SimpleGrid
+    columns={1}
+    spacing={4}
+    mb={4}
+    {...provided.droppableProps}
+    ref={provided.innerRef}
+    bg={snapshot.isDraggingOver ? dragOverBg : 'transparent'}
+    p={snapshot.isDraggingOver ? 2 : 0}
+    borderRadius="md"
+  >
+    {formFields.map((field, index) => (
+      <DraggableLesson
+        key={`lesson-${field.lessonId}`}
+        field={field}
+        index={index}
+        bgColor={bgColor}
+        borderColor={borderColor}
+        dragOverBg={dragOverBg}
+        dragHandleColor={dragHandleColor}
+        textColor={textColor}
+      />
+    ))}
+    {provided.placeholder}
+  </SimpleGrid>
 );
 
 const EditLessons: React.FC<EditLessonsProps> = ({
@@ -111,24 +162,16 @@ const EditLessons: React.FC<EditLessonsProps> = ({
   onClose,
   onSuccess,
 }) => {
-  const [newLessonCounter, setNewLessonCounter] = useState(1);
   const { mutateAsync: updateLessons, isPending } = useUpdateLessons(associationId);
 
   const bgColor = useColorModeValue('white', 'gray.800');
   const textColor = useColorModeValue('gray.700', 'gray.200');
   const dragOverBg = useColorModeValue('blue.50', 'blue.900');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
-  const addLessonColor = useColorModeValue('blue.500', 'blue.300');
   const dragHandleColor = useColorModeValue('gray.500', 'gray.400');
 
   const initialValues: FormValues = useMemo(() => ({
-    lessons: [...details.lessons]
-      .sort((a, b) => a.sortedOrder - b.sortedOrder)
-      .map((lesson, index) => ({
-        ...lesson,
-        sortedOrder: index + 1,
-        isNew: false,
-      })),
+    lessons: [...details.lessons].sort((a, b) => a.sortedOrder - b.sortedOrder),
   }), [details.lessons]);
 
   const validationSchema = useMemo(() => {
@@ -136,21 +179,57 @@ const EditLessons: React.FC<EditLessonsProps> = ({
       name: `lessons[${index}].name`,
       type: 'text',
       label: `Lesson ${index + 1}`,
-      validationRules: {
-        required: false,
-        minLength: lesson.name.trim() ? 1 : 0,
-      },
+      validationRules: { required: false },
       placeholder: 'Enter lesson name...',
       isDraggable: true,
-      lessonId: lesson.id ?? `new-${index}`,
+      lessonId: lesson.id,
     }));
     return createValidationSchema(fields as Field[]);
   }, [initialValues.lessons]);
 
-  const onSubmit = async (
-    values: FormValues,
-    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
-  ) => {
+  const createFormFields = (lessons: Lesson[]): ExtendedField[] => {
+    return lessons.map((lesson, index) => ({
+      name: `lessons[${index}].name`,
+      type: 'text',
+      label: `Lesson ${index + 1}`,
+      validationRules: { required: false },
+      placeholder: 'Enter lesson name...',
+      isDraggable: true,
+      lessonId: lesson.id,
+    }));
+  };
+
+  const handleDragEnd = (result: DropResult, values: FormValues, setFieldValue: any) => {
+    if (!result.destination) return;
+
+    const items = [...values.lessons];
+    const [movedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, movedItem);
+
+    const updatedItems = items.map((item, index) => ({
+      ...item,
+      sortedOrder: index + 1,
+    }));
+
+    setFieldValue('lessons', updatedItems);
+  };
+
+  const hasChanges = (values: FormValues): boolean => {
+    const currentLessons = values.lessons.filter(l => l.name.trim() !== '');
+    
+    if (currentLessons.length !== initialValues.lessons.length) return true;
+
+    return currentLessons.some((lesson, index) => {
+      const original = initialValues.lessons[index];
+      return (
+        !original ||
+        lesson.name.trim() !== original.name.trim() ||
+        lesson.sortedOrder !== original.sortedOrder
+      );
+    });
+  };
+
+  const onSubmit = async (values: FormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
     try {
       const validLessons = values.lessons.filter(l => l.name.trim() !== '');
       if (!validLessons.length) return;
@@ -170,80 +249,27 @@ const EditLessons: React.FC<EditLessonsProps> = ({
     }
   };
 
-  // Extracted helper functions to reduce nesting
-  const createFormFields = (lessons: EditableLesson[]): ExtendedField[] => {
-    return lessons.map((lesson, index) => ({
-      name: `lessons[${index}].name`,
-      type: 'text',
-      label: `Lesson ${index + 1}`,
-      validationRules: { required: false },
-      placeholder: 'Enter lesson name...',
-      isDraggable: true,
-      lessonId: lesson.id ?? `new-${index}`,
-    }));
-  };
-
-  const handleDragEnd = (result: DropResult, values: FormValues, setFieldValue: any) => {
-    if (!result.destination) return;
-
-    const items = [...values.lessons];
-    const [movedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, movedItem);
-
-    const updatedItems = items.map((item, index) => ({
-      ...item,
-      sortedOrder: index + 1,
-    }));
-
-    setFieldValue('lessons', updatedItems);
-  };
-
-  const handleAddLesson = (values: FormValues, setFieldValue: any) => {
-    const newLesson: EditableLesson = {
-      id: `new-${newLessonCounter}`,
-      name: '',
-      sortedOrder: values.lessons.length + 1,
-      isNew: true,
-    };
-    setFieldValue('lessons', [...values.lessons, newLesson]);
-    setNewLessonCounter(prev => prev + 1);
-  };
-
-  const hasChanges = (values: FormValues): boolean => {
-    const currentLessons = values.lessons.filter(l => l.name.trim() !== '');
-    const originalLessons = initialValues.lessons;
-
-    if (currentLessons.length !== originalLessons.length) return true;
-
-    return currentLessons.some((lesson, index) => {
-      const original = originalLessons[index];
-      return (
-        !original ||
-        lesson.name.trim() !== original.name.trim() ||
-        lesson.sortedOrder !== original.sortedOrder
-      );
-    });
-  };
-
-  const renderDraggableLesson = (field: ExtendedField, index: number) => (
-    <Draggable
-      key={`lesson-${field.lessonId}`}
-      draggableId={`lesson-${field.lessonId}`}
-      index={index}
-    >
-      {(provided, snapshot) => (
-        <LessonItem
-          field={field}
-          provided={provided}
-          snapshot={snapshot}
-          bgColor={bgColor}
-          borderColor={borderColor}
-          dragOverBg={dragOverBg}
-          dragHandleColor={dragHandleColor}
-          textColor={textColor}
-        />
-      )}
-    </Draggable>
+  const renderDragDropContent = (
+    values: FormValues,
+    setFieldValue: any,
+    formFields: ExtendedField[]
+  ) => (
+    <DragDropContext onDragEnd={(result) => handleDragEnd(result, values, setFieldValue)}>
+      <Droppable droppableId={`lessons-${details.levelSubjectId}`}>
+        {(provided, snapshot) => (
+          <DroppableArea
+            provided={provided}
+            snapshot={snapshot}
+            formFields={formFields}
+            bgColor={bgColor}
+            borderColor={borderColor}
+            dragOverBg={dragOverBg}
+            dragHandleColor={dragHandleColor}
+            textColor={textColor}
+          />
+        )}
+      </Droppable>
+    </DragDropContext>
   );
 
   return (
@@ -254,9 +280,7 @@ const EditLessons: React.FC<EditLessonsProps> = ({
         </Text>
         <Alert status="info" borderRadius="md" bg={dragOverBg}>
           <AlertIcon />
-          <Text fontSize="sm">
-            Drag lessons to reorder, add new ones.
-          </Text>
+          <Text fontSize="sm">Drag lessons to reorder them.</Text>
         </Alert>
       </VStack>
 
@@ -273,40 +297,7 @@ const EditLessons: React.FC<EditLessonsProps> = ({
 
           return (
             <Form>
-              <DragDropContext onDragEnd={(result) => handleDragEnd(result, values, setFieldValue)}>
-                <Droppable droppableId={`lessons-${details.levelSubjectId}`}>
-                  {(provided, snapshot) => (
-                    <SimpleGrid
-                      columns={1}
-                      spacing={4}
-                      mb={4}
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}
-                      bg={snapshot.isDraggingOver ? dragOverBg : 'transparent'}
-                      p={snapshot.isDraggingOver ? 2 : 0}
-                      borderRadius="md"
-                    >
-                      {formFields.map((field, index) => renderDraggableLesson(field, index))}
-                      {provided.placeholder}
-                    </SimpleGrid>
-                  )}
-                </Droppable>
-              </DragDropContext>
-
-              <Box mb={4}>
-                <Text
-                  as="button"
-                  type="button"
-                  color={addLessonColor}
-                  fontSize="sm"
-                  fontWeight="600"
-                  onClick={() => handleAddLesson(values, setFieldValue)}
-                  _hover={{ textDecoration: 'underline' }}
-                >
-                  + Add New Lesson
-                </Text>
-              </Box>
-
+              {renderDragDropContent(values, setFieldValue, formFields)}
               <FooterActions
                 onClose={onClose}
                 handleSave={handleSubmit}

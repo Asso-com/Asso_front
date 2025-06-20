@@ -20,10 +20,11 @@ import {
   Flex,
   useDisclosure,
 } from '@chakra-ui/react';
-import { FaChevronUp, FaChevronDown, FaBook, FaGraduationCap, FaBookOpen } from 'react-icons/fa';
+import { FaChevronUp, FaChevronDown, FaBook, FaGraduationCap, FaBookOpen, FaPlus } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
 import GenericModal from "@components/ui/GenericModal";
 import EditTopics from './EditTopics';
+import AddTopics from './AddNewTopic'; 
 import { BaseCard } from '@components/shared/Cards/BaseCard';
 import useDeleteTopicById from '../../hooks/useDeleteTopicById';
 import { BaseHeader } from '@components/shared/Cards/BaseHeader';
@@ -49,25 +50,51 @@ interface Props {
 
 const TopicAccordion = ({ associationId, data, searchTerm }: Props) => {
   const { mutate: deleteTopic } = useDeleteTopicById();
+  
+  // Edit modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedTopicGroup, setSelectedTopicGroup] = useState<{
     lessonId: number;
     topics: Topic[];
     lessonName: string;
+    levelSubject?: string;
   } | null>(null);
 
-  const handleEditTopics = (lessonId: number, currentTopics: Topic[], lessonName: string) => {
+  // Add modal state
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [selectedLessonForAdd, setSelectedLessonForAdd] = useState<{
+    lessonId: number;
+    lessonName: string;
+    levelSubject?: string;
+  } | null>(null);
+
+  const handleEditTopics = (lessonId: number, currentTopics: Topic[], lessonName: string, levelSubject?: string) => {
     setSelectedTopicGroup({
       lessonId,
       topics: currentTopics.map(topic => ({ ...topic })),
       lessonName,
+      levelSubject,
     });
     setEditModalOpen(true);
+  };
+
+  const handleAddTopics = (lessonId: number, lessonName: string, levelSubject?: string) => {
+    setSelectedLessonForAdd({
+      lessonId,
+      lessonName,
+      levelSubject,
+    });
+    setAddModalOpen(true);
   };
 
   const toggleEditModal = () => {
     setEditModalOpen(!editModalOpen);
     if (!editModalOpen) setSelectedTopicGroup(null);
+  };
+
+  const toggleAddModal = () => {
+    setAddModalOpen(!addModalOpen);
+    if (!addModalOpen) setSelectedLessonForAdd(null);
   };
 
   const handleDeleteTopic = (topicId: number) => {
@@ -129,6 +156,7 @@ const TopicAccordion = ({ associationId, data, searchTerm }: Props) => {
                       key={lesson.lessonId}
                       lesson={lesson}
                       onEditTopics={handleEditTopics}
+                      onAddTopics={handleAddTopics}
                       onDeleteTopic={handleDeleteTopic}
                       searchTerm={searchTerm}
                     />
@@ -140,6 +168,7 @@ const TopicAccordion = ({ associationId, data, searchTerm }: Props) => {
         })}
       </VStack>
 
+      {/* Edit Topics Modal */}
       <GenericModal
         isOpen={editModalOpen}
         onClose={toggleEditModal}
@@ -152,10 +181,34 @@ const TopicAccordion = ({ associationId, data, searchTerm }: Props) => {
               lessonId: selectedTopicGroup.lessonId,
               topics: selectedTopicGroup.topics,
               lessonName: selectedTopicGroup.lessonName,
+              subjectName: selectedTopicGroup.levelSubject?.split(' - ')[1],
+              levelName: selectedTopicGroup.levelSubject?.split(' - ')[0],
             }}
             associationId={associationId}
             onClose={toggleEditModal}
             onSuccess={toggleEditModal}
+          />
+        )}
+      </GenericModal>
+
+      {/* Add Topics Modal */}
+      <GenericModal
+        isOpen={addModalOpen}
+        onClose={toggleAddModal}
+        title={`Add Topics - ${selectedLessonForAdd?.lessonName ?? ''}`}
+        size="lg"
+      >
+        {selectedLessonForAdd && (
+          <AddTopics
+            details={{
+              lessonId: selectedLessonForAdd.lessonId,
+              lessonName: selectedLessonForAdd.lessonName,
+              subjectName: selectedLessonForAdd.levelSubject?.split(' - ')[1],
+              levelName: selectedLessonForAdd.levelSubject?.split(' - ')[0],
+            }}
+            associationId={associationId}
+            onClose={toggleAddModal}
+            onSuccess={toggleAddModal}
           />
         )}
       </GenericModal>
@@ -166,11 +219,13 @@ const TopicAccordion = ({ associationId, data, searchTerm }: Props) => {
 const LessonSection = ({
   lesson,
   onEditTopics,
+  onAddTopics,
   onDeleteTopic,
   searchTerm,
 }: {
   lesson: LessonItem;
-  onEditTopics: (lessonId: number, currentTopics: Topic[], lessonName: string) => void;
+  onEditTopics: (lessonId: number, currentTopics: Topic[], lessonName: string, levelSubject?: string) => void;
+  onAddTopics: (lessonId: number, lessonName: string, levelSubject?: string) => void;
   onDeleteTopic: (topicId: number) => void;
   searchTerm: string;
 }) => {
@@ -182,7 +237,12 @@ const LessonSection = ({
 
   const handleEditTopicsClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onEditTopics(lesson.lessonId, lesson.topics, lesson.lessonName);
+    onEditTopics(lesson.lessonId, lesson.topics, lesson.lessonName, lesson.levelSubject);
+  };
+
+  const handleAddTopicsClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onAddTopics(lesson.lessonId, lesson.lessonName, lesson.levelSubject);
   };
 
   const normalize = (str: string) => str.toLowerCase().trim().normalize('NFD').replace(/\u0300-\u036f/g, '');
@@ -215,7 +275,21 @@ const LessonSection = ({
               {lesson.topics.length}
             </Badge>
           </BaseHeader>
-          <HStack spacing={3}>
+          <HStack spacing={2}>
+            <Tooltip label="Add topics">
+              <IconButton
+                aria-label="Add topics"
+                icon={<FaPlus />}
+                size="sm"
+                variant="ghost"
+                color={useColorModeValue('green.600', 'green.300')}
+                _hover={{ 
+                  bg: useColorModeValue('green.50', 'green.800'),
+                  color: useColorModeValue('green.700', 'green.200')
+                }}
+                onClick={handleAddTopicsClick}
+              />
+            </Tooltip>
             <Tooltip label="Edit topics">
               <IconButton
                 aria-label="Edit topics"
@@ -223,6 +297,10 @@ const LessonSection = ({
                 size="sm"
                 variant="ghost"
                 color={useColorModeValue('gray.600', 'gray.300')}
+                _hover={{ 
+                  bg: useColorModeValue('gray.50', 'gray.700'),
+                  color: useColorModeValue('gray.700', 'gray.200')
+                }}
                 onClick={handleEditTopicsClick}
               />
             </Tooltip>
