@@ -13,8 +13,8 @@ const useUpdateStudent = (associationId: number) => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: async ({ StudentId, data }: StudentUpdatePayload) => {
-      return StudentServiceApi.update(StudentId, data);
+    mutationFn: async ({ StudentId, }: StudentUpdatePayload) => {
+      return StudentServiceApi.update(StudentId);
     },
 
     onSuccess: () => {

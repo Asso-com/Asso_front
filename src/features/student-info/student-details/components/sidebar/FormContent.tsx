@@ -26,7 +26,7 @@ export type FormContentRef = {
 const FormContent = forwardRef<FormContentRef>((_, ref) => {
   const [parentOption, setParentOption] = useState('new');
   const [guardianOption, setGuardianOption] = useState('parent');
-  const [existingParents, setExistingParents] = useState([
+  const [existingParents, ] = useState([
     { id: '1', name: 'John Doe (Father)' },
     { id: '2', name: 'Jane Smith (Mother)' },
   ]);

@@ -34,9 +34,7 @@ const StudentServiceApi = {
         }
     },
 
-    update: async (id: number, data: {
-         /* data */
-    }): Promise<any> => {
+    update: async (id: number, ): Promise<any> => {
         try {
             const response = await axiosInstance.put(
                 `/api/v1/student/${id}`,

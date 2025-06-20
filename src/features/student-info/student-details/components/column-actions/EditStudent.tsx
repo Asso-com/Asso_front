@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@store/index"; 
 import useUpdateStudent from "../../hooks/useUpdateStudent";
 import createValidationSchema from "@utils/createValidationSchema";
-import { StudentFields } from "../../constants/StudentFields";
+import { studentFields } from "../../constants/StudentFields";
 
 interface EditStudentProps {
   details?: Record<string, any>;
@@ -28,13 +28,13 @@ const EditStudent: React.FC<EditStudentProps> = ({ details, onClose }) => {
     useUpdateStudent(associationId);
 
   const initialValues: FormValues = useMemo(() => {
-    return StudentFields.reduce((acc: FormValues, field: Field) => {
+    return studentFields.reduce((acc: FormValues, field: Field) => {
       acc[field.name] = details?.[field.name] ?? "";
       return acc;
     }, {});
   }, [details]);
 
-  const validationSchema = createValidationSchema(StudentFields);
+  const validationSchema = createValidationSchema(studentFields);
 
   const onSubmit = async (
     values: FormValues,
@@ -62,7 +62,7 @@ const EditStudent: React.FC<EditStudentProps> = ({ details, onClose }) => {
         {({ isSubmitting, handleSubmit, dirty }) => (
           <Form>
             <SimpleGrid columns={2} spacing={4} mt={2}>
-              {StudentFields.filter((field) => field.name !== "active").map(
+              {studentFields.filter((field) => field.name !== "active").map(
                 (field: Field) => (
                   <RenderFormBuilder key={field.name} field={field} />
                 )

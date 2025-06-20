@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+
 import { Flex } from "@chakra-ui/react";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
 import { MdDelete, MdEdit } from "react-icons/md";
 import type { ICellRendererParams } from "ag-grid-community";
 import { confirmAlert } from "@components/shared/confirmAlert";
-import GenericModal from "@components/ui/GenericModal";
 import { useSelector } from "react-redux";
 import type { RootState } from "@store/index";
 import useDeleteStudent from "../../hooks/useDeleteStudent";
 
 const ColumnAction: React.FC<ICellRendererParams> = (params) => {
-  const [editModalOpen, setEditModalOpen] = useState(false);
+//  const [editModalOpen, setEditModalOpen] = useState(false);
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
@@ -31,9 +30,7 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
     }
   };
 
-  const toggleEditModal = () => {
-    setEditModalOpen(!editModalOpen);
-  };
+ 
 
   return (
     <Flex align="center" justify="center" gap={2} height="100%">
@@ -43,8 +40,7 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
         ariaLabel="edit_btn"
         variant="ghost"
         colorScheme="green"
-        size="sm"
-        onClick={toggleEditModal}
+        size="sm" 
         disabled={params.data.standard}
       />
       <GenericIconButtonWithTooltip
@@ -57,14 +53,15 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
         onClick={handleDelete}
         disabled={params.data.standard}
       />
-      <GenericModal
-        isOpen={editModalOpen}
-        onClose={toggleEditModal}
+    {/*   <GenericModal
+       // isOpen={editModalOpen}
+
         title="Edit Student"
-        size="3xl"
-      >
-        <EditStudent details={params.data} onClose={toggleEditModal} />
-      </GenericModal>
+        size="3xl" onClose={function (): void {
+          throw new Error("Function not implemented.");
+        } } children={undefined}      >
+     
+      </GenericModal> */}
     </Flex>
   );
 };
