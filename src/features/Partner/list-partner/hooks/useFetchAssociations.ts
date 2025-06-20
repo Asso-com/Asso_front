@@ -1,8 +1,8 @@
+
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { switchLoadingModal } from '@components/shared/modal-overlay/ModalLoading';
 import AssociationServiceApi from '../services/AssociationServiceApi';
 import type { Association } from '../types/AssociationType';
-
 const useFetchAssociations = (): UseQueryResult<Association[], Error> => {
   return useQuery<Association[], Error>({
     queryKey: ["associations"],
@@ -23,5 +23,4 @@ const useFetchAssociations = (): UseQueryResult<Association[], Error> => {
         staleTime: 1000 * 60 * 5,
     });
 };
-
 export default useFetchAssociations;
