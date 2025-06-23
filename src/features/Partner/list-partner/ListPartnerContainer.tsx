@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import useExternalPartners from "./hooks/useExternalPartners";
 import ExternalPartnerPresenter from "./ExternalPartnerPresenter";
 
 const ListPartnerContainer: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10); 
+  const [pageSize, setPageSize] = useState(10);
 
   const {
     data,
@@ -19,20 +19,24 @@ const ListPartnerContainer: React.FC = () => {
 
   const handlePageChange = useCallback(
     (newPage: number) => {
-      console.log(`⚡ Navigation instantanée: ${currentPage} → ${newPage}`);
-      setCurrentPage(newPage);
-      window.scrollTo({ top: 0, behavior: 'auto' });
+      const maxPage = data?.totalPages || 1;
+      const validPage = Math.max(1, Math.min(newPage, maxPage));
+      if (validPage !== currentPage) {
+        setCurrentPage(validPage);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
     },
-    [currentPage]
+    [data?.totalPages, currentPage]
   );
 
   const handlePageSizeChange = useCallback(
     (newSize: number) => {
-      console.log(`📊 Taille change: ${pageSize} → ${newSize}`);
-      setPageSize(newSize);
+      const validSizes = [10, 20, 50, 100];
+      const validSize = validSizes.find((size) => size >= newSize) || 10;
+      setPageSize(validSize);
       setCurrentPage(1);
     },
-    [pageSize]
+    []
   );
 
   return (

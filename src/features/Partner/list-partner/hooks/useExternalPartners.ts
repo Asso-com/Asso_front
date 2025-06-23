@@ -1,15 +1,6 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import ExternalPartnerApi from '../services/ExternalPartnerApi';
-import type { Association } from '../types/AssociationType';
-
-interface ExternalPartnersResponse {
-  data: Association[];
-  total: number;
-  page: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-}
+import type { ExternalPartnersResponse } from '../types/AssociationType';
 
 interface UseExternalPartnersParams {
   page: number;
@@ -19,45 +10,27 @@ interface UseExternalPartnersParams {
 const useExternalPartners = (
   params: UseExternalPartnersParams
 ): UseQueryResult<ExternalPartnersResponse, Error> => {
-  return useQuery<ExternalPartnersResponse, Error>({
+  return useQuery({
     queryKey: ["external-partners", params.page, params.limit],
     queryFn: async () => {
-      console.log(`⚡ API ULTRA-RAPIDE - Page ${params.page}, Limit ${params.limit}`);
-      
-      const startTime = performance.now();
-      
-      try {
-        const result = await ExternalPartnerApi.getPartners({
-          page: params.page,
-          limit: params.limit
-        });
-        
-        const endTime = performance.now();
-        console.log(`🚀 API en ${(endTime - startTime).toFixed(2)}ms`);
-        
-        return result;
-      } catch (error) {
-        console.error("❌ API Error:", error);
-        throw error;
-      }
+      const result = await ExternalPartnerApi.getPartners({
+        page: params.page,
+        limit: params.limit,
+      });
+      return result;
     },
-    
-    // ✅ CACHE ULTRA-AGRESSIF
-    staleTime: 1000 * 60 * 15, // ✅ 15 MIN FRESH
-    gcTime: 1000 * 60 * 120,   // ✅ 2 HEURES CACHE
-    
-    // ✅ OPTIMISATIONS MAXIMALES
-    keepPreviousData: true,
+    select: (data: ExternalPartnersResponse) => {
+      return data;
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 30,  // 30 minutes
+    // ✅ SUPPRIMÉ: keepPreviousData (obsolète dans React Query v5)
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
-    retry: 0, // ✅ PAS DE RETRY POUR RAPIDITÉ
-    retryOnMount: false,
-    
-    // ✅ PERFORMANCE MAXIMALE
-    structuralSharing: true,
-    notifyOnChangeProps: ['data', 'error'], // ✅ NOTIFICATION MINIMALE
-  });
+    retry: 1,
+    notifyOnChangeProps: ['data', 'error'],
+  }) as UseQueryResult<ExternalPartnersResponse, Error>;
 };
 
 export default useExternalPartners;

@@ -1,4 +1,3 @@
-// asso_front/src/features/Partner/list-partner/components/ExternalPartnerActions.tsx
 import {
   Flex,
   HStack,
@@ -11,21 +10,19 @@ import {
   Badge,
 } from "@chakra-ui/react";
 import { FaHandshake, FaSearch } from "react-icons/fa";
-import { useTranslation } from "react-i18next";
+// ✅ SUPPRIMÉ: import { useTranslation } from "react-i18next";
 import { useState } from "react";
 
 interface ExternalPartnerActionsProps {
   totalCount: number;
   onSearchChange?: (search: string) => void;
-  // ❌ SUPPRIMÉ: onLimitChange?: (limit: number) => void;
 }
 
 const ExternalPartnerActions: React.FC<ExternalPartnerActionsProps> = ({
   totalCount,
   onSearchChange,
-  // ❌ SUPPRIMÉ: onLimitChange,
 }) => {
-  const { t } = useTranslation();
+  // ✅ SUPPRIMÉ: const { t } = useTranslation();
   const [searchText, setSearchText] = useState("");
   
   const bgColor = useColorModeValue("white", "gray.800");
@@ -60,7 +57,6 @@ const ExternalPartnerActions: React.FC<ExternalPartnerActionsProps> = ({
         </Badge>
       </HStack>
 
-      {/* SEULE LA RECHERCHE - PAS DE SÉLECTEUR DE LIMITE */}
       <InputGroup maxW="300px">
         <InputLeftElement pointerEvents="none">
           <Icon as={FaSearch} color="gray.400" />
