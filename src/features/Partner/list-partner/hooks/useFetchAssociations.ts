@@ -7,9 +7,8 @@ const useFetchAssociations = (): UseQueryResult<Association[], Error> => {
   return useQuery<Association[], Error>({
     queryKey: ["associations"],
     queryFn: async () => {
-      switchLoadingModal(); // If this is a global loading toggle (optional)
+      switchLoadingModal();
       try {
-        // Assuming AssociationServiceApi.getAll returns Promise<Association[]>
         const data = await AssociationServiceApi.getAll();
         return data;
       } catch (error) {
@@ -19,8 +18,8 @@ const useFetchAssociations = (): UseQueryResult<Association[], Error> => {
         switchLoadingModal();
       }
     },
-        gcTime: 1000 * 60 * 10,
-        staleTime: 1000 * 60 * 5,
-    });
+    gcTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 5,
+  });
 };
 export default useFetchAssociations;

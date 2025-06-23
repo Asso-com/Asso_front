@@ -6,15 +6,15 @@ import React from "react";
 const StatusRenderer = (params: any) => {
   const status = params.value || 'Unknown';
   const colorScheme = status === 'Active' ? 'green' : status === 'Inactive' ? 'red' : 'gray';
-  
+
   return React.createElement(Badge, {
     colorScheme,
     size: 'xs',
-    px: 2,              
-    py: 1.5,             
-    borderRadius: 'md',   
-    fontSize: '13px',      
-    fontWeight: 'medium', 
+    px: 2,
+    py: 1.5,
+    borderRadius: 'md',
+    fontSize: '13px',
+    fontWeight: 'medium',
     lineHeight: 1,
   }, status);
 };
@@ -38,7 +38,7 @@ const AddressRenderer = (params: any) => {
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      maxWidth: '100%' // ✅ Utilise toute la largeur disponible
+      maxWidth: '100%'
     }
   }, address);
 };
@@ -72,52 +72,54 @@ const TextRenderer = (params: any) => {
   }, text);
 };
 
-// ✅ DÉFINITION DES COLONNES OPTIMISÉES POUR SCROLL
+
 const ExternalPartnerColumns = (): ColDef[] => {
   return [
     {
       field: "rowIndex",
       headerName: "#",
       width: 70,
-      pinned: "left", // ✅ Reste visible lors du scroll
-      cellStyle: { 
-        fontWeight: 'bold', 
+      pinned: "left",
+      cellStyle: {
+        fontWeight: 'bold',
         color: '#2B6CB0',
         textAlign: 'center'
       },
-      suppressMovable: true,
-      filter: false,
-      sortable: false,
-      lockPosition: true, // ✅ Verrouille la position
     },
     {
       field: "name",
       headerName: "Association Name",
-      width: 300, // ✅ Largeur fixe pour consistency
+      width: 300,
       cellRenderer: NameRenderer,
-      tooltipField: "name",
       filter: "agTextColumnFilter",
-      filterParams: {
-        buttons: ["reset", "apply"],
-        closeOnApply: true,
+      pinned: "left",
+      cellStyle: {
+        textAlign: 'left'
       },
-      sortable: true,
-      resizable: true,
-      pinned: "left", // ✅ Garde la colonne principale visible
+    },
+    {
+      field: "isPartner",
+      headerName: "Already Partner?",
+      width: 165,
+      valueFormatter: (params) => (params.value ? "Yes" : "No"),
+      cellStyle: {
+        textAlign: 'center',
+      },
     },
     {
       field: "associationIdentifier",
       headerName: "Identifier",
       width: 150,
       filter: "agTextColumnFilter",
-      cellStyle: { 
-        fontFamily: 'monospace', 
-        fontSize: '12px',
-        color: '#4A5568'
-      },
-      filterParams: {
-        buttons: ["reset", "apply"],
-        closeOnApply: true,
+    },
+    {
+      field: "manager",
+      headerName: "Manager",
+      width: 180,
+      cellRenderer: TextRenderer,
+      filter: "agTextColumnFilter",
+      cellStyle: {
+        textAlign: 'left'
       },
     },
     {
@@ -125,11 +127,9 @@ const ExternalPartnerColumns = (): ColDef[] => {
       headerName: "Short Title",
       width: 200,
       cellRenderer: TextRenderer,
-      tooltipField: "shortTitle",
       filter: "agTextColumnFilter",
-      filterParams: {
-        buttons: ["reset", "apply"],
-        closeOnApply: true,
+      cellStyle: {
+        textAlign: 'left'
       },
     },
     {
@@ -137,21 +137,9 @@ const ExternalPartnerColumns = (): ColDef[] => {
       headerName: "Object/Purpose",
       width: 250,
       cellRenderer: TextRenderer,
-      tooltipField: "object",
       filter: "agTextColumnFilter",
-      filterParams: {
-        buttons: ["reset", "apply"],
-        closeOnApply: true,
-      },
-    },
-    {
-      field: "city",
-      headerName: "City",
-      width: 150,
-      filter: "agSetColumnFilter",
-      filterParams: {
-        buttons: ["reset", "apply"],
-        closeOnApply: true,
+      cellStyle: {
+        textAlign: 'left'
       },
     },
     {
@@ -159,15 +147,10 @@ const ExternalPartnerColumns = (): ColDef[] => {
       headerName: "Status",
       width: 120,
       cellRenderer: StatusRenderer,
-      filter: "agSetColumnFilter",
-      filterParams: {
-        values: ['Active', 'Inactive', 'Unknown'],
-        buttons: ["reset", "apply"],
-        closeOnApply: true,
-      },
-      cellStyle: { 
+      filter: "agTextColumnFilter",
+      cellStyle: {
         display: "flex",
-        justifyContent: "center", 
+        justifyContent: "center",
         alignItems: "center",
       },
     },
@@ -178,9 +161,8 @@ const ExternalPartnerColumns = (): ColDef[] => {
       cellRenderer: AddressRenderer,
       tooltipField: "address",
       filter: "agTextColumnFilter",
-      filterParams: {
-        buttons: ["reset", "apply"],
-        closeOnApply: true,
+      cellStyle: {
+        textAlign: 'left'
       },
     },
     {
@@ -188,8 +170,8 @@ const ExternalPartnerColumns = (): ColDef[] => {
       headerName: "Postal Code",
       width: 120,
       filter: "agTextColumnFilter",
-      cellStyle: { 
-        textAlign: 'center', 
+      cellStyle: {
+        textAlign: 'center',
         fontFamily: 'monospace',
         fontSize: '12px',
         color: '#4A5568'
@@ -201,68 +183,9 @@ const ExternalPartnerColumns = (): ColDef[] => {
       width: 140,
       cellRenderer: DateRenderer,
       filter: "agDateColumnFilter",
-      filterParams: {
-        buttons: ["reset", "apply"],
-        closeOnApply: true,
+      cellStyle: {
+        textAlign: 'center'
       },
-    },
-    {
-      field: "department",
-      headerName: "Department",
-      width: 150,
-      filter: "agSetColumnFilter",
-      filterParams: {
-        buttons: ["reset", "apply"],
-        closeOnApply: true,
-      },
-    },
-    {
-      field: "nature",
-      headerName: "Nature",
-      width: 150,
-      cellRenderer: TextRenderer,
-      tooltipField: "nature",
-      filter: "agSetColumnFilter",
-      filterParams: {
-        buttons: ["reset", "apply"],
-        closeOnApply: true,
-      },
-    },
-    {
-      field: "manager",
-      headerName: "Manager",
-      width: 180,
-      cellRenderer: TextRenderer,
-      tooltipField: "manager",
-      filter: "agTextColumnFilter",
-      filterParams: {
-        buttons: ["reset", "apply"],
-        closeOnApply: true,
-      },
-    },
-    {
-      field: "website",
-      headerName: "Website",
-      width: 200,
-      cellRenderer: (params: any) => {
-        if (!params.value) return 'N/A';
-        return React.createElement('a', {
-          href: params.value.startsWith('http') ? params.value : `https://${params.value}`,
-          target: '_blank',
-          rel: 'noopener noreferrer',
-          style: {
-            color: '#3182ce',
-            textDecoration: 'underline',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            display: 'block',
-            maxWidth: '100%'
-          }
-        }, params.value);
-      },
-      tooltipField: "website",
-      filter: "agTextColumnFilter",
     },
   ];
 };
