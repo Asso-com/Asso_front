@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import LessonServiceApi from "../services/LessonServiceApi";
 import { showToast } from "@store/toastSlice";
-import type { LessonUpdateDto, LessonSummary } from "../types/lesson.types";
+import type { LessonUpdateDto } from "../types/lesson.types";
 
 const useReorderAndUpdateLesson = (associationId: number) => {
   const queryClient = useQueryClient();
@@ -12,7 +12,7 @@ const useReorderAndUpdateLesson = (associationId: number) => {
     mutationFn: (payload: LessonUpdateDto[]) =>
       LessonServiceApi.updateLessonsBatch(associationId, payload),
 
-    onSuccess: (data: LessonSummary[]) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["lessons", associationId] });
 
       dispatch(

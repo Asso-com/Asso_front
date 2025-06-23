@@ -15,7 +15,7 @@ export type TopicSummary = {
 };
 export interface TopicUpdateDto {
   id: number;
-  name: string;
+  description: string;
   sortedOrder: number;
 }
 
