@@ -2,35 +2,39 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import ExternalPartnerApi from '../services/ExternalPartnerApi';
 import type { ExternalPartnersResponse } from '../types/AssociationType';
 
-interface UseExternalPartnersParams {
-  page: number;
-  limit: number;
-}
-
-const useExternalPartners = (
-  params: UseExternalPartnersParams
-): UseQueryResult<ExternalPartnersResponse, Error> => {
+const useExternalPartners = (): UseQueryResult<ExternalPartnersResponse, Error> => {
   return useQuery({
-    queryKey: ["external-partners", params.page, params.limit],
+    queryKey: ["external-partners-villeneuve-all"],
     queryFn: async () => {
-      const result = await ExternalPartnerApi.getPartners({
-        page: params.page,
-        limit: params.limit,
-      });
+
+      const result = await ExternalPartnerApi.getPartners();
       return result;
     },
-    select: (data: ExternalPartnersResponse) => {
-      return data;
-    },
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    gcTime: 1000 * 60 * 30,  // 30 minutes
-    // ✅ SUPPRIMÉ: keepPreviousData (obsolète dans React Query v5)
+    
+    // ✅ OPTIMISATIONS POUR PERFORMANCE
+    staleTime: 1000 * 60 * 15, // 15 minutes - données restent fraîches plus longtemps
+    gcTime: 1000 * 60 * 60 * 2, // 2 heures - garde en cache plus longtemps
+    
+    // ✅ RÉDUIRE LES RE-FETCH AUTOMATIQUES
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
-    retry: 1,
-    notifyOnChangeProps: ['data', 'error'],
-  }) as UseQueryResult<ExternalPartnersResponse, Error>;
+    
+    // ✅ RETRY CONFIGURATION
+    retry: 3,
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 10000),
+    
+    // ✅ OPTIMISATION DES NOTIFICATIONS
+    notifyOnChangeProps: ['data', 'error', 'isLoading', 'isFetching'],
+    
+    // ✅ SÉLECTEUR OPTIMISÉ
+    select: (data: ExternalPartnersResponse) => {
+      return {
+        ...data,
+        data: data.data.slice(), // Créer une copie pour éviter les mutations
+      };
+    },
+  });
 };
 
 export default useExternalPartners;

@@ -1,9 +1,14 @@
 import axios from 'axios';
 import type { Association, ExternalPartnersResponse } from '../types/AssociationType';
 
+// ✅ INSTANCE AXIOS OPTIMISÉE
 const externalApiInstance = axios.create({
-  timeout: 10000,
+  timeout: 45000,
   withCredentials: false,
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+  },
 });
 
 interface ExternalApiResponse {
@@ -11,82 +16,171 @@ interface ExternalApiResponse {
   total_count: number;
 }
 
-interface PaginationParams {
-  page: number;
-  limit: number;
-}
+// ✅ CONSTANTES OPTIMISÉES
+const API_CONFIG = {
+  BASE_URL: 'https://data.iledefrance.fr/api/explore/v2.1/catalog/datasets/repertoire-national-des-associations-ile-de-france/records',
+  FILTER: 'refine=com_name_asso:"Villeneuve-la-Garenne"',
+  BATCH_SIZE: 100,
+  MAX_CONCURRENT_REQUESTS: 3,
+};
+
+// ✅ FONCTION UTILITAIRE POUR TRAITER LES DONNÉES - CORRECTION email supprimé
+const processAssociationData = (item: any, index: number, offset: number = 0): Association => ({
+  id: offset + index + 1,
+  name: item.title || item.short_title || `Association ${item.id || offset + index + 1}`,
+  associationIdentifier: item.id || `ID_${offset + index + 1}`,
+  joinedDate: item.creation_date || new Date().toISOString().split('T')[0],
+  shortTitle: item.short_title || 'N/A',
+  object: item.object || 'N/A',
+  address: `${item.street_number_asso || ''} ${item.street_type_asso || ''} ${item.street_name_asso || ''}`.trim() || 'Address not available',
+  city: item.com_name_asso || 'Villeneuve-la-Garenne',
+  postalCode: item.pc_address_asso || 'N/A',
+  status: item.position || 'Active',
+  department: item.dep_name || 'N/A',
+  creationDate: item.creation_date || 'N/A',
+  declarationDate: item.declaration_date || 'N/A',
+  publicationDate: item.publication_date || 'N/A',
+  nature: item.nature || 'N/A',
+  group: item.group || 'N/A',
+  website: item.website || undefined,
+  manager: item.street_name_manager || 'N/A',
+  region: item.reg_name || 'N/A',
+  isPartner: false,
+  phone: item.phone_number || undefined,
+  logoUrl: undefined,
+  // ✅ email supprimé car il n'existe pas dans le type Association
+});
+
+// ✅ FONCTION POUR FETCH EN BATCH OPTIMISÉ
+const fetchBatch = async (offset: number): Promise<{ data: Association[], hasMore: boolean, totalCount?: number }> => {
+  const url = `${API_CONFIG.BASE_URL}?limit=${API_CONFIG.BATCH_SIZE}&offset=${offset}&${API_CONFIG.FILTER}`;
+  
+  try {
+    const response = await externalApiInstance.get<ExternalApiResponse>(url);
+    
+    if (!response.data.results || response.data.results.length === 0) {
+      return { data: [], hasMore: false };
+    }
+
+    const processedData = response.data.results.map((item, index) => 
+      processAssociationData(item, index, offset)
+    );
+
+    return {
+      data: processedData,
+      hasMore: response.data.results.length === API_CONFIG.BATCH_SIZE,
+      totalCount: response.data.total_count,
+    };
+  } catch (error) {
+    console.error(`❌ Error fetching batch at offset ${offset}:`, error);
+    throw error;
+  }
+};
 
 const ExternalPartnerApi = {
-  getPartners: async ({ page, limit }: PaginationParams): Promise<ExternalPartnersResponse> => {
+  getPartners: async (): Promise<ExternalPartnersResponse> => {
+    const startTime = performance.now();
+    
     try {
-      const validPage = Math.max(1, page);
-      const validLimit = Math.max(1, Math.min(limit, 50));
-      const offset = (validPage - 1) * validLimit;
+      let allPartners: Association[] = [];
+      let offset = 0;
+      let totalCount = 0;
+      let batchCount = 0;
 
-      if (offset >= 418) {
-        console.warn(`Offset ${offset} exceeds dataset size (418)`);
+      // ✅ PREMIÈRE REQUÊTE POUR OBTENIR LE TOTAL
+      const firstBatch = await fetchBatch(0);
+      
+      if (firstBatch.data.length === 0) {
         return {
           data: [],
-          total: 418,
-          page: validPage,
-          totalPages: Math.ceil(418 / validLimit),
+          total: 0,
+          page: 1,
+          totalPages: 1,
           hasNextPage: false,
-          hasPreviousPage: validPage > 1,
+          hasPreviousPage: false,
         };
       }
 
-  
-      const response = await externalApiInstance.get<ExternalApiResponse>(
-        `https://data.iledefrance.fr/api/explore/v2.1/catalog/datasets/repertoire-national-des-associations-ile-de-france/records?limit=${validLimit}&offset=${offset}&refine=com_name_asso%3A"Villeneuve-la-Garenne"`
-      );
+      allPartners = [...firstBatch.data];
+      totalCount = firstBatch.totalCount || firstBatch.data.length;
+      offset = API_CONFIG.BATCH_SIZE;
+      batchCount = 1;
 
-      const partners: Association[] = response.data.results?.map((item: any, index: number) => ({
-        id: offset + index + 1,
-        name: item.title || item.short_title || `Association ${item.id}`,
-        associationIdentifier: item.id || 'N/A',
-        joinedDate: item.creation_date || new Date().toISOString().split('T')[0],
-        // ✅ Toutes les propriétés ajoutées
-        shortTitle: item.short_title || 'N/A',
-        object: item.object,
-        address: `${item.street_number_asso || ''} ${item.street_type_asso || ''} ${item.street_name_asso || ''}`.trim() || 'Address not available',
-        city: item.com_name_asso || 'Villeneuve-la-Garenne',
-        postalCode: item.pc_address_asso || 'N/A',
-        status: item.position || 'Unknown',
-        department: item.dep_name || 'N/A',
-        creationDate: item.creation_date,
-        declarationDate: item.declaration_date,
-        publicationDate: item.publication_date,
-        nature: item.nature,
-        group: item.group,
-        website: item.website,
-        manager: item.street_name_manager,
-        region: item.reg_name,
-        // ✅ Propriétés obligatoires
-        isPartner: false, // Par défaut non-partenaire
-        phone: undefined,
-        logoUrl: undefined,
-      })) || [];
+   
 
-      const total = Math.min(response.data.total_count || 418, 418);
-      const totalPages = Math.ceil(total / validLimit);
+      // ✅ FETCH SÉQUENTIEL OPTIMISÉ
+      while (firstBatch.hasMore && allPartners.length < totalCount) {
+        try {
+          
+          const batch = await fetchBatch(offset);
+          
+          if (batch.data.length === 0) {
+            break;
+          }
+
+          allPartners = [...allPartners, ...batch.data];
+          offset += API_CONFIG.BATCH_SIZE;
+          batchCount++;
+
+
+          if (batchCount % 5 === 0) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+          }
+
+          if (!batch.hasMore) {
+            break;
+          }
+
+        } catch (error) {
+          console.error(`❌ Error in batch ${batchCount + 1}, continuing...`, error);
+          break;
+        }
+      }
+
+
 
       return {
-        data: partners,
-        total,
-        page: validPage,
-        totalPages,
-        hasNextPage: validPage < totalPages,
-        hasPreviousPage: validPage > 1,
+        data: allPartners,
+        total: allPartners.length,
+        page: 1,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPreviousPage: false,
       };
+
     } catch (error) {
-      console.error('API: Error fetching partners:', error);
+      const endTime = performance.now();
+      const duration = ((endTime - startTime) / 1000).toFixed(2);
+      
+      console.error(`❌ API Error after ${duration}s:`, error);
+      
+      if (axios.isAxiosError(error)) {
+        console.error('🔍 Error Details:', {
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          data: error.response?.data,
+          url: error.config?.url,
+        });
+
+        // ✅ CORRECTION: Vérification de undefined
+        const status = error.response?.status;
+        if (status === 400) {
+          console.error('🚨 Bad Request - Check API parameters');
+        } else if (status === 429) {
+          console.error('🚨 Rate Limited - Too many requests');
+        } else if (status && status >= 500) { // ✅ Vérification que status n'est pas undefined
+          console.error('🚨 Server Error - API service issue');
+        }
+      }
+
+      // ✅ RETOUR GRACEFUL EN CAS D'ERREUR
       return {
         data: [],
-        total: 418,
-        page,
-        totalPages: Math.ceil(418 / limit),
-        hasNextPage: page < Math.ceil(418 / limit),
-        hasPreviousPage: page > 1,
+        total: 0,
+        page: 1,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPreviousPage: false,
       };
     }
   },

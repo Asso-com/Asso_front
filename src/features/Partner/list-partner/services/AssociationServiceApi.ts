@@ -10,7 +10,6 @@ const AssociationServiceApi = {
         }
     },
 
-    // Nouvelle méthode pour créer une association
     createAssociation: async (associationData: {
         associationIdentifier: string;
         name: string;

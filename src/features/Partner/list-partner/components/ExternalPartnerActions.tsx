@@ -10,7 +10,6 @@ import {
   Badge,
 } from "@chakra-ui/react";
 import { FaHandshake, FaSearch } from "react-icons/fa";
-// ✅ SUPPRIMÉ: import { useTranslation } from "react-i18next";
 import { useState } from "react";
 
 interface ExternalPartnerActionsProps {
@@ -22,7 +21,6 @@ const ExternalPartnerActions: React.FC<ExternalPartnerActionsProps> = ({
   totalCount,
   onSearchChange,
 }) => {
-  // ✅ SUPPRIMÉ: const { t } = useTranslation();
   const [searchText, setSearchText] = useState("");
   
   const bgColor = useColorModeValue("white", "gray.800");

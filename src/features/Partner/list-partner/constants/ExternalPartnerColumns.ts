@@ -1,9 +1,8 @@
-// ✅ IMPORT CORRECT
 import type { ColDef } from "ag-grid-community";
 import { Badge } from "@chakra-ui/react";
 import React from "react";
 
-// ✅ RENDERER POUR STATUS BADGES (OPTIMISÉ STYLE SUBJECT)
+// ✅ RENDERER POUR STATUS BADGES
 const StatusRenderer = (params: any) => {
   const status = params.value || 'Unknown';
   const colorScheme = status === 'Active' ? 'green' : status === 'Inactive' ? 'red' : 'gray';
@@ -39,12 +38,12 @@ const AddressRenderer = (params: any) => {
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      maxWidth: '200px'
+      maxWidth: '100%' // ✅ Utilise toute la largeur disponible
     }
   }, address);
 };
 
-// ✅ RENDERER POUR NOM AVEC STYLE PRINCIPAL (comme Subject)
+// ✅ RENDERER POUR NOM AVEC STYLE PRINCIPAL
 const NameRenderer = (params: any) => {
   const name = params.value || 'N/A';
   return React.createElement('div', {
@@ -59,14 +58,28 @@ const NameRenderer = (params: any) => {
   }, name);
 };
 
-// ✅ DÉFINITION DES COLONNES (STYLE SUBJECT)
+// ✅ RENDERER POUR TEXTE LONG AVEC TOOLTIP
+const TextRenderer = (params: any) => {
+  const text = params.value || 'N/A';
+  return React.createElement('div', {
+    title: text,
+    style: {
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      maxWidth: '100%'
+    }
+  }, text);
+};
+
+// ✅ DÉFINITION DES COLONNES OPTIMISÉES POUR SCROLL
 const ExternalPartnerColumns = (): ColDef[] => {
   return [
     {
       field: "rowIndex",
       headerName: "#",
       width: 70,
-      pinned: "left",
+      pinned: "left", // ✅ Reste visible lors du scroll
       cellStyle: { 
         fontWeight: 'bold', 
         color: '#2B6CB0',
@@ -75,13 +88,13 @@ const ExternalPartnerColumns = (): ColDef[] => {
       suppressMovable: true,
       filter: false,
       sortable: false,
+      lockPosition: true, // ✅ Verrouille la position
     },
     {
       field: "name",
       headerName: "Association Name",
-      minWidth: 250,
-      flex: 2,                    // ✅ FLEX 2 comme Subject (plus large)
-      cellRenderer: NameRenderer, // ✅ RENDERER CUSTOM pour style
+      width: 300, // ✅ Largeur fixe pour consistency
+      cellRenderer: NameRenderer,
       tooltipField: "name",
       filter: "agTextColumnFilter",
       filterParams: {
@@ -90,12 +103,12 @@ const ExternalPartnerColumns = (): ColDef[] => {
       },
       sortable: true,
       resizable: true,
+      pinned: "left", // ✅ Garde la colonne principale visible
     },
     {
       field: "associationIdentifier",
       headerName: "Identifier",
-      minWidth: 150,
-      flex: 1,
+      width: 150,
       filter: "agTextColumnFilter",
       cellStyle: { 
         fontFamily: 'monospace', 
@@ -110,9 +123,21 @@ const ExternalPartnerColumns = (): ColDef[] => {
     {
       field: "shortTitle",
       headerName: "Short Title",
-      minWidth: 180,
-      flex: 1,
+      width: 200,
+      cellRenderer: TextRenderer,
       tooltipField: "shortTitle",
+      filter: "agTextColumnFilter",
+      filterParams: {
+        buttons: ["reset", "apply"],
+        closeOnApply: true,
+      },
+    },
+    {
+      field: "object",
+      headerName: "Object/Purpose",
+      width: 250,
+      cellRenderer: TextRenderer,
+      tooltipField: "object",
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["reset", "apply"],
@@ -122,8 +147,7 @@ const ExternalPartnerColumns = (): ColDef[] => {
     {
       field: "city",
       headerName: "City",
-      minWidth: 130,
-      flex: 1,
+      width: 150,
       filter: "agSetColumnFilter",
       filterParams: {
         buttons: ["reset", "apply"],
@@ -134,7 +158,6 @@ const ExternalPartnerColumns = (): ColDef[] => {
       field: "status",
       headerName: "Status",
       width: 120,
-      maxWidth: 120,           // ✅ LARGEUR FIXE comme Subject
       cellRenderer: StatusRenderer,
       filter: "agSetColumnFilter",
       filterParams: {
@@ -151,8 +174,7 @@ const ExternalPartnerColumns = (): ColDef[] => {
     {
       field: "address",
       headerName: "Address",
-      minWidth: 220,
-      flex: 1,
+      width: 250,
       cellRenderer: AddressRenderer,
       tooltipField: "address",
       filter: "agTextColumnFilter",
@@ -187,13 +209,60 @@ const ExternalPartnerColumns = (): ColDef[] => {
     {
       field: "department",
       headerName: "Department",
-      minWidth: 130,
-      flex: 1,
+      width: 150,
       filter: "agSetColumnFilter",
       filterParams: {
         buttons: ["reset", "apply"],
         closeOnApply: true,
       },
+    },
+    {
+      field: "nature",
+      headerName: "Nature",
+      width: 150,
+      cellRenderer: TextRenderer,
+      tooltipField: "nature",
+      filter: "agSetColumnFilter",
+      filterParams: {
+        buttons: ["reset", "apply"],
+        closeOnApply: true,
+      },
+    },
+    {
+      field: "manager",
+      headerName: "Manager",
+      width: 180,
+      cellRenderer: TextRenderer,
+      tooltipField: "manager",
+      filter: "agTextColumnFilter",
+      filterParams: {
+        buttons: ["reset", "apply"],
+        closeOnApply: true,
+      },
+    },
+    {
+      field: "website",
+      headerName: "Website",
+      width: 200,
+      cellRenderer: (params: any) => {
+        if (!params.value) return 'N/A';
+        return React.createElement('a', {
+          href: params.value.startsWith('http') ? params.value : `https://${params.value}`,
+          target: '_blank',
+          rel: 'noopener noreferrer',
+          style: {
+            color: '#3182ce',
+            textDecoration: 'underline',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: 'block',
+            maxWidth: '100%'
+          }
+        }, params.value);
+      },
+      tooltipField: "website",
+      filter: "agTextColumnFilter",
     },
   ];
 };
