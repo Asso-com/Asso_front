@@ -14,7 +14,7 @@ import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-p
 import RenderFormBuilder from '@components/shared/form-builder/RenderFormBuilder';
 import FooterActions from '@components/shared/FooterActions';
 import createValidationSchema from '@utils/createValidationSchema';
-import useUpdateLessons from '../../hooks/useUpdateLessons';
+import useReorderAndUpdateLesson from '../../hooks/useReorderAndUpdateLesson';
 import type { Field } from '@/types/formTypes';
 
 interface ExtendedField extends Field {
@@ -162,7 +162,7 @@ const EditLessons: React.FC<EditLessonsProps> = ({
   onClose,
   onSuccess,
 }) => {
-  const { mutateAsync: updateLessons, isPending } = useUpdateLessons(associationId);
+  const { mutateAsync: updateLessons, isPending } = useReorderAndUpdateLesson(associationId);
 
   const bgColor = useColorModeValue('white', 'gray.800');
   const textColor = useColorModeValue('gray.700', 'gray.200');
@@ -229,25 +229,30 @@ const EditLessons: React.FC<EditLessonsProps> = ({
     });
   };
 
-  const onSubmit = async (values: FormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
-    try {
-      const validLessons = values.lessons.filter(l => l.name.trim() !== '');
-      if (!validLessons.length) return;
+ const onSubmit = async (
+  values: FormValues,
+  { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+) => {
+  try {
+    const validLessons = values.lessons.filter(l => l.name.trim() !== '');
+    if (!validLessons.length) return;
 
-      const payload = {
-        levelSubjectId: details.levelSubjectId,
-        lessonNames: validLessons.map(l => l.name.trim()),
-      };
+    const payload = validLessons.map((lesson) => ({
+      id: Number(lesson.id),
+      name: lesson.name.trim(),
+      sortedOrder: lesson.sortedOrder,
+    }));
 
-      await updateLessons(payload);
-      onSuccess();
-      onClose();
-    } catch (error) {
-      console.error('Failed to update lessons', error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    await updateLessons(payload);
+    onSuccess();
+    onClose();
+  } catch (error) {
+    console.error('Failed to update lessons', error);
+  } finally {
+    setSubmitting(false);
+  }
+};
+
 
   const renderDragDropContent = (
     values: FormValues,

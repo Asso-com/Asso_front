@@ -361,7 +361,6 @@ const SubjectSection = ({
                 cardConfig={{
                   color: "blue",
                   showCode: false,
-                  onClick: () => console.log("Clicked lesson:", lesson.name),
                 }}
               />
             ))}

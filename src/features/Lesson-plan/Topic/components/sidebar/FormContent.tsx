@@ -51,8 +51,6 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
       }))
     );
 
-    console.log("Lesson options:", options);
-
     const dynamicFields: Field[] = TopicFields.map((field: Field) => 
       field.name === "lessonId"
         ? { ...field, options }

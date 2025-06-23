@@ -15,7 +15,7 @@ import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-p
 import RenderFormBuilder from '@components/shared/form-builder/RenderFormBuilder';
 import FooterActions from '@components/shared/FooterActions';
 import createValidationSchema from '@utils/createValidationSchema';
-import useUpdateTopics from '../../hooks/useUpdateTopics';
+import useReorderAndUpdateTopics from '../../hooks/useReorderAndUpdateTopics';
 import { useQueryClient } from '@tanstack/react-query';
 import type { Field } from '@/types/formTypes';
 
@@ -112,7 +112,7 @@ const EditTopics: React.FC<EditTopicsProps> = ({
   onClose,
   onSuccess,
 }) => {
-  const { mutateAsync: updateTopics, isPending } = useUpdateTopics(associationId);
+const { mutateAsync: reorderAndUpdateTopics, isPending } = useReorderAndUpdateTopics(associationId);
   const queryClient = useQueryClient();
 
   const bgColor = useColorModeValue('white', 'gray.800');
@@ -148,28 +148,30 @@ const EditTopics: React.FC<EditTopicsProps> = ({
   }, [initialValues.topics]);
 
   const onSubmit = async (
-    values: FormValues,
-    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
-  ) => {
-    try {
-      const validTopics = values.topics.filter(t => t.description.trim() !== '');
-      if (!validTopics.length) return;
+  values: FormValues,
+  { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+) => {
+  try {
+    const validTopics = values.topics.filter(t => t.description.trim() !== '');
+    if (!validTopics.length) return;
 
-      const payload = {
-        lessonId: details.lessonId,
-        topicDescriptions: validTopics.map(t => t.description.trim()), // Match backend expectation
-      };
+    const payload = validTopics.map((t, index) => ({
+      id: Number(t.id),
+      description: t.description.trim(),
+      sortedOrder: index + 1,
+    }));
 
-      await updateTopics(payload);
-      queryClient.invalidateQueries({ queryKey: ['topics', associationId] });
-      onSuccess();
-      onClose();
-    } catch (error) {
-      console.error('Failed to update topics', error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    await reorderAndUpdateTopics(payload);
+    queryClient.invalidateQueries({ queryKey: ['topics', associationId] });
+    onSuccess();
+    onClose();
+  } catch (error) {
+    console.error('Failed to reorder/update topics', error);
+  } finally {
+    setSubmitting(false);
+  }
+};
+
 
   const createFormFields = (topics: EditableTopic[]): ExtendedField[] => {
     return topics.map((topic, index) => ({

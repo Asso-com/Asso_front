@@ -99,7 +99,6 @@ export const SubjectLevelAccordion = ({ levels, associationId }: Props) => {
         cardConfig={{
           color: "blue",
           showCode: true,
-          onClick: (item) => console.log("Card clicked:", item.name),
         }}
       />
     )
