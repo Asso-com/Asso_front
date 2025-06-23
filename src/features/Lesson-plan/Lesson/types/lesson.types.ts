@@ -21,3 +21,9 @@ export interface LessonLevelItem {
   subject: string;
   lessons: Lesson[];
 }
+export type LessonUpdateDto = {
+  id: number;
+  name: string;
+  sortedOrder: number;
+};
+

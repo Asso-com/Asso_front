@@ -19,7 +19,6 @@ const SubjectLevelServiceApi = {
       const response = await axiosInstance.get<SubjectLevelItem[]>(
         `/api/v1/level-subjects/association/${associationId}`
       );
-      console.log("associationId:", associationId);
       return response.data;
     } catch (error) {
       handleAxiosError(error);

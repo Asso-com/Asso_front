@@ -1,6 +1,6 @@
 import handleAxiosError from "@utils/handleAxiosError";
 import { axiosInstance } from "../../../../services/api-services/axiosInstance";
-import type { TopicSummary, TopicRequestDto } from "../types/topic.types.ts";
+import type { TopicSummary, TopicRequestDto, TopicUpdateDto } from "../types/topic.types.ts";
 
 const TopicServiceApi = {
   // GET /topics/association/{associationId}
@@ -36,6 +36,23 @@ const TopicServiceApi = {
       const response = await axiosInstance.put<TopicSummary[]>(
         `/api/v1/topics`,
         payload
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+      return [];
+    }
+  },
+
+  // PUT /topics/reorder-and-update/association/{associationId}
+  reorderAndUpdateTopics: async (
+    associationId: number,
+    updates: TopicUpdateDto[]
+  ): Promise<TopicSummary[]> => {
+    try {
+      const response = await axiosInstance.put<TopicSummary[]>(
+        `/api/v1/topics/reorder-and-update/association/${associationId}`,
+        updates
       );
       return response.data;
     } catch (error) {

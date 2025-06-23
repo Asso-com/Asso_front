@@ -339,7 +339,6 @@ const LessonSection = ({
                 cardConfig={{
                   color: 'green',
                   showCode: false,
-                  onClick: () => console.log("Clicked topic:", topic.description),
                 }}
               />
             ))}

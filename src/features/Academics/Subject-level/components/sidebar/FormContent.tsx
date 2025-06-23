@@ -56,8 +56,6 @@ const FormContent = forwardRef<FormContentRef, FormContentProps>(
         label: subj.name,
         value: subj.id,
       }));
-      console.log("Subject options:", subjectOptions);
-
       // Construction dynamique du tableau des champs
       const dynamicFields: Field[] = [
         {

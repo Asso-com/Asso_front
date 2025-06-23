@@ -49,9 +49,6 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
       value: item.value,
       label: item.label,
     }));
-
-    console.log("Subject level options:", options);
-
     // Construction dynamique du tableau des champs
     const dynamicFields: Field[] = LessonFields.map((field: Field) => 
       field.name === "levelSubjectId"

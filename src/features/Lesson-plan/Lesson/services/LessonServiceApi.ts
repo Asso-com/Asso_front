@@ -1,6 +1,6 @@
 import handleAxiosError from "@utils/handleAxiosError";
 import { axiosInstance } from "../../../../services/api-services/axiosInstance";
-import type { LessonSummary } from "../types/lesson.types.ts";
+import type { LessonSummary , LessonUpdateDto} from "../types/lesson.types.ts";
 export type LessonRequestDto = {
   levelSubjectId: number;
   lessonNames: string[];
@@ -47,6 +47,23 @@ const LessonServiceApi = {
       return [];
     }
   },
+    // PUT /lessons/reorder-and-update/association/{associationId}
+  updateLessonsBatch: async (
+    associationId: number,
+    payload: LessonUpdateDto[]
+  ): Promise<LessonSummary[]> => {
+    try {
+      const response = await axiosInstance.put<LessonSummary[]>(
+        `/api/v1/lessons/reorder-and-update/association/${associationId}`,
+        payload
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+      return [];
+    }
+  },
+
 
   // DELETE /lessons/{lessonId}
   deleteLessonById: async (lessonId: number): Promise<void> => {
