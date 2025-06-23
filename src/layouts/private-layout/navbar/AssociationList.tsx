@@ -11,40 +11,40 @@ import {
   useColorModeValue,
   Divider,
   Skeleton,
-} from "@chakra-ui/react"
-import { FaCheck, FaUsers, FaChevronDown } from "react-icons/fa"
-import { motion } from "framer-motion"
-import { useTranslation } from "react-i18next"
-import { useDispatch, useSelector } from "react-redux"
-import { setAssociationId } from "@store/authSlice"
-import useFetchAssociations from "@features/Partner/list-partner/hooks/useFetchAssociations"
-import type { RootState } from "@store/index"
-import type { Association } from "@features/Partner/list-partner/types/AssociationType"
+} from "@chakra-ui/react";
+import { FaCheck, FaUsers, FaChevronDown } from "react-icons/fa";
+import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { setAssociationId } from "@store/authSlice";
+import useFetchAssociations from "@features/Partner/list-partner/hooks/useFetchAssociations";
+import type { RootState } from "@store/index";
+import type { Association } from "@features/Partner/list-partner/types/AssociationType";
 
 const AssociationList: React.FC = () => {
-  const { t } = useTranslation()
-  const dispatch = useDispatch()
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
 
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
-  )
-  const { data: associations = [], isLoading } = useFetchAssociations()
+  );
+  const { data: associations = [], isLoading } = useFetchAssociations();
 
   // Find the currently selected association from the list
   const selectedAssociation = associations.find(
     (a: Association) => a.id === associationId
-  )
+  );
 
   // Colors based on color mode
-  const bgColor = useColorModeValue("white", "gray.800")
-  const hoverBg = useColorModeValue("gray.50", "gray.700")
-  const activeBg = useColorModeValue("gray.100", "gray.600")
-  const borderColor = useColorModeValue("gray.200", "gray.600")
+  const bgColor = useColorModeValue("white", "gray.800");
+  const hoverBg = useColorModeValue("gray.50", "gray.700");
+  const activeBg = useColorModeValue("gray.100", "gray.600");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
 
   // Dispatch the selected association id to Redux
   const handleSelect = (association: Association) => {
-    dispatch(setAssociationId(association.id))
-  }
+    dispatch(setAssociationId(association.id));
+  };
 
   return (
     <Box position="relative">
@@ -165,7 +165,7 @@ const AssociationList: React.FC = () => {
         </Menu>
       )}
     </Box>
-  )
-}
+  );
+};
 
-export default AssociationList
+export default AssociationList;
