@@ -1,7 +1,7 @@
 import { type ColDef } from "ag-grid-community";
 
 const StaffColumnDefs: ColDef[] = [
-    {
+  {
     headerName: "Staff Identifier",
     field: "staffIdentifier",
     sortable: true,
@@ -17,7 +17,7 @@ const StaffColumnDefs: ColDef[] = [
     sortable: true,
     filter: "agTextColumnFilter",
     resizable: true,
-    minWidth: 150,
+    minWidth: 200,
     flex: 1,
     cellStyle: { textAlign: "left" },
   },
@@ -27,7 +27,7 @@ const StaffColumnDefs: ColDef[] = [
     sortable: true,
     filter: "agTextColumnFilter",
     resizable: true,
-    minWidth: 150,
+    minWidth: 200,
     flex: 1,
     cellStyle: { textAlign: "left" },
   },
@@ -47,7 +47,17 @@ const StaffColumnDefs: ColDef[] = [
     sortable: true,
     filter: "agTextColumnFilter",
     resizable: true,
-    minWidth: 120,
+    minWidth: 200,
+    flex: 1,
+    cellStyle: { textAlign: "left" },
+  },
+  {
+    headerName: "Job Category",
+    field: "jobCategory",
+    sortable: true,
+    filter: "agTextColumnFilter",
+    resizable: true,
+    minWidth: 200,
     flex: 1,
     cellStyle: { textAlign: "left" },
   },
@@ -67,7 +77,7 @@ const StaffColumnDefs: ColDef[] = [
     sortable: true,
     filter: "agTextColumnFilter",
     resizable: true,
-    minWidth: 150,
+    minWidth: 200,
     flex: 1,
     cellStyle: { textAlign: "left" },
   },
@@ -77,7 +87,7 @@ const StaffColumnDefs: ColDef[] = [
     sortable: true,
     filter: "agTextColumnFilter",
     resizable: true,
-    minWidth: 100,
+    minWidth: 200,
     flex: 1,
     cellStyle: { textAlign: "left" },
   },
@@ -87,7 +97,7 @@ const StaffColumnDefs: ColDef[] = [
     sortable: true,
     filter: "agTextColumnFilter",
     resizable: true,
-    minWidth: 100,
+    minWidth: 200,
     flex: 1,
     cellStyle: { textAlign: "left" },
   },
@@ -97,7 +107,7 @@ const StaffColumnDefs: ColDef[] = [
     sortable: false,
     filter: "agTextColumnFilter",
     resizable: true,
-    minWidth: 250,
+    minWidth: 200,
     flex: 1,
     cellStyle: { textAlign: "left" },
   },
@@ -108,7 +118,7 @@ const StaffColumnDefs: ColDef[] = [
     sortable: true,
     filter: "agDateColumnFilter",
     resizable: true,
-    minWidth: 120,
+    minWidth: 150,
     flex: 1,
     cellStyle: { textAlign: "left" },
     valueFormatter: (params) => {
@@ -123,7 +133,7 @@ const StaffColumnDefs: ColDef[] = [
     sortable: true,
     filter: "agDateColumnFilter",
     resizable: true,
-    minWidth: 120,
+    minWidth: 150,
     flex: 1,
     cellStyle: { textAlign: "left" },
     valueFormatter: (params) => {
@@ -138,7 +148,7 @@ const StaffColumnDefs: ColDef[] = [
     sortable: true,
     filter: "agNumberColumnFilter",
     resizable: true,
-    minWidth: 100,
+    minWidth: 150,
     flex: 1,
     cellStyle: { textAlign: "right" },
     valueFormatter: (params) => {
@@ -146,30 +156,7 @@ const StaffColumnDefs: ColDef[] = [
         ? `$${params.value.toLocaleString()}`
         : "";
     },
-  },
-  {
-    headerName: "Job Category",
-    field: "jobCategory",
-    sortable: true,
-    filter: "agTextColumnFilter",
-    resizable: true,
-    minWidth: 150,
-    flex: 1,
-    cellStyle: { textAlign: "left" },
-  },
-  // {
-  //   headerName: "Is Active",
-  //   field: "isActive",
-  //   sortable: true,
-  //   filter: "agSetColumnFilter",
-  //   resizable: true,
-  //   minWidth: 100,
-  //   flex: 1,
-  //   cellStyle: { textAlign: "center" },
-  //   valueFormatter: (params) => {
-  //     return params.value ? "Yes" : "No";
-  //   },
-  // },
+  }
 ];
 
 export default StaffColumnDefs;

@@ -1,4 +1,4 @@
-import type { AxiosError } from "axios";
+import handleAxiosError from "@utils/handleAxiosError";
 import { axiosInstance } from "../../../../services/api-services/axiosInstance";
 
 
@@ -12,7 +12,7 @@ const StaffServiceApi = {
             );
             return response.data;
         } catch (error) {
-            throw error;
+          handleAxiosError(error);
         }
     },
 
@@ -20,22 +20,8 @@ const StaffServiceApi = {
         try {
             const response = await axiosInstance.put(`/api/v1/staff/${staffId}`, data);
             return response.data;
-        } catch (err) {
-            const error = err as AxiosError;
-            if (error.response?.status === 400) {
-                const backendData = error.response.data as any;
-                if (backendData.errors && typeof backendData.errors === "object") {
-                    const validationErrors = backendData.errors as Record<string, string>;
-                    const message = Object.values(validationErrors).join(", ");
-                    throw new Error(message);
-                }
-                if (typeof backendData === "object") {
-                    const message = Object.values(backendData).join(", ");
-                    throw new Error(message);
-                }
-                throw new Error("Validation failed");
-            }
-            throw err;
+        } catch (error) {
+           handleAxiosError(error);
         }
     },
 
@@ -46,7 +32,7 @@ const StaffServiceApi = {
             );
             return response.data;
         } catch (error) {
-            throw error;
+          handleAxiosError(error);
         }
     },
 
@@ -57,22 +43,8 @@ const StaffServiceApi = {
                 data
             );
             return response.data;
-        } catch (err) {
-            const error = err as AxiosError;
-            if (error.response?.status === 400) {
-                const backendData = error.response.data as any;
-                if (backendData.errors && typeof backendData.errors === 'object') {
-                    const validationErrors = backendData.errors as Record<string, string>;
-                    const message = Object.values(validationErrors).join(', ');
-                    throw new Error(message);
-                }
-                if (typeof backendData === 'object') {
-                    const message = Object.values(backendData).join(', ');
-                    throw new Error(message);
-                }
-                throw new Error('Validation failed');
-            }
-            throw new Error('An unexpected error occurred.');
+        } catch (error) {
+           handleAxiosError(error);
 
         }
     },
@@ -84,11 +56,7 @@ const StaffServiceApi = {
                 `/api/v1/staff/${staffId}/association/${associationId}`
             );
         } catch (error) {
-            const axiosError = error as AxiosError;
-            if (axiosError.response?.status === 400) {
-                throw new Error('Invalid ID format sent to server');
-            }
-            throw error;
+            handleAxiosError(error);
         }
     },
 };

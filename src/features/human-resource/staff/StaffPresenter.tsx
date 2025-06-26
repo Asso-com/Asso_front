@@ -67,6 +67,8 @@ const StaffPresenter = ({
             pinned: "right",
           },
         ]}
+        pagination={true}
+        paginationPageSize={10}
         onGridReady={() => setIsGridInitialized(true)}
       />
     </Box>
