@@ -2,21 +2,14 @@ import type { Field } from "@/types/formTypes";
 
 export const studentFields: Field[] = [
   {
-    name: 'registration_id',
-    type: 'text',
-    label: 'Registration ID',
-    placeholder: 'Admission number',
-    validationRules: { required: true, maxLength: 50 }
-  },
-  {
-    name: 'first_name',
+    name: 'firstName',
     type: 'text',
     label: 'First Name',
     placeholder: 'Enter first name',
     validationRules: { required: true, maxLength: 255 }
   },
   {
-    name: 'last_name',
+    name: 'lastName',
     type: 'text',
     label: 'Last Name',
     placeholder: 'Enter last name',
@@ -40,13 +33,13 @@ export const studentFields: Field[] = [
     validationRules: { required: true }
   },
   {
-    name: 'date_of_birth',
+    name: 'dateOfBirth',
     type: 'date',
     label: 'Date of Birth',
     validationRules: { required: true }
   },
   {
-    name: 'mobile_number',
+    name: 'mobileNumber',
     type: 'phone',
     label: 'Phone Number',
     placeholder: 'Enter phone number'
@@ -73,7 +66,7 @@ export const studentFields: Field[] = [
     validationRules: { maxLength: 50 }
   },
   {
-    name: 'zip_code',
+    name: 'zipCode',
     type: 'text',
     label: 'Postal Code',
     placeholder: 'Enter postal code',
@@ -82,71 +75,69 @@ export const studentFields: Field[] = [
 ];
 
 export const parentFields: Field[] = [
-  // Father fields
   {
-    name: 'father_first_name',
+    name: 'firstName',
     type: 'text',
     label: "Father's First Name",
     placeholder: "Enter father's first name",
     validationRules: { maxLength: 255 }
   },
   {
-    name: 'father_last_name',
+    name: 'lastName',
     type: 'text',
     label: "Father's Last Name",
     placeholder: "Enter father's last name",
     validationRules: { maxLength: 255 }
   },
   {
-    name: 'father_email',
+    name: 'email',
     type: 'email',
     label: "Father's Email",
     placeholder: "Enter father's email",
     validationRules: { maxLength: 255 }
   },
   {
-    name: 'father_mobile_number',
+    name: 'mobileNumber',
     type: 'phone',
     label: "Father's Phone",
     placeholder: "Enter father's phone number"
   },
   {
-    name: 'father_occupation',
+    name: 'occupation',
     type: 'text',
     label: "Father's Occupation",
     placeholder: "Enter father's occupation",
     validationRules: { maxLength: 100 }
   },
-  // Mother fields
   {
-    name: 'mother_first_name',
+    name: 'firstName',
     type: 'text',
     label: "Mother's First Name",
     placeholder: "Enter mother's first name",
     validationRules: { maxLength: 255 }
   },
   {
-    name: 'mother_last_name',
+    name: 'lastName',
     type: 'text',
     label: "Mother's Last Name",
     placeholder: "Enter mother's last name",
     validationRules: { maxLength: 255 }
   },
   {
-    name: 'mother_email',
+    name: 'email',
     type: 'email',
     label: "Mother's Email",
     placeholder: "Enter mother's email",
     validationRules: { maxLength: 255 }
   },
   {
-    name: 'mother_mobile_number',
+    name: 'mobileNumber',
     type: 'phone',
     label: "Mother's Phone",
     placeholder: "Enter mother's phone number"
   },
   {
-    name: 'mother_occupation',
+    name: 'occupation',
     type: 'text',
     label: "Mother's Occupation",
     placeholder: "Enter mother's occupation",
@@ -156,39 +147,40 @@ export const parentFields: Field[] = [
 
 export const guardianFields: Field[] = [
   {
-    name: 'tutor_first_name',
+    name: 'firstName',
     type: 'text',
     label: "Guardian's First Name",
     placeholder: "Enter guardian's first name",
     validationRules: { maxLength: 255 }
   },
   {
-    name: 'tutor_last_name',
+    name: 'lastName',
     type: 'text',
     label: "Guardian's Last Name",
     placeholder: "Enter guardian's last name",
     validationRules: { maxLength: 255 }
   },
   {
-    name: 'tutor_email',
+    name: 'email',
     type: 'email',
     label: "Guardian's Email",
     placeholder: "Enter guardian's email",
     validationRules: { maxLength: 255 }
   },
   {
-    name: 'tutor_mobile_number',
+    name: 'mobileNumber',
     type: 'phone',
     label: "Guardian's Phone",
     placeholder: "Enter guardian's phone number"
-  } 
+  }
 ];
 
 export const additionalFields: Field[] = [
   {
-    name: 'admission_date',
+    name: 'admissionDate',
     type: 'date',
-    label: 'Admission Date'
+    label: 'Admission Date',
+    validationRules: { required: true }
   },
   {
     name: 'establishment',
@@ -198,12 +190,12 @@ export const additionalFields: Field[] = [
     validationRules: { maxLength: 100 }
   },
   {
-    name: 'child_can_return_alone',
+    name: 'childCanReturnAlone',
     type: 'checkbox',
     label: 'Can return home alone'
   },
   {
-    name: 'authorization_photo_pub',
+    name: 'authorizationPhotoPub',
     type: 'checkbox',
     label: 'Photo publication authorization'
   },
@@ -213,3 +205,5 @@ export const additionalFields: Field[] = [
     label: 'Priority Education Zone (QPv)'
   }
 ];
+
+export default { studentFields, parentFields, guardianFields, additionalFields };

@@ -3,21 +3,7 @@ import { useDispatch } from 'react-redux';
 import { showToast } from '@store/toastSlice';
 import StaffServiceApi from '../services/StaffServiceApi';
 
-// interface StaffFormData {
-//     firstName: string;
-//     lastName: string;
-//     email?: string;
-//     mobileNumber?: string;
-//     address: string;
-//     city: string;
-//     zipCode?: string;
-//     state?: string;
-//     comment?: string;
-//     basicSalary: number;
-//     jobCategory: string;
-//     isActive: boolean;
-//     associationId: number;
-// }
+ 
 
 const useCreateStaff = (associationId: number) => {
     const queryClient = useQueryClient();

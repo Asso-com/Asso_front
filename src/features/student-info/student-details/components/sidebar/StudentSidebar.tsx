@@ -1,5 +1,6 @@
 import { Button } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
+import RightSidebar from "@components/shared/RigthSidebar";
 import SidebarButtonsActions from "@components/shared/SidebarButtonsActions";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,42 +9,27 @@ import type { FormContentRef } from "./FormContent";
 import type { RootState } from "@store/index";
 import { useSelector } from "react-redux";
 import useCreateStudent from "../../hooks/useCreateStudent";
-import RightSidebar from "@components/shared/RigthSidebar";
 
 const StudentSidebar = () => {
   const { t } = useTranslation();
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
-
-  const { mutateAsync: createStudent, isPending: isSubmitting } =
-    useCreateStudent(associationId);
-
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { mutateAsync: createStudent, isPending } = useCreateStudent(associationId);
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const formRef = useRef<FormContentRef>(null);
 
-  const handleOpenSidebar = () => setSidebarOpen(true);
   const handleCloseSidebar = () => setSidebarOpen(false);
+  const handleOpenSidebar = () => setSidebarOpen(true);
 
   const handleSubmitForm = async () => {
-    const formValues = await formRef.current?.submitForm();
-
-    if (formValues && associationId) {
+    const values = await formRef.current?.submitForm();
+    if (values) {
       try {
-        const apiPayload = {
-          associationId: Number(associationId),
-        /* data */
-        };
-
-        await createStudent(apiPayload);
-        formRef.current?.resetForm?.();
+        await createStudent(values);
+        formRef.current?.resetForm();
         handleCloseSidebar();
-      } catch (error: unknown) {
-        console.error(
-          "Error creating Student:",
-          error instanceof Error ? error.message : error
-        );
-      }
+      } catch (error) {}
     }
   };
 
@@ -57,18 +43,18 @@ const StudentSidebar = () => {
         onClick={handleOpenSidebar}
         leftIcon={<FiPlus />}
       >
-        {t("Add student")}
+        {t("Add Student")}
       </Button>
 
       <RightSidebar
         isOpen={sidebarOpen}
-        title={t("Add student")}
+        title={t("Add Student")}
         onClose={handleCloseSidebar}
         footer={
           <SidebarButtonsActions
             onSubmitForm={handleSubmitForm}
             onClose={handleCloseSidebar}
-            isLoading={isSubmitting}
+            isLoading={isPending}
           />
         }
       >

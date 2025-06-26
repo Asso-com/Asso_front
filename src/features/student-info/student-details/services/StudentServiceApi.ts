@@ -1,38 +1,45 @@
+
 import { axiosInstance } from "../../../../services/api-services/axiosInstance";
 import handleAxiosError from "@utils/handleAxiosError";
 
 
 const StudentServiceApi = {
 
-    getAll: async (associationId: number): Promise<any> => {
-        
+    getAll: async (): Promise<any> => {
         try {
-            const response = await axiosInstance.get<any>(
-                `/api/v1/student/association/${associationId}`,
-            );
-            return response.data;
+          const response = await axiosInstance.get<any>(
+            `/api/v1/students`,
+          );
+          return response.data;
         } catch (error) {
-            handleAxiosError(error);
+          handleAxiosError(error);
         }
-    },
-
+      },
     
-
-    create: async (associationId: number, data: any): Promise<any> => {
+      getAllParents: async (): Promise<any> => {
         try {
-            const payload = {
-                ...data,
-                associationId
-            };
-            const response = await axiosInstance.post<unknown>(
-                `/api/v1/student`,
-                payload
-            );
-            return response.data;
+          const response = await axiosInstance.get<any>(
+            `/api/v1/parents`,
+          );
+          return response.data;
         } catch (error) {
-            handleAxiosError(error);
+          handleAxiosError(error);
         }
-    },
+      },
+    
+      create: async (data: any): Promise<any> => {
+        try {
+          const response = await axiosInstance.post(
+            `/api/v1/students/inscription`,
+            data
+          );
+          return response.data;
+        } catch (err) {
+          
+         
+          throw new Error('An unexpected error occurred.');
+        }
+      },
 
     update: async (id: number, ): Promise<any> => {
         try {
