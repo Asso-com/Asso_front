@@ -40,7 +40,8 @@ const StudentColumnDefs: ColDef[] = [
     minWidth: 150,
     flex: 1,
     cellStyle: { textAlign: "left" },
-    valueFormatter: (params) => params.value ? new Date(params.value).toLocaleDateString() : '',
+    valueFormatter: (params) =>
+      params.value ? new Date(params.value).toLocaleDateString() : "",
   },
   {
     headerName: "Email",
@@ -81,7 +82,8 @@ const StudentColumnDefs: ColDef[] = [
     minWidth: 150,
     flex: 1,
     cellStyle: { textAlign: "left" },
-    valueFormatter: (params) => params.value ? new Date(params.value).toLocaleDateString() : '',
+    valueFormatter: (params) =>
+      params.value ? new Date(params.value).toLocaleDateString() : "",
   },
   {
     headerName: "Gender",
@@ -102,20 +104,6 @@ const StudentColumnDefs: ColDef[] = [
     minWidth: 120,
     flex: 1,
     cellStyle: { textAlign: "left" },
-  },
-  {
-    headerName: "Actions",
-    field: "actions",
-    sortable: false,
-    filter: false,
-    resizable: false,
-    minWidth: 150,
-    maxWidth: 150,
-    cellStyle: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    },
   },
 ];
 
