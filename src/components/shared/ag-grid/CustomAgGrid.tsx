@@ -9,6 +9,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 
 import { Box } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import { useDirection } from "@hooks/useDirection";
 
 interface CustomAgGridProps {
   rowData?: any[];
@@ -19,7 +20,7 @@ interface CustomAgGridProps {
 const CustomAgGrid = forwardRef<AgGridReactType, CustomAgGridProps>(
   ({ rowData = [], colDefs = [], ...props }, ref) => {
     const { t } = useTranslation();
-    const isRTL = false; // Optional: Replace with useDirection() if using RTL
+    const { isRTL } = useDirection();
 
     const gridRef = useRef<AgGridReactType>(null);
     useImperativeHandle(ref, () => gridRef.current!, []);
@@ -38,6 +39,8 @@ const CustomAgGrid = forwardRef<AgGridReactType, CustomAgGridProps>(
         },
       };
     }, []);
+
+    console.log(t("Enrollment"));
 
     return (
       <Box

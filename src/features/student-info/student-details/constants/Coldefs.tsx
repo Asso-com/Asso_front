@@ -1,6 +1,55 @@
 import { type ColDef } from "ag-grid-community";
+import i18next from 'i18next';
+
+const t = i18next.t.bind(i18next);
+
 
 const StudentColumnDefs: ColDef[] = [
+  {
+    headerName: "Enrollment",
+    field: "enrolledInCurrentPeriod",
+    sortable: true,
+    filter: true,
+    width: 150,
+    pinned: "left",
+    cellStyle: {
+      textAlign: "center",
+      padding: "8px 4px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    cellRenderer: (params: any) => {
+      const isEnrolled = params.value;
+      return (
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "4px",
+            fontSize: "13px",
+            fontWeight: "500",
+            color: isEnrolled ? "#059669" : "#dc2626",
+            padding: "2px 6px",
+            borderRadius: "4px",
+            backgroundColor: isEnrolled ? "#ecfdf5" : "#fef2f2",
+            border: `1px solid ${isEnrolled ? "#a7f3d0" : "#fecaca"}`,
+            height: "20px",
+          }}
+        >
+          <span
+            style={{
+              width: "6px",
+              height: "6px",
+              borderRadius: "50%",
+              backgroundColor: isEnrolled ? "#059669" : "#dc2626",
+            }}
+          />
+          {isEnrolled ? t("Enrolled") : t("Not Enrolled")}
+        </div>
+      );
+    },
+  },
   {
     headerName: "Registration ID",
     field: "registrationId",
