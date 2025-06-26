@@ -8,7 +8,7 @@ const useFetchStudent = (associationId: number): UseQueryResult<any, Error> => {
         queryFn: async () => {
             switchLoadingModal();
             try {
-                const response = await StudentServiceApi.getAll(associationId);
+                const response = await StudentServiceApi.getAll();
                 return response;
             } catch (err) {
                 console.error("Error fetching Student:", err);
