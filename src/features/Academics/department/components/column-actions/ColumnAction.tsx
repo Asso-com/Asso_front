@@ -27,8 +27,7 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
     if (isConfirmed) {
       try {
         deleteDepartment(params.data.id);
-      } catch (error) {
-      }
+      } catch (error) {}
     }
   };
 

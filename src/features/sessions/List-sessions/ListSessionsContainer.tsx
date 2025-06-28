@@ -1,5 +1,9 @@
-const ListSessionsContainer = () => {
-  return <div>ListSessionsContainer</div>
-}
+import useFetchSessions from "./hooks/useFetchSessions";
+import ListSessionsPresenter from "./ListSessionsPresenter";
 
-export default ListSessionsContainer
+const ListSessionsContainer = () => {
+  const { data } = useFetchSessions();
+  return <ListSessionsPresenter rows={data} total={data?.length} />;
+};
+
+export default ListSessionsContainer;

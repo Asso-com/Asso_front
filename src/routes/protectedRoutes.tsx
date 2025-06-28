@@ -32,25 +32,61 @@ const protectedRoutes = [
     element: <ProtectedLayout />,
     children: [
       { path: "/dashboard", element: <DashboardPage /> },
-      { path: "/Settings/SessionSetting", element: <SchoolYearSettingsContainer /> },
-      { path: "/Settings/AcademicPeriodWeeks",element:<AcademicPeriodWeeksContainer/>},
-      { path: "/Student/StudentInformation", element: <StudentDetailsContainer /> },
-      { path: "/Student/GeographicalLocationofStudentAddresses", element: <LocationOfStudentContainer /> },
-      { path: "/Student/LinguisticLevelsRegistration", element: <LinguisticLevelsRegistrationContainer /> },
-      { path: "/Student/StudentInformation", element: <StudentDetailsContainer /> },
+      {
+        path: "/Settings/SessionSetting",
+        element: <SchoolYearSettingsContainer />,
+      },
+      {
+        path: "/Settings/AcademicPeriodWeeks",
+        element: <AcademicPeriodWeeksContainer />,
+      },
+      {
+        path: "/Student/StudentInformation",
+        element: <StudentDetailsContainer />,
+      },
+      {
+        path: "/Student/GeographicalLocationofStudentAddresses",
+        element: <LocationOfStudentContainer />,
+      },
+      {
+        path: "/Student/LinguisticLevelsRegistration",
+        element: <LinguisticLevelsRegistrationContainer />,
+      },
+      {
+        path: "/Student/StudentInformation",
+        element: <StudentDetailsContainer />,
+      },
       { path: "/Student/Payments", element: <PaymentsContainer /> },
-      { path: "/Student/AddStudent", element: <StudentRegistrationContainer /> },
+      {
+        path: "/Student/AddStudent",
+        element: <StudentRegistrationContainer />,
+      },
 
       { path: "/Sessions/listSessions", element: <ListSessionsContainer /> },
       { path: "/Sessions/AddSession", element: <AddSessionContainer /> },
-      { path: "/Sessions/AddStudentSession", element: <AddStudentSessionContainer /> },
-      { path: "/Sessions/listStudentSession", element: <ListStudentSessionContainer /> },
-      { path: "/Sessions/SessionsConsultation", element: <SessionsConsultationContainer /> },
-      { path: "/Sessions/AttendanceTracking", element: <AttendanceTrackingContainer /> },
-      { path: "/Sessions/SessionSchedule", element: <SessionScheduleContainer /> }, 
-    
+      {
+        path: "/Sessions/AddStudentSession",
+        element: <AddStudentSessionContainer />,
+      },
+      {
+        path: "/Sessions/listStudentSession",
+        element: <ListStudentSessionContainer />,
+      },
+      {
+        path: "/Sessions/SessionsConsultation",
+        element: <SessionsConsultationContainer />,
+      },
+      {
+        path: "/Sessions/AttendanceTracking",
+        element: <AttendanceTrackingContainer />,
+      },
+      {
+        path: "/Sessions/SessionSchedule",
+        element: <SessionScheduleContainer />,
+      },
+
       { path: "/Partner/listPartner", element: <ListPartnerContainer /> },
-      { path: "/Partner/location", element: <LocationContainer /> },  
+      { path: "/Partner/location", element: <LocationContainer /> },
 
       { path: "/LessonPlan/Lesson", element: <LessonContainer /> },
       { path: "/LessonPlan/Topic", element: <TopicContainer /> },
@@ -59,12 +95,18 @@ const protectedRoutes = [
       { path: "/Academics/listSubject", element: <ListSubjectContainer /> },
       { path: "/Academics/SubjectLevel", element: <SubjectLevelContainer /> },
       { path: "/Academics/ClassRoom", element: <ClassRoomContainer /> },
-      { path: "/Academics/CategoriesLevels", element: <CategoriesLevelsContainer /> },
+      {
+        path: "/Academics/CategoriesLevels",
+        element: <CategoriesLevelsContainer />,
+      },
       { path: "/Academics/Department", element: <DepartmentContainer /> },
 
-      {path:"/Settings/CoefficientSetting",element: <CoefficientSettingsContainer/>},
-     
-      { path: "/HumanResource/listStaff", element: <StaffContainer /> }, 
+      {
+        path: "/Settings/CoefficientSetting",
+        element: <CoefficientSettingsContainer />,
+      },
+
+      { path: "/HumanResource/listStaff", element: <StaffContainer /> },
     ],
   },
 ];
