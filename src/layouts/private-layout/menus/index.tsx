@@ -50,7 +50,7 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
       as="nav"
       id="sidebar_menus"
       h="100%"
-      w={isOpen ? "260px" : "0px"}
+      w={isOpen ? '15vw' : "0px"}
       overflowY="auto"
       overflowX="hidden"
       transition="width 0.3s ease"

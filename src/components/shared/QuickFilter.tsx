@@ -17,6 +17,7 @@ import type { AgGridReact } from "ag-grid-react"
 interface QuickFilterProps {
   gridRef: React.RefObject<AgGridReact>
   placeholder?: string
+  onChange?: (value: string) => void
 }
 
 const QuickFilter: React.FC<QuickFilterProps> = ({

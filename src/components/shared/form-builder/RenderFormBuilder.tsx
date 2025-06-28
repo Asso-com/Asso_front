@@ -7,8 +7,10 @@ import type { Field as FieldType } from "../../../types/formTypes";
 import SelectDropdown from "../inputs/GenericSelectDropdown";
 import GenericCheckbox from "../inputs/GenericCheckbox";
 import MultiSelectCheckbox from "../inputs/MultiSelectCheckbox";
+import GenericRadioGroup from "../inputs/GenericRadioGroup";
 import MultiTextInput from "../inputs/MultiTextInput";
 import FileInput from "../inputs/FileInput";
+import TimeInput from "../inputs/TimeInput";
 
 interface RenderFormBuilderProps {
   field: FieldType
@@ -193,6 +195,38 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
                 {...inputProps}
               />
             );
+          case "radio":
+  return (
+    <GenericRadioGroup
+      name={fullName}
+      label={label}
+      options={options || []}
+      selectedValue={formikField.value}
+      onChange={(value) => form.setFieldValue(fullName, value)}
+      isInvalid={isInvalid}
+      errorMessage={error}
+      isRequired={validationRules?.required}
+      labelDirection={labelDirection}
+      {...inputProps}
+    />
+            );
+          case "time":
+            return (
+              <TimeInput
+                label={label}
+                isRequired={validationRules?.required}
+                isInvalid={isInvalid}
+                errorMessage={error}
+                id={fullName}
+                placeholder={placeholder}
+                value={formikField.value || ""}
+                onChange={(value) => form.setFieldValue(fullName, value)}
+                formikField={formikField}
+                labelDirection={labelDirection}
+                {...inputProps}
+              />
+            );
+
 
           default:
             return (
