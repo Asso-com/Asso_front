@@ -42,6 +42,7 @@ export type FieldType =
     | 'select'
     | 'radio'
     | 'checkbox'
+    | 'time'
     | 'multi-select-checkbox'
     | 'string-array';
 
