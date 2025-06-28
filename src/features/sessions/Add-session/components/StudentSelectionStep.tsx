@@ -2,11 +2,9 @@ import React, { useState, useMemo, useRef } from "react";
 import {
   Card,
   CardBody,
-  VStack,
   Text,
   useColorModeValue,
   Box,
-  Divider,
 } from "@chakra-ui/react";
 import type { FormikProps } from "formik";
 import { MOCK_STUDENTS } from "../constants";

@@ -1,8 +1,8 @@
 import { Wrap, WrapItem, Badge } from "@chakra-ui/react";
 
 interface ActiveFiltersProps {
-  searchTerm: string;
   selectedDay: string;
+  selectedLevel: string;
   selectedSubject: string;
   selectedStaff: string;
   selectedStatus: string;
@@ -10,8 +10,8 @@ interface ActiveFiltersProps {
 }
 
 const ActiveFilters: React.FC<ActiveFiltersProps> = ({
-  searchTerm,
   selectedDay,
+  selectedLevel,
   selectedSubject,
   selectedStaff,
   selectedStatus,
@@ -29,19 +29,6 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
 
   return (
     <Wrap>
-      {searchTerm && (
-        <WrapItem>
-          <Badge
-            colorScheme="blue"
-            variant="solid"
-            px={3}
-            py={1}
-            borderRadius="full"
-          >
-            Search: {searchTerm}
-          </Badge>
-        </WrapItem>
-      )}
       {selectedDay && (
         <WrapItem>
           <Badge colorScheme="green" px={3} py={1} borderRadius="full">
@@ -49,6 +36,15 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
           </Badge>
         </WrapItem>
       )}
+
+      {selectedLevel && (
+        <WrapItem>
+          <Badge colorScheme="cyan" px={3} py={1} borderRadius="full">
+            {selectedLevel}
+          </Badge>
+        </WrapItem>
+      )}
+
       {selectedSubject && (
         <WrapItem>
           <Badge colorScheme="purple" px={3} py={1} borderRadius="full">
@@ -56,6 +52,7 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
           </Badge>
         </WrapItem>
       )}
+
       {selectedStaff && (
         <WrapItem>
           <Badge colorScheme="orange" px={3} py={1} borderRadius="full">
@@ -63,6 +60,7 @@ const ActiveFilters: React.FC<ActiveFiltersProps> = ({
           </Badge>
         </WrapItem>
       )}
+
       {selectedStatus && (
         <WrapItem>
           <Badge colorScheme="teal" px={3} py={1} borderRadius="full">

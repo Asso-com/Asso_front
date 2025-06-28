@@ -12,17 +12,16 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { FiFilter, FiList, FiGrid } from "react-icons/fi";
-import SearchInput from "./SearchInput";
 import FilterSelect from "./FilterSelect";
 import ActiveFilters from "./ActiveFilters";
 import DatePeriodNavigator from "../ui/DatePeriodNavigator";
 import { useTranslation } from "react-i18next";
 
 interface FilterPanelProps {
-  searchTerm: string;
-  setSearchTerm: (value: string) => void;
   selectedDay: string;
   setSelectedDay: (value: string) => void;
+  selectedLevel: string;
+  setSelectedLevel: (value: string) => void;
   selectedSubject: string;
   setSelectedSubject: (value: string) => void;
   selectedStaff: string;
@@ -33,6 +32,7 @@ interface FilterPanelProps {
     days: string[];
     subjects: string[];
     staff: string[];
+    levels: string[];
   };
   hasActiveFilters: boolean;
   clearFilters: () => void;
@@ -42,10 +42,10 @@ interface FilterPanelProps {
 }
 
 const FilterPanel: React.FC<FilterPanelProps> = ({
-  searchTerm,
-  setSearchTerm,
   selectedDay,
   setSelectedDay,
+  selectedLevel,
+  setSelectedLevel,
   selectedSubject,
   setSelectedSubject,
   selectedStaff,
@@ -127,19 +127,12 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
       <CardBody pt={0}>
         <VStack spacing={4}>
           <SimpleGrid columns={{ base: 1, md: 2, lg: 5 }} spacing={4} w="full">
-            <SearchInput
-              value={searchTerm}
-              onChange={setSearchTerm}
-              bg={bgColor}
-            />
-
             <FilterSelect
-              value={selectedDay}
-              onChange={setSelectedDay}
-              placeholder={t("Day")}
-              options={filterOptions.days}
+              value={selectedLevel}
+              onChange={setSelectedLevel}
+              placeholder={t("Level")}
+              options={filterOptions.levels}
               bg={bgColor}
-              optionFormatter={(day) => dayNames[day] || day}
             />
 
             <FilterSelect
@@ -157,7 +150,14 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               options={filterOptions.staff}
               bg={bgColor}
             />
-
+            <FilterSelect
+              value={selectedDay}
+              onChange={setSelectedDay}
+              placeholder={t("Day")}
+              options={filterOptions.days}
+              bg={bgColor}
+              optionFormatter={(day) => dayNames[day] || day}
+            />
             <FilterSelect
               value={selectedStatus}
               onChange={setSelectedStatus}
@@ -173,8 +173,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
           {hasActiveFilters && (
             <ActiveFilters
-              searchTerm={searchTerm}
               selectedDay={selectedDay}
+              selectedLevel={selectedLevel}
               selectedSubject={selectedSubject}
               selectedStaff={selectedStaff}
               selectedStatus={selectedStatus}

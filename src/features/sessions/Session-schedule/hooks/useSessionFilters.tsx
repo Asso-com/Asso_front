@@ -2,14 +2,14 @@ import { useState, useMemo } from "react";
 import type { SessionTracking } from "../types";
 
 export const useSessionFilters = (sessionsData: SessionTracking[]) => {
-    
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectedDay, setSelectedDay] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedStaff, setSelectedStaff] = useState("");
 
   const filterOptions = useMemo(() => {
+    const levels = [...new Set(sessionsData.map((session) => session.level))];
     const days = [...new Set(sessionsData.map((session) => session.day))];
     const subjects = [
       ...new Set(sessionsData.map((session) => session.subject)),
@@ -22,21 +22,13 @@ export const useSessionFilters = (sessionsData: SessionTracking[]) => {
       ),
     ];
 
-    return { days, subjects, staff };
+    return { days, subjects, staff, levels };
   }, [sessionsData]);
 
   const filteredSessions = useMemo(() => {
     return sessionsData.filter((session: SessionTracking) => {
-      const matchesSearch =
-        !searchTerm ||
-        session.level.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        session.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        `${session.firstName} ${session.lastName}`
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        session.classRoom.toLowerCase().includes(searchTerm.toLowerCase());
-
       const matchesDay = !selectedDay || session.day === selectedDay;
+      const matchesLevel = !selectedLevel || session.level === selectedLevel;
       const matchesSubject =
         !selectedSubject || session.subject === selectedSubject;
       const matchesStaff =
@@ -64,8 +56,8 @@ export const useSessionFilters = (sessionsData: SessionTracking[]) => {
       }
 
       return (
-        matchesSearch &&
         matchesDay &&
+        matchesLevel &&
         matchesSubject &&
         matchesStaff &&
         matchesStatus
@@ -73,36 +65,36 @@ export const useSessionFilters = (sessionsData: SessionTracking[]) => {
     });
   }, [
     sessionsData,
-    searchTerm,
     selectedDay,
+    selectedLevel,
     selectedSubject,
     selectedStatus,
     selectedStaff,
   ]);
 
   const clearFilters = () => {
-    setSearchTerm("");
     setSelectedDay("");
+    setSelectedLevel("");
     setSelectedSubject("");
     setSelectedStatus("");
     setSelectedStaff("");
   };
 
   const hasActiveFilters =
-    !!searchTerm ||
     !!selectedDay ||
+    !!selectedLevel ||
     !!selectedSubject ||
     !!selectedStatus ||
     !!selectedStaff;
 
   return {
-    searchTerm,
     selectedDay,
+    selectedLevel,
     selectedSubject,
     selectedStatus,
     selectedStaff,
-    setSearchTerm,
     setSelectedDay,
+    setSelectedLevel,
     setSelectedSubject,
     setSelectedStatus,
     setSelectedStaff,

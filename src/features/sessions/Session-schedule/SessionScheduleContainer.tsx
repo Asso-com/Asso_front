@@ -15,13 +15,13 @@ const SessionScheduleContainer = () => {
   const bgColor = useColorModeValue("gray.50", "gray.900");
 
   const {
-    searchTerm,
     selectedDay,
+    selectedLevel,
     selectedSubject,
     selectedStatus,
     selectedStaff,
-    setSearchTerm,
     setSelectedDay,
+    setSelectedLevel,
     setSelectedSubject,
     setSelectedStatus,
     setSelectedStaff,
@@ -47,10 +47,10 @@ const SessionScheduleContainer = () => {
       p={4}
     >
       <FilterPanel
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
         selectedDay={selectedDay}
         setSelectedDay={setSelectedDay}
+        selectedLevel={selectedLevel}
+        setSelectedLevel={setSelectedLevel}
         selectedSubject={selectedSubject}
         setSelectedSubject={setSelectedSubject}
         selectedStaff={selectedStaff}
