@@ -71,7 +71,7 @@ const SessionScheduleContainer = () => {
         {viewMode === "grouped" ? (
           <DayPresentation sessionsByDay={sessionsByDay} />
         ) : filteredSessions.length > 0 ? (
-          <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} spacing={6}>
+          <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} spacing={6}>
             {filteredSessions.map((session: SessionTracking) => (
               <ModernSessionCard
                 key={session.sessionDateId}

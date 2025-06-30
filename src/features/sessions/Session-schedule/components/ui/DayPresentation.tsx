@@ -81,7 +81,7 @@ const DayPresentation: React.FC<DayPresentationProps> = ({ sessionsByDay }) => {
             </AccordionButton>
             <AccordionPanel pb={4}>
               {sessionsByDay[day]?.length > 0 ? (
-                <SimpleGrid columns={{ base: 1, lg: 2, xl: 3 }} spacing={6}>
+                <SimpleGrid columns={{ base: 1, lg: 2, xl: 4 }} spacing={6}>
                   {sessionsByDay[day].map((session) => (
                     <ModernSessionCard
                       key={session.sessionDateId}
