@@ -1,52 +1,75 @@
-// components/StudentSelectionStep.tsx
-import React, { useMemo, useRef,useState } from "react";
-import {
-  Card,
-  CardBody,
-  Text,
-  useColorModeValue,
-  Box,
-} from "@chakra-ui/react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
+import { Box, Card, CardBody, Text, useColorModeValue } from "@chakra-ui/react";
 import type { FormikProps } from "formik";
-
-import { MOCK_STUDENTS } from "../constants";
-import type { SessionFormData } from "../types/addsession.types";
+import type { SessionFormData, Student } from "../types/addsession.types";
 import StudentTable from "./StudentTable";
 import QuickFilter from "@components/shared/QuickFilter";
 import type { AgGridReact } from "ag-grid-react";
 import { useTranslation } from "react-i18next";
 import ClearFilter from "@components/shared/ClearFilter";
+import useFetchStudentsByCategoryAndLevelSubjectID from "@features/student-info/student-details/hooks/useFetchStudentsByCategoryAndLevelSubjectID";
+import { useDispatch } from "react-redux";
+import { showToast } from "@store/toastSlice";
 
 interface StudentSelectionStepProps {
   formik: FormikProps<SessionFormData>;
+  associationId: number;
+  categoryId: number;
+  levelSubjectId: number;
 }
 
 const StudentSelectionStep: React.FC<StudentSelectionStepProps> = ({
   formik,
+  associationId,
+  categoryId,
+  levelSubjectId,
 }) => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const gridRef = useRef<AgGridReact<any>>(null!);
   const cardBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("blue.100", "blue.700");
   const textColor = useColorModeValue("gray.700", "gray.100");
 
-  const filteredStudents = useMemo(() => {
-    return MOCK_STUDENTS.filter(
-      (student) =>
-        student.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        student.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        student.matricule.includes(searchTerm)
-    );
-  }, [searchTerm]);
+  const {
+    data: students = [],
+  } = useFetchStudentsByCategoryAndLevelSubjectID(associationId, categoryId, levelSubjectId);
 
-  const handleStudentToggle = (matricule: string) => {
+  const filteredStudents = useMemo(() => {
+    return students.filter((student: Student) =>
+      String(student.studentId ?? "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(student.studentName ?? "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (student.levelName ?? "").includes(searchTerm)
+    );
+  }, [students, searchTerm]);
+
+  const handleStudentToggle = (studentId: string) => {
     const currentSelected = formik.values.studentIds;
-    const newSelected = currentSelected.includes(matricule)
-      ? currentSelected.filter((id) => id !== matricule)
-      : [...currentSelected, matricule];
+    const newSelected = currentSelected.includes(studentId)
+      ? currentSelected.filter((id) => id !== studentId)
+      : [...currentSelected, studentId];
     formik.setFieldValue("studentIds", newSelected);
   };
+
+  useEffect(() => {
+    const isOverCapacity = formik.values.studentIds.length > formik.values.maxStudentsCapacity;
+    if (isOverCapacity) {
+      dispatch(
+        showToast({
+          title: t("Over Capacity"),
+          message: t(
+            "You have selected {{selected}} students, which exceeds the maximum capacity of {{max}}.",
+            {
+              selected: formik.values.studentIds.length,
+              max: formik.values.maxStudentsCapacity,
+            }
+          ),
+          type: "warning",
+        })
+      );
+    }
+  }, [formik.values.studentIds, formik.values.maxStudentsCapacity, dispatch, t]);
 
   return (
     <Card

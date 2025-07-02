@@ -1,9 +1,8 @@
-// components/AddSessionPresenter.tsx
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Box, Flex, VStack, useColorModeValue } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import type { FormikProps } from "formik";
-import { initialValues } from "./constants/formFields";
+import { createInitialValues } from "./constants/formFields";
 import type { SessionFormData } from "./types/addsession.types";
 import Stepper from "./components/Stepper";
 import BasicInfoStep from "./components/BasicInfoStep";
@@ -13,9 +12,9 @@ import { NavigationButtons } from "./components/FormComponents";
 import { createFullInfoSchema } from "./validation/schemas";
 import { useDispatch } from "react-redux";
 import { showToast } from "@store/toastSlice";
-
-
 import useCreateSession from "./hooks/useCreateSession";
+import useFetchCategories from "@features/Academics/Categories-levels/hooks/useFetchCategories";
+
 interface AcademicPeriodWeek {
   id: number;
   code: string;
@@ -38,71 +37,113 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
 }) => {
   const bgColor = useColorModeValue("gray.50", "gray.900");
   const [currentStep, setCurrentStep] = useState(0);
+  const [dynamicInitialValues, setDynamicInitialValues] = useState<SessionFormData | null>(null);
+  
   const { mutate: createSession } = useCreateSession(associationId);
+  const dispatch = useDispatch();
+
+  const {
+    data: categories = [],
+    isLoading: isLoadingCategories,
+  } = useFetchCategories(associationId);
 
   const normalizedData = useMemo((): AcademicPeriodWeek[] => {
     if (!data) return [];
     return Array.isArray(data) ? data : [data];
   }, [data]);
 
-const dispatch = useDispatch();
+  useEffect(() => {
+    if (!isLoadingCategories && categories.length > 0) {
+      const initialVals = createInitialValues(normalizedData, categories);
+      setDynamicInitialValues(initialVals);
+    }
+  }, [categories, isLoadingCategories, normalizedData]);
 
-const handleNext = async (
-  validateForm: FormikProps<SessionFormData>["validateForm"],
-  setTouched: FormikProps<SessionFormData>["setTouched"],
-  formik: FormikProps<SessionFormData>
-) => {
-  const errors = await validateForm();
-  const allTouched = Object.keys(formik.values).reduce((acc, key) => {
-    acc[key] = true;
-    return acc;
-  }, {} as Record<string, boolean>);
-  setTouched(allTouched);
+  const markAllTouchedByStep = (values: SessionFormData, currentStep: number) => {
+    const touched: any = {};
 
-  if (currentStep === 0) {
-    const hasBasicInfoErrors = Boolean(
-      errors.generalLevels ??
-      errors.levelSubjectId ??
-      errors.staffId ??
-      errors.periodicity ??
-      errors.sessionType ??
-      errors.startDate ??
-      errors.endDate ??
-      errors.maxStudentsCapacity ??
-      errors.fees
-    );
-    if (!hasBasicInfoErrors) setCurrentStep(1);
-  } else if (currentStep === 1) {
-    const newErrors = await validateForm();
+    if (currentStep >= 0) {
+      touched.categoryId = true;
+      touched.levelSubjectId = true;
+      touched.staffId = true;
+      touched.associationId = true;
+      touched.periodicity = true;
+      touched.sessionType = true;
+      touched.startDate = true;
+      touched.endDate = true;
+      touched.maxStudentsCapacity = true;
+      touched.fees = true;
+      touched.generalLevels = true;
+    }
+    if (currentStep >= 1) {
+      touched.sessionSchedules = values.sessionSchedules.map((schedule) => {
+        const touchedSchedule: any = {};
+        Object.keys(schedule).forEach(key => {
+          touchedSchedule[key] = true;
+        });
+        return touchedSchedule;
+      });
+    }
 
-    // 🔔 Show toast if overlapping detected
-    if (
-      typeof newErrors.sessionSchedules === "string" &&
-      newErrors.sessionSchedules.includes("overlapping")
-    ) {
-      dispatch(
-        showToast({
-          title: "Attention",
-          message: newErrors.sessionSchedules,
-          type: "warning",
-        })
+    if (currentStep >= 2) {
+      touched.studentIds = values.studentIds.map(() => true);
+    }
+
+    return touched;
+  };
+
+  const handleNext = async (
+    validateForm: FormikProps<SessionFormData>["validateForm"],
+    setTouched: FormikProps<SessionFormData>["setTouched"],
+    formik: FormikProps<SessionFormData>
+  ) => {
+    const errors = await validateForm();
+    const stepTouched = markAllTouchedByStep(formik.values, currentStep);
+    setTouched(stepTouched);
+
+    if (currentStep === 0) {
+      const hasBasicInfoErrors = Boolean(
+        errors.generalLevels ??
+          errors.levelSubjectId ??
+          errors.staffId ??
+          errors.periodicity ??
+          errors.sessionType ??
+          errors.startDate ??
+          errors.endDate ??
+          errors.maxStudentsCapacity ??
+          errors.fees
       );
+      if (!hasBasicInfoErrors) setCurrentStep(1);
+    } else if (currentStep === 1) {
+      const newErrors = await validateForm();
+      if (
+        typeof newErrors.sessionSchedules === "string" &&
+        newErrors.sessionSchedules.includes("overlapping")
+      ) {
+        dispatch(
+          showToast({
+            title: "Attention",
+            message: newErrors.sessionSchedules,
+            type: "warning",
+          })
+        );
+      }
+      if (!newErrors.sessionSchedules) {
+        setCurrentStep(2);
+      }
     }
+  };
 
-    if (!newErrors.sessionSchedules) {
-      setCurrentStep(2);
-    }
-  }
-};
-
-
-const handleSubmit = (values: SessionFormData, associationId: number) => {
-  createSession({ ...values, associationId });
-};
   const handlePrevious = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 0));
   };
 
+  const handleSubmit = (values: SessionFormData, associationId: number) => {
+    createSession({
+      ...values,
+      associationId,
+    });
+  };
 
   const renderStepContent = (formik: FormikProps<SessionFormData>) => {
     if (currentStep === 0)
@@ -114,8 +155,22 @@ const handleSubmit = (values: SessionFormData, associationId: number) => {
       );
     if (currentStep === 1)
       return <ScheduleStep formik={formik} associationId={associationId} />;
-    return <StudentSelectionStep formik={formik} />;
+    return (
+      <StudentSelectionStep
+        formik={formik}
+        associationId={associationId}
+        categoryId={formik.values.categoryId}
+        levelSubjectId={formik.values.levelSubjectId}
+      />
+    );
   };
+  if (!dynamicInitialValues || isLoadingCategories) {
+    return (
+      <Box bg={bgColor} h="100%" p={2} display="flex" alignItems="center" justifyContent="center">
+        <div>Loading form...</div>
+      </Box>
+    );
+  }
 
   return (
     <Box bg={bgColor} h="100%" p={2} overflow="hidden">
@@ -134,9 +189,10 @@ const handleSubmit = (values: SessionFormData, associationId: number) => {
             overflow="hidden"
           >
             <Formik<SessionFormData>
-              initialValues={initialValues}
+              initialValues={dynamicInitialValues}
               validationSchema={createFullInfoSchema(normalizedData)}
               onSubmit={(values) => handleSubmit(values, associationId)}
+              enableReinitialize={true}
             >
               {(formik) => (
                 <Form
@@ -150,13 +206,14 @@ const handleSubmit = (values: SessionFormData, associationId: number) => {
                     <VStack spacing={4} align="stretch" h="100%">
                       {renderStepContent(formik)}
                       <NavigationButtons
-  currentStep={currentStep}
-  isLastStep={currentStep === 2}
-  onNext={() => handleNext(formik.validateForm, formik.setTouched, formik)}
-  onPrevious={handlePrevious}
-  onSubmit={() => formik.submitForm()}
-/>
-
+                        currentStep={currentStep}
+                        isLastStep={currentStep === 2}
+                        onNext={() =>
+                          handleNext(formik.validateForm, formik.setTouched, formik)
+                        }
+                        onPrevious={handlePrevious}
+                        onSubmit={() => formik.submitForm()}
+                      />
                     </VStack>
                   </Box>
                 </Form>
