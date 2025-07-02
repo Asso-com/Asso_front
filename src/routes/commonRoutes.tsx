@@ -1,3 +1,5 @@
+import NotFoundPage from "@features/NotFoundPage";
+
 const commonRoutes = [
   {
     path: "/access-denied",
@@ -5,7 +7,7 @@ const commonRoutes = [
   },
   {
     path: "*",
-    element: <h2>Not found Page</h2>,
+    element: <NotFoundPage />,
   },
 ];
 

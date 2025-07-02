@@ -18,7 +18,6 @@ import ListLevelContainer from "@features/Academics/list-level/ListLevelContaine
 import ListSubjectContainer from "@features/Academics/Subject/ListSubjectContainer";
 import SubjectLevelContainer from "@features/Academics/Subject-level/SubjectLevelContainer";
 import ListPartnerContainer from "@features/Partner/list-partner/ListPartnerContainer";
-import LocationContainer from "@features/Partner/location/LocationContainer";
 import AcademicPeriodWeeksContainer from "@features/system-settings/academic-period-weeks/AcademicPeriodWeeksContainer";
 import DepartmentContainer from "@features/Academics/department/DepartmentContainer";
 import CategoriesLevelsContainer from "@features/Academics/Categories-levels/CategoriesLevelsContainer";
@@ -27,6 +26,7 @@ import ClassRoomContainer from "@features/Academics/Class-room/ClassRoomContaine
 import CoefficientSettingsContainer from "@features/system-settings/coefficients/CoefficientSettingsContainer.tsx";
 import LessonContainer from "@features/Lesson-plan/Lesson/LessonContainer.tsx";
 import TopicContainer from "@features/Lesson-plan/Topic/TopicContainer.tsx";
+import LocationContainer from "@features/Partner/location/LocationContainer";
 const protectedRoutes = [
   {
     element: <ProtectedLayout />,
@@ -85,8 +85,8 @@ const protectedRoutes = [
         element: <SessionScheduleContainer />,
       },
 
-      { path: "/Partner/listPartner", element: <ListPartnerContainer /> },
-      { path: "/Partner/location", element: <LocationContainer /> },
+      { path: "/partner/associations", element: <ListPartnerContainer /> },
+      { path: "/partner/associations/locations", element: <LocationContainer /> },
 
       { path: "/LessonPlan/Lesson", element: <LessonContainer /> },
       { path: "/LessonPlan/Topic", element: <TopicContainer /> },
