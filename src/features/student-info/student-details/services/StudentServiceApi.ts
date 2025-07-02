@@ -36,6 +36,20 @@ const StudentServiceApi = {
       handleAxiosError(error);
     }
   },
+  getByAssociationCategoryAndLevelSubject: async (
+    associationId: number,
+    categoryId: number,
+    levelSubjectId: number
+  ): Promise<any> => {
+    try {
+      const response = await axiosInstance.get<any>(
+        `/api/v1/enrollments/association/${associationId}/category/${categoryId}/levelSubject/${levelSubjectId}`
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  },
 
   create: async (data: any): Promise<any> => {
     try {
