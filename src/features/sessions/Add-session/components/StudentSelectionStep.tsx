@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useRef } from "react";
+// components/StudentSelectionStep.tsx
+import React, { useMemo, useRef,useState } from "react";
 import {
   Card,
   CardBody,
@@ -7,6 +8,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 import type { FormikProps } from "formik";
+
 import { MOCK_STUDENTS } from "../constants";
 import type { SessionFormData } from "../types/addsession.types";
 import StudentTable from "./StudentTable";
@@ -39,11 +41,11 @@ const StudentSelectionStep: React.FC<StudentSelectionStepProps> = ({
   }, [searchTerm]);
 
   const handleStudentToggle = (matricule: string) => {
-    const currentSelected = formik.values.students;
+    const currentSelected = formik.values.studentIds;
     const newSelected = currentSelected.includes(matricule)
       ? currentSelected.filter((id) => id !== matricule)
       : [...currentSelected, matricule];
-    formik.setFieldValue("selectedStudents", newSelected);
+    formik.setFieldValue("studentIds", newSelected);
   };
 
   return (
@@ -56,7 +58,6 @@ const StudentSelectionStep: React.FC<StudentSelectionStepProps> = ({
       overflow="hidden"
       h="100%"
     >
-      {/* <Divider borderColor={borderColor} /> */}
       <CardBody p={4} h="100%">
         <Box
           borderRadius="xl"
@@ -92,11 +93,11 @@ const StudentSelectionStep: React.FC<StudentSelectionStepProps> = ({
             <ClearFilter gridRef={gridRef} />
           </Box>
 
-          <Box flex={1} h={"100%"} p={4}>
+          <Box flex={1} h="100%" p={4}>
             <StudentTable
               ref={gridRef}
               students={filteredStudents}
-              selectedStudents={formik.values.students}
+              selectedStudents={formik.values.studentIds}
               onStudentToggle={handleStudentToggle}
             />
           </Box>

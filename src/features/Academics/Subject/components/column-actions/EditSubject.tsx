@@ -40,7 +40,8 @@ const EditSubject: React.FC<EditLevelProps> = ({ details, onClose }) => {
       departments?.map((item: any) => ({
         value: item.id,
         label: item.name,
-      })) || [],
+      }))
+      ?? [],
     [departments]
   );
 

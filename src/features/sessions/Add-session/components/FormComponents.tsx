@@ -1,18 +1,21 @@
+// components/NavigationButtons.tsx
 import React from "react";
-import { Button, Flex } from "@chakra-ui/react";// ← ajuste ce chemin si besoin
+import { Button, Flex } from "@chakra-ui/react";
 
 interface NavigationButtonsProps {
-  currentStep: number;
+  isLastStep: boolean;
   onNext: () => void;
   onPrevious: () => void;
-    onSubmit: () => void;
+  onSubmit: () => void;
+  currentStep: number;
 }
 
-const NavigationButtons: React.FC<NavigationButtonsProps> = ({
+export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
   currentStep,
   onNext,
   onPrevious,
   onSubmit,
+  isLastStep,
 }) => {
   return (
     <Flex
@@ -30,6 +33,7 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
           borderRadius="full"
           px={8}
           onClick={onPrevious}
+          type="button" // Explicitly set to button
         >
           Previous
         </Button>
@@ -44,13 +48,11 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
           transform: "translateY(-1px)",
           boxShadow: "lg",
         }}
-        type={currentStep === 2 ? "submit" : "button"}
-        onClick={currentStep === 2 ? onSubmit : onNext}
+        type="button" 
+        onClick={isLastStep ? onSubmit : onNext}
       >
-        {currentStep === 2 ? "Create Session" : "Next"}
+        {isLastStep ? "Create Session" : "Next"}
       </Button>
     </Flex>
   );
 };
-
-export default NavigationButtons;

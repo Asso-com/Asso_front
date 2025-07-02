@@ -1,6 +1,5 @@
 import { Field, type FieldProps } from "formik"
 import { get } from "lodash"
-
 import InputPhone from "../inputs/InputPhone";
 import GenericInput from "../inputs/GenericInput";
 import type { Field as FieldType } from "../../../types/formTypes";
@@ -13,15 +12,19 @@ import FileInput from "../inputs/FileInput";
 import TimeInput from "../inputs/TimeInput";
 
 interface RenderFormBuilderProps {
-  field: FieldType
+  field: FieldType & {
+    onChange?: (value: any) => void; 
+  }
   arrayName?: string
   index?: number
   labelDirection?: "top" | "left"
 }
+
 type Option = {
   label: string
   value: string | number
 }
+
 const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
   field,
   arrayName,
@@ -36,6 +39,7 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
     options,
     placeholder,
     inputProps,
+    onChange: customOnChange, 
   } = field
 
   const fullName =
@@ -55,6 +59,13 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
             ? new Date(formikField.value).toISOString().split("T")[0]
             : formikField.value
 
+        const handleValueChange = (value: any) => {
+          form.setFieldValue(fullName, value);
+          if (customOnChange) {
+            customOnChange(value);
+          }
+        };
+
         const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           const formattedDate = new Date(e.target.value)
             .toISOString()
@@ -66,13 +77,6 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
             },
           })
         }
-
-        // const handleFileChange = (
-        //   event: React.ChangeEvent<HTMLInputElement>
-        // ) => {
-        //   const file = event.currentTarget.files?.[0];
-        //   form.setFieldValue(fullName, file);
-        // };
 
         switch (type) {
           case "phone":
@@ -195,21 +199,23 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
                 {...inputProps}
               />
             );
+
           case "radio":
-  return (
-    <GenericRadioGroup
-      name={fullName}
-      label={label}
-      options={options || []}
-      selectedValue={formikField.value}
-      onChange={(value) => form.setFieldValue(fullName, value)}
-      isInvalid={isInvalid}
-      errorMessage={error}
-      isRequired={validationRules?.required}
-      labelDirection={labelDirection}
-      {...inputProps}
-    />
+            return (
+              <GenericRadioGroup
+                name={fullName}
+                label={label}
+                options={options || []}
+                selectedValue={formikField.value}
+                onChange={(value) => handleValueChange(value)} 
+                isError={isInvalid}
+                errorMessage={error}
+                isRequired={validationRules?.required}
+                labelDirection={labelDirection}
+                {...inputProps}
+              />
             );
+
           case "time":
             return (
               <TimeInput

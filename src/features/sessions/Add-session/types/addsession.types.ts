@@ -1,24 +1,4 @@
-import type { ComponentWithAs } from "@chakra-ui/react";
-import type { IconType } from "react-icons";
-
-export interface ValidationRules {
-  required?: boolean;
-  min?: number;
-  max?: number;
-  isAfter?: { field: string; message?: string };
-}
-
-export type FieldType = 'text' | 'number' | 'email' | 'date' | 'select' | 'radio' | 'time';
-
-export interface Field {
-  name: string;
-  label: string;
-  placeholder?: string;
-  type: FieldType;
-  validationRules?: ValidationRules;
-  options?: { label: string; value: any }[];
-}
-
+// types/addsession.types.ts
 export interface SessionFormData {
   levelSubjectId: number;
   staffId: string;
@@ -31,12 +11,14 @@ export interface SessionFormData {
   maxStudentsCapacity: number;
   placesAvailable: number;
   fees: number;
-  sessions: SessionSchedule[];
-  students: string[];
+  generalLevels: 'Foundantion' | 'Linguistic' | '';
+  sessionSchedules: SessionSchedule[];
+  studentIds: string[];
 }
+
 export interface SessionSchedule {
+  sessionName?: string; // Add this field
   classRoomId: number;
-  sessionName: string;
   day: string;
   startTime: string;
   endTime: string;
@@ -48,9 +30,27 @@ export interface Student {
   nom: string;
   niveau: string;
 }
-export interface SessionStep{
+
+export interface Field {
+  name: string;
+  label: string;
+  placeholder?: string;
+  type: FieldType;
+  validationRules?: ValidationRules;
+  options?: { label: string; value: any }[];
+}
+
+export type FieldType = 'text' | 'number' | 'email' | 'date' | 'select' | 'radio' | 'time';
+
+export interface ValidationRules {
+  required?: boolean;
+  min?: number;
+  max?: number;
+  isAfter?: { field: string; message?: string };
+}
+
+export interface SessionStep {
   title: string;
   description: string;
-  icon: IconType|ComponentWithAs<"svg">;
-
+  icon: any; 
 }

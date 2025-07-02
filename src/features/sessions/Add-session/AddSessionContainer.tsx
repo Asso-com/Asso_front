@@ -9,7 +9,7 @@ const AddSessionContainer = () => {
   );
   const { data } = useFetchActivePeriod(associationId);
   return (
-    <AddSessionPresenter data={data} associationId={associationId} />
+<AddSessionPresenter data={data} associationId={associationId} />
   );
 };
 

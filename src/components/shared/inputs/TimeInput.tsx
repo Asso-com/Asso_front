@@ -10,6 +10,7 @@ import {
   IconButton,
   CircularProgress,
   useColorModeValue,
+  FormErrorMessage
 } from "@chakra-ui/react";
 import { FiClock, FiEdit2 } from "react-icons/fi";
 
@@ -20,6 +21,7 @@ interface TimeInputProps {
   isDisabled?: boolean;
   isLoading?: boolean;
   isInvalid?: boolean;
+  errorMessage?: string;
 }
 
 const TimeInput: React.FC<TimeInputProps> = ({
@@ -29,9 +31,12 @@ const TimeInput: React.FC<TimeInputProps> = ({
   isDisabled = false,
   isLoading = false,
   isInvalid = false,
+  errorMessage="",
 }) => {
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  
 
   const colors = {
     bg: useColorModeValue("white", "gray.800"),
@@ -114,7 +119,12 @@ const TimeInput: React.FC<TimeInputProps> = ({
           )}
         </Box>
       </Flex>
+{isInvalid && errorMessage && (
+  <FormErrorMessage>{errorMessage}</FormErrorMessage>
+)}
+
     </FormControl>
+
   );
 };
 

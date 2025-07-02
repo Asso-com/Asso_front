@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
@@ -8,12 +8,13 @@ import {
   Box,
   Divider,
 } from "@chakra-ui/react";
+import { useFormikContext } from "formik";
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import { formFields } from "../constants/formFields";
-import { useFormikContext } from "formik";
-import useFetchSelectSubjectLevel from "@features/Academics/Subject-level/hooks/useFetchSelectSubjectLevel";
-import useFetchStaff from "@features/human-resource/staff/hooks/useFetchStaff";
 import type { SessionFormData } from "../types/addsession.types";
+import useFetchSubjectLevelSelectByCategory from "@features/Academics/Subject-level/hooks/useFetchSubjectLevelSelectByCategory";
+import useFetchStaff from "@features/human-resource/staff/hooks/useFetchStaff";
+import useFetchCategories from "@features/Academics/Categories-levels/hooks/useFetchCategories";
 
 interface AcademicPeriodWeek {
   id: number;
@@ -40,15 +41,34 @@ const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
   const { setFieldValue } = useFormikContext<SessionFormData>();
 
   const {
-    data: subjectLevelOptions = [],
-    isLoading: isLoadingSubjects,
-    error: subjectError,
-  } = useFetchSelectSubjectLevel(associationId);
+    data: categories = [],
+    isLoading: isLoadingCategories,
+    error: categoryError,
+  } = useFetchCategories(associationId);
+
+  const [selectedCategory, setSelectedCategory] = useState<number | undefined>(undefined);
+  
+useEffect(() => {
+}, [associationId, selectedCategory]);
+
+const {
+  data: subjectLevelOptions = [],
+  isLoading: isLoadingSubjects,
+  error: subjectError,
+} = useFetchSubjectLevelSelectByCategory(
+  associationId, 
+  selectedCategory
+);
+
   const {
     data: staffOptions = [],
     isLoading: isLoadingStaff,
     error: staffError,
   } = useFetchStaff(associationId);
+
+  useEffect(() => {
+  }, [selectedCategory, subjectLevelOptions]);
+
   const getDateRange = () => {
     if (!academicPeriods.length) return { minISO: "", maxISO: "" };
     const minDate = new Date(
@@ -65,39 +85,51 @@ const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
 
   const { minISO, maxISO } = getDateRange();
 
-  const teacherOptions = staffOptions.map(
-    (staff: {
-      id: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-    }) => ({
-      label: `${staff.firstName} ${staff.lastName}`,
-      value: staff.id,
-      email: staff.email || "unknown@example.com",
-    })
-  );
+  const teacherOptions = staffOptions.map((staff: { firstName: string; lastName: string; id: number | string; email?: string }) => ({
+    label: `${staff.firstName} ${staff.lastName}`,
+    value: staff.id,
+    email: staff.email ?? "unknown@example.com",
+  }));
+
+  const categoryOptions = categories.map((cat: { name: string; id: number | string }) => ({
+    label: cat.name,
+    value: cat.id,
+  }));
 
   const handleStaffChange = (staffId: string) => {
-    const selectedStaff = teacherOptions.find(
-      (staff: { label: string; value: string; email: string }) =>
-        staff.value === staffId
-    );
+    const selectedStaff = teacherOptions.find((s: { value: string | number; email: string }) => s.value === staffId);
     if (selectedStaff) {
       setFieldValue("staffEmail", selectedStaff.email);
     }
   };
+const enhancedFields = formFields.basicInfo.map((field) => {
+  switch (field.name) {
+    case "generalLevels": {
+      return {
+        ...field,
+        options: categoryOptions,
+        isLoading: isLoadingCategories,
+        error: categoryError?.message,
+        onChange: (selectedId: number) => {
+          setSelectedCategory(selectedId); 
 
-  const enhancedFields = formFields.basicInfo.map((field) => {
-    if (field.name === "levelSubjectId") {
+          const selectedCategoryLabel = categoryOptions.find((opt: { label: string; value: number | string }) => opt.value === selectedId)?.label;
+
+          if (selectedCategoryLabel) {
+            setFieldValue("generalLevels", selectedCategoryLabel); 
+          }
+        }
+      };
+    }
+    case "levelSubjectId":
       return {
         ...field,
         options: subjectLevelOptions,
         isLoading: isLoadingSubjects,
         error: subjectError?.message,
       };
-    }
-    if (field.name === "staffId") {
+      
+    case "staffId":
       return {
         ...field,
         options: teacherOptions,
@@ -105,12 +137,20 @@ const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
         error: staffError?.message,
         onChange: handleStaffChange,
       };
-    }
-    if (["startDate", "endDate"].includes(field.name)) {
-      return { ...field, academicPeriods, min: minISO, max: maxISO };
-    }
-    return field;
-  });
+      
+    case "startDate":
+    case "endDate":
+      return {
+        ...field,
+        academicPeriods,
+        min: minISO,
+        max: maxISO,
+      };
+      
+    default:
+      return field;
+  }
+});
 
   return (
     <Card
@@ -124,15 +164,11 @@ const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
     >
       <Divider borderColor={borderColor} />
       <CardBody p={4}>
-        <Grid
-          templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
-          gap={4}
-          w="full"
-        >
+        <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={4}>
           {enhancedFields.map((field) => (
             <GridItem
               key={field.name}
-              colSpan={["generalLevels"].includes(field.name) ? 2 : 1}
+              colSpan={field.name === "generalLevels" ? 2 : 1}
             >
               <Box>
                 <RenderFormBuilder field={field} />

@@ -1,18 +1,15 @@
-import type { Field,SessionFormData} from "../types/addsession.types";
-
+// constants/formFields.ts
+import type { Field, SessionFormData } from "../types/addsession.types";
 
 export const formFields: { basicInfo: Field[]; schedule: Field[] } = {
   basicInfo: [
-    {
-      name: "generalLevels",
-      label: "Category",
-      type: "radio",
-      options: [
-        { label: "Fundamentals", value: "Fundamentals" },
-        { label: "Linguistic", value: "Linguistic" },
-      ],
-      validationRules: { required: true },
-    },
+{
+  name: "generalLevels",
+  label: "Category",
+  type: "radio",
+  validationRules: { required: true },
+},
+
     {
       name: "levelSubjectId",
       label: "Subject Level",
@@ -41,7 +38,7 @@ export const formFields: { basicInfo: Field[]; schedule: Field[] } = {
       type: "radio",
       options: [
         { label: "Online", value: "ONLINE" },
-        { label: "Face to Face", value: "FACE_TO_FACE" },
+        { label: "Onsite", value: "ONSITE" },
       ],
       validationRules: { required: true },
     },
@@ -77,6 +74,7 @@ export const formFields: { basicInfo: Field[]; schedule: Field[] } = {
   ],
   schedule: [
     {
+
       name: "sessionName",
       label: "Session Name",
       type: "text",
@@ -103,14 +101,14 @@ export const formFields: { basicInfo: Field[]; schedule: Field[] } = {
       label: "Start Time",
       type: "time",
       validationRules: { required: true },
-      placeholder: "HH:MM",
+      placeholder: "HH:MM:SS",
     },
     {
       name: "endTime",
       label: "End Time",
       type: "time",
       validationRules: { required: true },
-      placeholder: "HH:MM",
+      placeholder: "HH:MM:SS",
     },
     {
       name: "classRoomId",
@@ -126,21 +124,22 @@ export const initialValues: SessionFormData = {
   staffId: "",
   staffEmail: "",
   associationId: 0,
-  periodicity: "WEEKLY",
-  sessionType: "ONLINE",
+  periodicity: "" as 'WEEKLY' | 'MONTHLY',
+  sessionType: "" as 'ONLINE' | 'FACE_TO_FACE',
   startDate: "",
   endDate: "",
   maxStudentsCapacity: 0,
   placesAvailable: 0,
   fees: 0,
-  sessions: [
+  generalLevels: "",
+  sessionSchedules: [
     {
-      sessionName: "",
       classRoomId: 0,
+      sessionName: "",
       day: "",
       startTime: "",
       endTime: "",
     },
   ],
-  students: [],
+  studentIds: [],
 };

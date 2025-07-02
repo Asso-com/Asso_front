@@ -12,6 +12,7 @@ interface StudentTableProps {
   selectedStudents: string[];
   onStudentToggle: (matricule: string) => void;
 }
+
 const renderLevelCell = (params: any) => (
   <span
     style={{

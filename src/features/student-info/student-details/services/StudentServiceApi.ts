@@ -26,6 +26,16 @@ const StudentServiceApi = {
       handleAxiosError(error);
     }
   },
+  getAllInCurrentAcademicPeriod: async (associationId: number): Promise<any> => {
+    try {
+      const response = await axiosInstance.get<any>(
+        `/api/v1/students/enrolledInCurrentPeriod/association/${associationId}`,
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  },
 
   create: async (data: any): Promise<any> => {
     try {

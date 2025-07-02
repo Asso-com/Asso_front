@@ -25,7 +25,6 @@ import type { LevelWithSubjects, Subject } from '../../types/subject.types'
 
 interface Props {
   levels: LevelWithSubjects[]
-  filterText?: string
   associationId: number 
 }
 

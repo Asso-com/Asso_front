@@ -14,6 +14,7 @@ export type SubjectLevelSelectOption = {
 };
 
 const SubjectLevelServiceApi = {
+  
   getAll: async (associationId: number): Promise<SubjectLevelItem[]> => {
     try {
       const response = await axiosInstance.get<SubjectLevelItem[]>(
@@ -24,6 +25,22 @@ const SubjectLevelServiceApi = {
       handleAxiosError(error);
     }
   },
+
+  getSelectOptionsByCategory: async (
+  associationId: number | string,
+  categoryId: number | string
+): Promise<SubjectLevelSelectOption[]> => {
+  try {
+    const response = await axiosInstance.get<SubjectLevelSelectOption[]>(
+      `/api/v1/level-subjects/select/association/${associationId}/category/${categoryId}`
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+    return [];
+  }
+},
+
 
   getSelectOptions: async (associationId: number): Promise<SubjectLevelSelectOption[]> => {
     try {

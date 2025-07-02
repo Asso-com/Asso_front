@@ -1,16 +1,15 @@
-// mock-data.ts
-import type { Student, SessionStep } from "../types/addsession.types";
-import { InfoIcon, CheckIcon} from "@chakra-ui/icons";
-import { FaCalendar } from "react-icons/fa";
+// constants/mock-data.ts
+import type { Student } from "../types/addsession.types";
+
 export const MOCK_STUDENTS: Student[] = [
   {
-    matricule: "100",
+    matricule: "22ab1ad6-5b96-4b30-9c3c-1fe9012f995b",
     prenom: "Bader",
     nom: "BEN RHOUMA",
     niveau: "1ère",
   },
   {
-    matricule: "129",
+    matricule: "123e4567-e89b-12d3-a456-426614174000",
     prenom: "Yazid",
     nom: "DJOUAHER",
     niveau: "Terminale",
@@ -33,10 +32,4 @@ export const MOCK_STUDENTS: Student[] = [
     nom: "HAMOUALI",
     niveau: "4ème",
   },
-];
-
-export const SESSION_STEPS: SessionStep[] = [
-  { title: "Basic Info", description: "Complete session details", icon: InfoIcon },
-  { title: "Schedule", description: "Set up schedule", icon: FaCalendar },
-  { title: "Select Students", description: "Select students", icon: CheckIcon },
 ];

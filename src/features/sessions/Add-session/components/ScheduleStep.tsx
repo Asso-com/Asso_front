@@ -1,3 +1,4 @@
+// components/ScheduleStep.tsx
 import React from "react";
 import {
   Card,
@@ -17,10 +18,7 @@ import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import type { FormikProps } from "formik";
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import { formFields } from "../constants/formFields";
-import type {
-  SessionFormData,
-  SessionSchedule,
-} from "../types/addsession.types";
+import type { SessionFormData, SessionSchedule } from "../types/addsession.types";
 import useFetchClassRoom from "@features/Academics/Class-room/hooks/useFetchClassRoom";
 import { useTranslation } from "react-i18next";
 
@@ -38,7 +36,6 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
   const borderColor = useColorModeValue("blue.100", "blue.700");
   const sessionCardBg = useColorModeValue("gray.50", "gray.700");
   const sessionBorderColor = useColorModeValue("gray.200", "gray.600");
-  //const hoverBorderColor = useColorModeValue("blue.300", "blue.500");
   const removeButtonHoverBg = useColorModeValue("red.50", "red.900");
 
   const {
@@ -74,19 +71,14 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
       <CardBody p={2} h="100%">
         <Box h="100%" overflowY="auto">
           <VStack spacing={4} align="stretch" px={2}>
-            {formik.values.sessions.map((session, index: number) => (
+            {formik.values.sessionSchedules.map((session, index: number) => (
               <Box
-                key={session.sessionName || `session-${index}`}
+                key={`session-${index}`}
                 p={6}
                 bg={sessionCardBg}
                 border="2px solid"
                 borderColor={sessionBorderColor}
                 borderRadius="xl"
-                // _hover={{
-                //   borderColor: hoverBorderColor,
-                //   transform: "translateY(-2px)",
-                //   boxShadow: "lg",
-                // }}
                 transition="all 0.2s ease-in-out"
               >
                 <Flex justify="space-between" align="center" mb={6}>
@@ -101,17 +93,17 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
                       {t("Session")} {index + 1}
                     </Badge>
                   </HStack>
-                  {formik.values.sessions.length > 1 && (
+                  {formik.values.sessionSchedules.length > 1 && (
                     <Button
                       size="sm"
                       colorScheme="red"
                       variant="ghost"
                       leftIcon={<DeleteIcon />}
                       onClick={() => {
-                        const newSessions = formik.values.sessions.filter(
+                        const newSessions = formik.values.sessionSchedules.filter(
                           (_: SessionSchedule, i: number) => i !== index
                         );
-                        formik.setFieldValue("sessions", newSessions);
+                        formik.setFieldValue("sessionSchedules", newSessions);
                       }}
                       _hover={{
                         bg: removeButtonHoverBg,
@@ -124,10 +116,10 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
                 <Grid templateColumns="repeat(2, 1fr)" gap={6} w="full">
                   {enhancedScheduleFields.map((field) => (
                     <GridItem key={`${field.name}-${index}`}>
-                      <RenderFormBuilder
-                        field={field}
-                        arrayName={`sessions[${index}]`}
-                      />
+                     <RenderFormBuilder
+  field={{ ...field, name: `sessionSchedules.${index}.${field.name}` }}
+/>
+
                     </GridItem>
                   ))}
                 </Grid>
@@ -143,16 +135,14 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
                 py={4}
                 leftIcon={<AddIcon />}
                 onClick={() => {
-                  formik.setFieldValue("sessions", [
-                    ...formik.values.sessions,
+                  formik.setFieldValue("sessionSchedules", [
+                    ...formik.values.sessionSchedules,
                     {
-                      sessionName: `Session${
-                        formik.values.sessions.length + 1
-                      }`,
                       classRoomId: 0,
                       day: "",
                       startTime: "",
                       endTime: "",
+                      sessionName: "",
                     },
                   ]);
                 }}

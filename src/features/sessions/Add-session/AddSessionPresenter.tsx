@@ -1,16 +1,21 @@
-import React, { useMemo } from "react";
+// components/AddSessionPresenter.tsx
+import React, { useMemo, useState } from "react";
 import { Box, Flex, VStack, useColorModeValue } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import type { FormikProps } from "formik";
 import { initialValues } from "./constants/formFields";
 import type { SessionFormData } from "./types/addsession.types";
-import { useShowdata } from "./hooks/useShowdata";
 import Stepper from "./components/Stepper";
 import BasicInfoStep from "./components/BasicInfoStep";
 import ScheduleStep from "./components/ScheduleStep";
 import StudentSelectionStep from "./components/StudentSelectionStep";
-import NavigationButtons from "./components/FormComponents";
+import { NavigationButtons } from "./components/FormComponents";
+import { createFullInfoSchema } from "./validation/schemas";
+import { useDispatch } from "react-redux";
+import { showToast } from "@store/toastSlice";
 
+
+import useCreateSession from "./hooks/useCreateSession";
 interface AcademicPeriodWeek {
   id: number;
   code: string;
@@ -32,13 +37,72 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
   associationId,
 }) => {
   const bgColor = useColorModeValue("gray.50", "gray.900");
-  const { currentStep, handleNext, handlePrevious, handleSubmit } =
-    useShowdata();
+  const [currentStep, setCurrentStep] = useState(0);
+  const { mutate: createSession } = useCreateSession(associationId);
 
   const normalizedData = useMemo((): AcademicPeriodWeek[] => {
     if (!data) return [];
     return Array.isArray(data) ? data : [data];
   }, [data]);
+
+const dispatch = useDispatch();
+
+const handleNext = async (
+  validateForm: FormikProps<SessionFormData>["validateForm"],
+  setTouched: FormikProps<SessionFormData>["setTouched"],
+  formik: FormikProps<SessionFormData>
+) => {
+  const errors = await validateForm();
+  const allTouched = Object.keys(formik.values).reduce((acc, key) => {
+    acc[key] = true;
+    return acc;
+  }, {} as Record<string, boolean>);
+  setTouched(allTouched);
+
+  if (currentStep === 0) {
+    const hasBasicInfoErrors = Boolean(
+      errors.generalLevels ??
+      errors.levelSubjectId ??
+      errors.staffId ??
+      errors.periodicity ??
+      errors.sessionType ??
+      errors.startDate ??
+      errors.endDate ??
+      errors.maxStudentsCapacity ??
+      errors.fees
+    );
+    if (!hasBasicInfoErrors) setCurrentStep(1);
+  } else if (currentStep === 1) {
+    const newErrors = await validateForm();
+
+    // 🔔 Show toast if overlapping detected
+    if (
+      typeof newErrors.sessionSchedules === "string" &&
+      newErrors.sessionSchedules.includes("overlapping")
+    ) {
+      dispatch(
+        showToast({
+          title: "Attention",
+          message: newErrors.sessionSchedules,
+          type: "warning",
+        })
+      );
+    }
+
+    if (!newErrors.sessionSchedules) {
+      setCurrentStep(2);
+    }
+  }
+};
+
+
+const handleSubmit = (values: SessionFormData, associationId: number) => {
+  createSession({ ...values, associationId });
+};
+  const handlePrevious = () => {
+    setCurrentStep((prev) => Math.max(prev - 1, 0));
+  };
+
 
   const renderStepContent = (formik: FormikProps<SessionFormData>) => {
     if (currentStep === 0)
@@ -56,13 +120,7 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
   return (
     <Box bg={bgColor} h="100%" p={2} overflow="hidden">
       <Flex direction={{ base: "column", md: "row" }} gap={6} h="100%">
-        <Box
-          // w={{ base: "100%", md: "40%" }}
-          flexShrink={0}
-          h="100%"
-          display="flex"
-          flexDirection="column"
-        >
+        <Box flexShrink={0} h="100%" display="flex" flexDirection="column">
           <Stepper currentStep={currentStep} />
         </Box>
         <Box flex="1" h="100%" display="flex" flexDirection="column">
@@ -77,13 +135,8 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
           >
             <Formik<SessionFormData>
               initialValues={initialValues}
-              onSubmit={(values, { validateForm, setTouched }) => {
-                if (currentStep < 2) {
-                  handleNext(validateForm, setTouched);
-                } else {
-                  handleSubmit(values, associationId);
-                }
-              }}
+              validationSchema={createFullInfoSchema(normalizedData)}
+              onSubmit={(values) => handleSubmit(values, associationId)}
             >
               {(formik) => (
                 <Form
@@ -93,19 +146,17 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
                     height: "100%",
                   }}
                 >
-                  <Box flex="1" overflowY="auto" p={4} h={"100%"}>
+                  <Box flex="1" overflowY="auto" p={4} h="100%">
                     <VStack spacing={4} align="stretch" h="100%">
-                      <NavigationButtons
-                        currentStep={currentStep}
-                        onNext={() =>
-                          handleNext(formik.validateForm, formik.setTouched)
-                        }
-                        onPrevious={handlePrevious}
-                        onSubmit={() =>
-                          handleSubmit(formik.values, associationId)
-                        }
-                      />
                       {renderStepContent(formik)}
+                      <NavigationButtons
+  currentStep={currentStep}
+  isLastStep={currentStep === 2}
+  onNext={() => handleNext(formik.validateForm, formik.setTouched, formik)}
+  onPrevious={handlePrevious}
+  onSubmit={() => formik.submitForm()}
+/>
+
                     </VStack>
                   </Box>
                 </Form>
