@@ -1,23 +1,31 @@
 import {
-  useEffect,
   useState,
   forwardRef,
   useRef,
   useImperativeHandle,
-} from 'react';
-import { Text, Flex, Box, Heading, Radio, RadioGroup, Stack, Select } from '@chakra-ui/react';
-import { Formik, type FormikProps } from 'formik';
-import { useSelector } from 'react-redux';
+  useMemo,
+  useCallback,
+} from "react";
+import { Flex, Box, Heading, RadioGroup, Radio, Stack } from "@chakra-ui/react";
+import { Formik, type FormikProps } from "formik";
+import { useSelector } from "react-redux";
 
-import RenderFormBuilder from '@components/shared/form-builder/RenderFormBuilder';
-import createValidationSchema from '@utils/createValidationSchema';
-import { getDefaultFormValues } from '@utils/getDefaultValueByType';
-import { additionalFields, guardianFields, parentFields, studentFields } from '../../constants/StudentFields';
-import type { RootState } from '@store/index';
-import useFetchStudent from '../../hooks/useFetchStudent';
-import useFetchLevel from '@features/Academics/list-level/hooks/useFetchListLevel';
-import type { Field } from '@/types/formTypes';
+import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
+import createValidationSchema from "@utils/createValidationSchema";
+import { getDefaultFormValues } from "@utils/getDefaultValueByType";
+import {
+  guardianFields,
+  fatherFields,
+  motherFields,
+  studentFields,
+  levelFields,
+} from "../../constants/StudentFields";
+import type { RootState } from "@store/index";
+import type { Field } from "@/types/formTypes";
+import { useTranslation } from "react-i18next";
+import useFetchLevelsByCategory from "@features/Academics/list-level/hooks/useFetchLevelsByCategory";
 
+// Types
 type FormValues = {
   [key: string]: any;
 };
@@ -27,373 +35,330 @@ export type FormContentRef = {
   resetForm: () => void;
 };
 
+type GuardianType = "father" | "mother" | "other" | "";
+
+// Constants
+const FIELD_PREFIXES = {
+  FATHER: "father_",
+  MOTHER: "mother_",
+  TUTOR: "tutor_",
+} as const;
+
+const GUARDIAN_COLORS = {
+  father: "green",
+  mother: "pink",
+  other: "purple",
+  tutor: "teal",
+} as const;
+
+// Helper functions
+const prefixFields = (fields: Field[], prefix: string): Field[] =>
+  fields.map((field) => ({
+    ...field,
+    name: `${prefix}${field.name}`,
+  }));
+
+const separateFormData = (values: FormValues) => {
+  const studentData: any = {};
+  const fatherData: any = {};
+  const motherData: any = {};
+  const tutorData: any = {};
+
+  Object.entries(values).forEach(([key, value]) => {
+    if (key.startsWith(FIELD_PREFIXES.FATHER)) {
+      const fieldName = key.replace(FIELD_PREFIXES.FATHER, "");
+      fatherData[fieldName] = value;
+    } else if (key.startsWith(FIELD_PREFIXES.MOTHER)) {
+      const fieldName = key.replace(FIELD_PREFIXES.MOTHER, "");
+      motherData[fieldName] = value;
+    } else if (key.startsWith(FIELD_PREFIXES.TUTOR)) {
+      const fieldName = key.replace(FIELD_PREFIXES.TUTOR, "");
+      tutorData[fieldName] = value;
+    } else if (!["levelId", "guardianType"].includes(key)) {
+      studentData[key] = value;
+    }
+  });
+
+  return { studentData, fatherData, motherData, tutorData };
+};
+
+// Form Section Component
+interface FormSectionProps {
+  title: string;
+  color: string;
+  fields: Field[];
+  isGuardian?: boolean;
+}
+
+const FormSection: React.FC<FormSectionProps> = ({ 
+  title, 
+  color, 
+  fields, 
+  isGuardian = false 
+}) => {
+  const { t } = useTranslation();
+  
+  return (
+    <Box>
+      <Heading
+        size="md"
+        mb={4}
+        color={`${color}.600`}
+        display="flex"
+        alignItems="center"
+        gap={2}
+      >
+        {t(title)}
+        {isGuardian && (
+          <Box
+            as="span"
+            fontSize="sm"
+            bg={`${color}.100`}
+            color={`${color}.800`}
+            px={2}
+            py={1}
+            borderRadius="md"
+          >
+            {t("Guardian")}
+          </Box>
+        )}
+      </Heading>
+      <Flex direction="column" gap={4}>
+        {fields.map((field) => (
+          <RenderFormBuilder key={field.name} field={field} />
+        ))}
+      </Flex>
+    </Box>
+  );
+};
+
+// Guardian Selection Component
+interface GuardianSelectionProps {
+  guardianSelection: GuardianType;
+  onGuardianChange: (value: string) => void;
+}
+
+const GuardianSelection: React.FC<GuardianSelectionProps> = ({
+  guardianSelection,
+  onGuardianChange,
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <Box>
+      <Heading size="md" mb={4} color="orange.600">
+        {t("Guardian Selection")}
+      </Heading>
+      <Box p={4} border="1px" borderColor="gray.200" borderRadius="md">
+        <RadioGroup value={guardianSelection} onChange={onGuardianChange}>
+          <Stack direction="column" spacing={3}>
+            <Radio value="father" colorScheme={GUARDIAN_COLORS.father}>
+              {t("Father is the Guardian")}
+            </Radio>
+            <Radio value="mother" colorScheme={GUARDIAN_COLORS.mother}>
+              {t("Mother is the Guardian")}
+            </Radio>
+            <Radio value="other" colorScheme={GUARDIAN_COLORS.other}>
+              {t("Other person is the Guardian")}
+            </Radio>
+          </Stack>
+        </RadioGroup>
+      </Box>
+    </Box>
+  );
+};
+
+// Custom hook for field configurations
+const useFieldConfigurations = (showTutorFields: boolean) => {
+  return useMemo(() => {
+    const prefixedFatherFields = prefixFields(fatherFields, FIELD_PREFIXES.FATHER);
+    const prefixedMotherFields = prefixFields(motherFields, FIELD_PREFIXES.MOTHER);
+    const prefixedTutorFields = prefixFields(guardianFields, FIELD_PREFIXES.TUTOR);
+
+    const allFields = [
+      ...studentFields,
+      ...prefixedFatherFields,
+      ...prefixedMotherFields,
+      ...(showTutorFields ? prefixedTutorFields : []),
+      ...levelFields,
+    ];
+
+    return {
+      allFields,
+      prefixedFatherFields,
+      prefixedMotherFields,
+      prefixedTutorFields,
+    };
+  }, [showTutorFields]);
+};
+
+// Custom hook for guardian states
+const useGuardianStates = (guardianSelection: GuardianType) => {
+  return useMemo(
+    () => ({
+      isFatherGuardian: guardianSelection === "father",
+      isMotherGuardian: guardianSelection === "mother",
+      isOtherGuardian: guardianSelection === "other",
+      showTutorFields: guardianSelection === "other",
+    }),
+    [guardianSelection]
+  );
+};
+
+// Main Component
 const FormContent = forwardRef<FormContentRef>((_, ref) => {
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
-  const [studentOption, setStudentOption] = useState('new');
-  const [parentOption, setParentOption] = useState('new');
-  const [guardianOption, setGuardianOption] = useState('parent');
-  const [existingStudents, setExistingStudents] = useState<{ id: string; name: string }[]>([]);
-  const [existingParents, ] = useState([
-    { id: '1', name: 'John Doe (Father)' },
-    { id: '2', name: 'Jane Smith (Mother)' },
-  ]);
-  const [initialValues, setInitialValues] = useState<FormValues>({});
+
+  const { data: levels } = useFetchLevelsByCategory(associationId, 1);
+  const [guardianSelection, setGuardianSelection] = useState<GuardianType>("father");
   const formikRef = useRef<FormikProps<FormValues>>(null);
 
-  const { data: studentData = [], isLoading: isStudentLoading } = useFetchStudent(associationId);
-  const { data: levelData = [], isLoading: isLevelLoading } = useFetchLevel(associationId);
-  const foundationLevels = levelData.filter((level: any) => level.categoryName === 'Foundation');
+  const guardianStates = useGuardianStates(guardianSelection);
+  const fieldConfigurations = useFieldConfigurations(guardianStates.showTutorFields);
 
-  useEffect(() => {
-    if (studentData && Array.isArray(studentData)) {
-      const formattedStudents = studentData.map((student: any) => ({
-        id: student.id,
-        name: `${student.firstName} ${student.lastName}`,
-      }));
-      setExistingStudents(formattedStudents);
+
+  const levelOptions = useMemo(
+    () =>
+      levels?.map((lvl: any) => ({
+        label: `${lvl.name} (${lvl.code})`,
+        value: lvl.id,
+      })) || [],
+    [levels]
+  );
+
+  const initialValues = useMemo(
+    () => ({
+      ...getDefaultFormValues(fieldConfigurations.allFields),
+      guardianType: guardianSelection,
+    }),
+    [fieldConfigurations.allFields, guardianSelection]
+  );
+
+  const validationSchema = useMemo(
+    () => createValidationSchema(fieldConfigurations.allFields),
+    [fieldConfigurations.allFields]
+  );
+
+  // Event handlers
+  const handleGuardianSelectionChange = useCallback((selectedValue: string) => {
+    const newSelection = selectedValue as GuardianType;
+    setGuardianSelection(newSelection);
+
+    if (formikRef.current) {
+      const currentValues = { ...formikRef.current.values };
+
+      if (newSelection !== "other") {
+        Object.keys(currentValues).forEach((key) => {
+          if (key.startsWith(FIELD_PREFIXES.TUTOR)) {
+            delete currentValues[key];
+          }
+        });
+      }
+
+      currentValues.guardianType = newSelection;
+      formikRef.current.setValues(currentValues);
     }
-  }, [studentData]);
+  }, []);
 
-  useEffect(() => { 
-    const modifiedParentFields = parentFields.map((field, index) => {
-      const isFatherField = field.label.toLowerCase().includes("father's");
-      const isMotherField = field.label.toLowerCase().includes("mother's");
-      return {
-        ...field,
-        name: isFatherField
-          ? `father_${field.name}_${index}`
-          : isMotherField
-          ? `mother_${field.name}_${index}`
-          : field.name,
-      };
-    });
+  // Imperative handle
+  useImperativeHandle(
+    ref,
+    () => ({
+      submitForm: async () => {
+        if (!formikRef.current) return null;
 
-    const modifiedGuardianFields = guardianFields.map((field, index) => ({
-      ...field,
-      name: `guardian_${field.name}_${index}`,
-    }));
- 
-    // Déclarer les champs avec l'assertion 'as Field' pour le typage
-    const levelField: Field = {
-      name: 'levelId',
-      type: 'select',
-      label: 'Level',
-      validationRules: { required: true },
-    };
+        await formikRef.current.submitForm();
 
-    const guardianTypeField: Field = {
-      name: 'guardian_type',
-      type: 'radio',
-      label: 'Guardian Type',
-      validationRules: { required: true },
-    };
+        if (!formikRef.current.isValid) {
+          console.error("Form validation errors:", formikRef.current.errors);
+          return null;
+        }
 
-    const allFields: Field[] = [
-      ...(studentOption === 'new' ? studentFields : []),
-      ...(parentOption === 'new' ? modifiedParentFields : []),
-      ...(guardianOption === 'other' ? modifiedGuardianFields : []),
-      ...additionalFields,
-      guardianTypeField,
-      levelField,  
-    ];
+        const values = formikRef.current.values;
+        const { studentData, fatherData, motherData, tutorData } = separateFormData(values);
 
-    setInitialValues({
-      ...getDefaultFormValues(allFields),
-      guardian_type: 'parent',
-      levelId: '',  
-    });
-  }, [studentOption, parentOption, guardianOption]);
+        return {
+          associationId,
+          levelId: values.levelId,
+          studentData,
+          fatherData: {
+            ...fatherData,
+            isGuardian: guardianStates.isFatherGuardian,
+            gender: "MALE",
+          },
+          motherData: {
+            ...motherData,
+            isGuardian: guardianStates.isMotherGuardian,
+            gender: "FEMALE",
+          },
+          tutorData: guardianStates.isOtherGuardian
+            ? { ...tutorData, isGuardian: true }
+            : null,
+        };
+      },
 
-  const validationSchema = createValidationSchema([
-    ...(studentOption === 'new' ? studentFields : []),
-    ...(parentOption === 'new'
-      ? parentFields.map((field) => {
-          const isFatherField = field.label.toLowerCase().includes("father's");
-          const isMotherField = field.label.toLowerCase().includes("mother's");
-          return {
-            ...field,
-            name: isFatherField
-              ? `father_${field.name}`
-              : isMotherField
-              ? `mother_${field.name}`
-              : field.name,
-          };
-        })
-      : []),
-    ...(guardianOption === 'other'
-      ? guardianFields.map((field) => ({
-          ...field,
-          name: `guardian_${field.name}`,
-        }))
-      : []),
-    ...additionalFields,
-    {
-      name: 'guardian_type',
-      type: 'radio',
-      label: 'Guardian Type',
-      validationRules: { required: true },
-    },
-    {
-      name: 'levelId',
-      type: 'select',
-      label: 'Level',
-      validationRules: { required: true },
-    },
-  ]);
-
-  useImperativeHandle(ref, () => ({
-    submitForm: async () => {
-      if (!formikRef.current) return null;
-      await formikRef.current.submitForm();
-
-      if (!formikRef.current.isValid) return null;
-
-      const values = formikRef.current.values;
- 
-      const formattedData: any = {
-        associationId: associationId,
-        levelId: values.levelId,
-      };
- 
-      if (studentOption === 'new') {
-        formattedData.studentData = {};
-        studentFields.forEach((field) => {
-          if (values[field.name] !== undefined) {
-            formattedData.studentData[field.name] = values[field.name];
-          }
-        });
-      } else {
-        formattedData.studentId = values.existingStudentId;
-      }
- 
-      if (parentOption === 'new') {
-        formattedData.fatherData = {};
-        formattedData.motherData = {};
-
-        parentFields.forEach((field) => {
-          const fieldName = field.name;
-          const fatherFieldName = `father_${fieldName}`;
-          const motherFieldName = `mother_${fieldName}`;
-          const fatherValue = values[fatherFieldName];
-          const motherValue = values[motherFieldName];
-
-          if (field.label.toLowerCase().includes("father's") && fatherValue !== undefined) {
-            formattedData.fatherData[fieldName] = fatherValue;
-          } else if (field.label.toLowerCase().includes("mother's") && motherValue !== undefined) {
-            formattedData.motherData[fieldName] = motherValue;
-          }
-        });
- 
-        formattedData.fatherData.isGuardian = ['father', 'both'].includes(values.guardian_type);
-        formattedData.motherData.isGuardian = ['mother', 'both'].includes(values.guardian_type);
-        formattedData.fatherData.gender = 'MALE';
-        formattedData.motherData.gender = 'FEMALE';
-      } else {
-        formattedData.fatherId = values.existingParentId;
-        formattedData.motherId = values.existingParentId;
-      }
- 
-      if (guardianOption === 'other') {
-        formattedData.tutorData = {};
-        guardianFields.forEach((field) => {
-          const fieldName = field.name;
-          const value = values[`guardian_${fieldName}`];
-          if (value !== undefined) {
-            formattedData.tutorData[fieldName] = value;
-          }
-        });
-        formattedData.tutorData.isGuardian = true;
-      }
-
-      return formattedData;
-    },
-    resetForm: () => {
-      if (formikRef.current) {
-        formikRef.current.resetForm();
-        setStudentOption('new');
-        setParentOption('new');
-        setGuardianOption('parent');
-      }
-    },
-  }));
+      resetForm: () => {
+        formikRef.current?.resetForm();
+        setGuardianSelection("father");
+      },
+    }),
+    [associationId, guardianStates]
+  );
 
   return (
     <Formik
       innerRef={formikRef}
       initialValues={initialValues}
       validationSchema={validationSchema}
-      enableReinitialize
+      enableReinitialize={false}
       onSubmit={() => {}}
     >
-      {({ values, setFieldValue }) => (
-        <Flex direction="column" gap={8}> 
-          <Box>
-            <Heading size="md" mb={4}>Student Selection</Heading>
-            <RadioGroup onChange={setStudentOption} value={studentOption} mb={4}>
-              <Stack direction="row">
-                <Radio value="existing">Select Existing Student</Radio>
-                <Radio value="new">Register New Student</Radio>
-              </Stack>
-            </RadioGroup>
-
-            {studentOption === 'existing' && (
-              <Box mb={4}>
-                <Select
-                  placeholder="Select student"
-                  onChange={(e) => setFieldValue('existingStudentId', e.target.value)}
-                  isDisabled={isStudentLoading}
-                >
-                  {existingStudents.map((student) => (
-                    <option key={student.id} value={student.id}>
-                      {student.name}
-                    </option>
-                  ))}
-                </Select>
-                {isStudentLoading && <Text mt={2} color="gray.500">Loading students...</Text>}
-              </Box>
-            )}
-          </Box>
+      {() => (
+        <Flex direction="column" gap={8}>
  
-          {studentOption === 'new' && (
-            <Box>
-              <Heading size="md" mb={4}>Student Information</Heading>
-              <Flex direction="column" gap={4}>
-                {studentFields.map((field) => (
-                  <RenderFormBuilder key={field.name} field={field} />
-                ))}
-              </Flex>
-            </Box>
+          <Flex direction="column" gap={4}>
+            {levelFields.map((field) => (
+              <RenderFormBuilder
+                key={field.name}
+                field={{ ...field, options: levelOptions }}
+              />
+            ))}
+          </Flex>
+
+          <FormSection
+            title="Student Information"
+            color="blue"
+            fields={studentFields}
+          />
+
+          <FormSection
+            title="Father's Information"
+            color={GUARDIAN_COLORS.father}
+            fields={fieldConfigurations.prefixedFatherFields}
+            isGuardian={guardianStates.isFatherGuardian}
+          />
+
+          <FormSection
+            title="Mother's Information"
+            color={GUARDIAN_COLORS.mother}
+            fields={fieldConfigurations.prefixedMotherFields}
+            isGuardian={guardianStates.isMotherGuardian}
+          />
+
+          <GuardianSelection
+            guardianSelection={guardianSelection}
+            onGuardianChange={handleGuardianSelectionChange}
+          />
+
+          {guardianStates.showTutorFields && (
+            <FormSection
+              title="Tutor Information"
+              color={GUARDIAN_COLORS.tutor}
+              fields={fieldConfigurations.prefixedTutorFields}
+            />
           )}
- 
-          <Box>
-            <Text fontWeight="medium" mb={2}>Level</Text>
-            <Select
-              placeholder="Select level"
-              onChange={(e) => setFieldValue('levelId', e.target.value)}
-              isDisabled={isLevelLoading}
-              value={values.levelId || ''}
-            >
-              {foundationLevels.map((level: any) => (
-                <option key={level.id} value={level.id}>
-                  {level.name} ({level.code})
-                </option>
-              ))}
-            </Select>
-            {isLevelLoading && <Text mt={2} color="gray.500">Loading levels...</Text>}
-          </Box>
- 
-          <Box>
-            <Heading size="md" mb={4}>Parents Information</Heading>
-            <RadioGroup onChange={setParentOption} value={parentOption} mb={4}>
-              <Stack direction="row">
-                <Radio value="existing">Select Existing Parent</Radio>
-                <Radio value="new">Register New Parent</Radio>
-              </Stack>
-            </RadioGroup>
-
-            {parentOption === 'existing' ? (
-              <Box mb={4}>
-                <Select
-                  placeholder="Select parent"
-                  onChange={(e) => setFieldValue('existingParentId', e.target.value)}
-                >
-                  {existingParents.map((parent) => (
-                    <option key={parent.id} value={parent.id}>
-                      {parent.name}
-                    </option>
-                  ))}
-                </Select>
-              </Box>
-            ) : (
-              <Box>
-                <Box>
-                  <Heading size="sm" mb={2}>Father's Information</Heading>
-                  <Flex direction="column" gap={4}>
-                    {parentFields
-                      .filter((f) => f.label.toLowerCase().includes("father's"))
-                      .map((field) => (
-                        <RenderFormBuilder
-                          key={`father_${field.name}`}
-                          field={{
-                            ...field,
-                            name: `father_${field.name}`,
-                          }}
-                        />
-                      ))}
-                  </Flex>
-                </Box>
-
-                <Box>
-                  <Heading size="sm" mb={2}>Mother's Information</Heading>
-                  <Flex direction="column" gap={4}>
-                    {parentFields
-                      .filter((f) => f.label.toLowerCase().includes("mother's"))
-                      .map((field) => (
-                        <RenderFormBuilder
-                          key={`mother_${field.name}`}
-                          field={{
-                            ...field,
-                            name: `mother_${field.name}`,
-                          }}
-                        />
-                      ))}
-                  </Flex>
-                </Box>
-              </Box>
-            )}
-          </Box>
- 
-          <Box>
-            <Heading size="md" mb={4}>Guardian Information</Heading>
-            <Box mb={4}>
-              <Text fontWeight="medium" mb={2}>Who is the guardian?</Text>
-              <RadioGroup
-                onChange={(value) => {
-                  formikRef.current?.setFieldValue('guardian_type', value);
-                  setGuardianOption(value);
-                }}
-                value={values.guardian_type || 'parent'}
-              >
-                <Stack direction="column">
-                  <Radio value="mother">Mother</Radio>
-                  <Radio value="father">Father</Radio>
-                  <Radio value="both">Both Parents</Radio>
-                  <Radio value="other">Other Guardian</Radio>
-                </Stack>
-              </RadioGroup>
-            </Box>
-
-            {guardianOption === 'other' && (
-              <Flex direction="column" gap={4} mt={4}>
-                {guardianFields.map((field) => (
-                  <RenderFormBuilder
-                    key={`guardian_${field.name}`}
-                    field={{
-                      ...field,
-                      name: `guardian_${field.name}`,
-                    }}
-                  />
-                ))}
-              </Flex>
-            )}
-
-            {guardianOption === 'both' && (
-              <Text mt={2} color="gray.600">
-                Both parents will be designated as guardians.
-              </Text>
-            )}
-          </Box>
- 
-          <Box>
-            <Heading size="md" mb={4}>Additional Information</Heading>
-            <Flex direction="column" gap={4}>
-              {additionalFields.map((field) => (
-                <RenderFormBuilder key={field.name} field={field} />
-              ))}
-            </Flex>
-          </Box>
         </Flex>
       )}
     </Formik>

@@ -13,7 +13,7 @@ const useCreateStudent = (associationId: number) => {
       StudentServiceApi.create({ ...formData, associationId }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['student', associationId],
+        queryKey: ['students', associationId],
       });
       dispatch(
         showToast({

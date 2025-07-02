@@ -19,7 +19,7 @@ const useUpdateStudent = (associationId: number) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['Student', associationId],
+        queryKey: ['students', associationId],
       });
 
       dispatch(

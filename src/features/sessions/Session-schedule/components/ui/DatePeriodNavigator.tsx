@@ -194,7 +194,6 @@ const DatePeriodNavigator = () => {
           _disabled={{ bg: "gray.400", cursor: "not-allowed" }}
         />
 
-        {/* Date Period Select */}
         <Box flex={1}>
           <Select
             value={selectedPeriod}

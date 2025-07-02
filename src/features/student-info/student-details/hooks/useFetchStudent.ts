@@ -4,7 +4,7 @@ import StudentServiceApi from '../services/StudentServiceApi';
 
 const useFetchStudent = (associationId: number): UseQueryResult<any, Error> => {
     return useQuery<any, Error>({
-        queryKey: ['Student', associationId],
+        queryKey: ['students', associationId],
         queryFn: async () => {
             switchLoadingModal();
             try {
@@ -16,7 +16,10 @@ const useFetchStudent = (associationId: number): UseQueryResult<any, Error> => {
                 switchLoadingModal();
             }
         },
-        retry: 1
+        gcTime: 1000 * 60 * 10,
+        staleTime: 1000 * 60 * 5,
+        enabled: !!associationId,
+        retry: false
     });
 };
 

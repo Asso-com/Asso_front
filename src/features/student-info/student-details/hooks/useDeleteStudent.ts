@@ -11,7 +11,7 @@ const useDeleteStudent = (associationId: number) => {
     mutationFn: (StudentId: number) => StudentServiceApi.delete(StudentId),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['Student', associationId] });
+      queryClient.invalidateQueries({ queryKey: ['students', associationId] });
 
       dispatch(
         showToast({
