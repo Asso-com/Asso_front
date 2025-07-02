@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   FormControl,
   RadioGroup,
@@ -13,7 +14,7 @@ import TextLabel from "@components/ui/TextLabel";
 
 type Option = {
   label: string;
-  value: string | number | boolean;
+  value: string;
 };
 
 interface GenericRadioGroupProps {
@@ -23,8 +24,8 @@ interface GenericRadioGroupProps {
   isError?: boolean;
   errorMessage?: string;
   name: string;
-  value: string | number | boolean;
-  onChange: (value: string | number | boolean) => void;
+  value: string;
+  onChange: (value: string) => void;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
   direction?: "row" | "column";
   isDisabled?: boolean;
@@ -45,7 +46,6 @@ const GenericRadioGroup: React.FC<GenericRadioGroupProps> = ({
   ...inputProps
 }) => {
   const { t } = useTranslation();
-
   return (
     <FormControl isInvalid={isError} isRequired={isRequired} mb={2}>
       <Flex align="center" mb={2}>
@@ -59,23 +59,17 @@ const GenericRadioGroup: React.FC<GenericRadioGroupProps> = ({
 
       <RadioGroup
         name={name}
-        value={value?.toString()}
-        onChange={(stringValue) => {
-          const selectedOption = options.find(
-            (option) => option.value.toString() === stringValue
-          );
-          if (selectedOption) {
-            onChange(selectedOption.value);
-          }
-        }}
+        value={value || ""}
+        onChange={onChange}
         onBlur={onBlur}
         {...inputProps}
       >
         <Stack direction={direction}>
           {options.map((option) => (
             <Radio
-              key={option.value.toString()}
-              value={option.value.toString()}
+              key={option.value}
+              value={option.value}
+              defaultChecked={option.value === value}
             >
               <Text fontSize="sm">{t(option.label)}</Text>
             </Radio>

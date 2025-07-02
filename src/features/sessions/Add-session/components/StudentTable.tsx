@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 interface StudentTableProps {
   students: Student[];
   selectedStudents: string[];
-  onStudentToggle: (matricule: string) => void;
+  onStudentToggle: (studentId: string) => void;
 }
 
 const renderLevelCell = (params: any) => (
@@ -30,12 +30,12 @@ const renderLevelCell = (params: any) => (
 const renderCheckboxCell = (
   params: any,
   selectedStudents: string[],
-  onStudentToggle: (matricule: string) => void
+  onStudentToggle: (studentId: string) => void
 ) => (
   <input
     type="checkbox"
-    checked={selectedStudents.includes(params.data.matricule)}
-    onChange={() => onStudentToggle(params.data.matricule)}
+    checked={selectedStudents.includes(params.data.studentId)}
+    onChange={() => onStudentToggle(params.data.studentId)}
     style={{
       width: "16px",
       height: "16px",
@@ -60,25 +60,19 @@ const StudentTable = forwardRef<AgGridReact<any>, StudentTableProps>(
         resizable: false,
       },
       {
-        field: "matricule",
-        headerName: t("Matricule"),
+        field: "studentId",
+        headerName: t("studentId"),
         flex: 1,
         filter: "agTextColumnFilter",
       },
       {
-        field: "prenom",
-        headerName: t("First Name"),
+        field: "studentName",
+        headerName: t("Name"),
         flex: 2,
         filter: "agTextColumnFilter",
       },
       {
-        field: "nom",
-        headerName: t("Last Name"),
-        flex: 2,
-        filter: "agTextColumnFilter",
-      },
-      {
-        field: "niveau",
+        field: "levelName",
         headerName: t("Level"),
         flex: 1,
         cellRenderer: renderLevelCell,
@@ -95,7 +89,6 @@ const StudentTable = forwardRef<AgGridReact<any>, StudentTableProps>(
           rowSelection="multiple"
           pagination={true}
           paginationPageSize={10}
-          enableRangeSelection={true}
           suppressRowClickSelection={true}
           defaultColDef={{
             sortable: true,

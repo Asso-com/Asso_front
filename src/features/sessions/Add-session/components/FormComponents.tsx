@@ -1,4 +1,3 @@
-// components/NavigationButtons.tsx
 import React from "react";
 import { Button, Flex } from "@chakra-ui/react";
 

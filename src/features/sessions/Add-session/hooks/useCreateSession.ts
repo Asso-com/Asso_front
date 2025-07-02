@@ -1,4 +1,3 @@
-// hooks/useCreateSession.ts
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { showToast } from '@store/toastSlice';

@@ -1,15 +1,24 @@
-// constants/formFields.ts
 import type { Field, SessionFormData } from "../types/addsession.types";
+
+interface AcademicPeriodWeek {
+  id: number;
+  code: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  active: boolean;
+  dayOfWeek: string;
+  numberOfWeeks: number;
+}
 
 export const formFields: { basicInfo: Field[]; schedule: Field[] } = {
   basicInfo: [
-{
-  name: "generalLevels",
-  label: "Category",
-  type: "radio",
-  validationRules: { required: true },
-},
-
+    {
+      name: "generalLevels",
+      label: "Category",
+      type: "radio",
+      validationRules: { required: true },
+    },
     {
       name: "levelSubjectId",
       label: "Subject Level",
@@ -74,14 +83,6 @@ export const formFields: { basicInfo: Field[]; schedule: Field[] } = {
   ],
   schedule: [
     {
-
-      name: "sessionName",
-      label: "Session Name",
-      type: "text",
-      validationRules: { required: true },
-      placeholder: "Enter session name",
-    },
-    {
       name: "day",
       label: "Day",
       type: "select",
@@ -119,17 +120,67 @@ export const formFields: { basicInfo: Field[]; schedule: Field[] } = {
   ],
 };
 
+// Helper function to get the earliest start date from academic periods
+const getStartDate = (academicPeriods: AcademicPeriodWeek[]): string => {
+  if (!academicPeriods.length) return "";
+  const minDate = new Date(
+    Math.min(...academicPeriods.map((p) => new Date(p.startDate).getTime()))
+  );
+  return minDate.toISOString().split("T")[0];
+};
+export const createInitialValues = (
+  academicPeriods: AcademicPeriodWeek[] = [],
+  categories: Array<{ name: string; id: number | string }> = []
+): SessionFormData => {
+  const firstCategory = categories[0];
+  const defaultCategoryId = firstCategory ? Number(firstCategory.id) : 0;
+  const mapCategoryName = (name: string): "" | "Foundation" | "Linguistic" => {
+    const normalizedName = name.toLowerCase();
+    if (normalizedName.includes('foundation')) {
+      return "Foundation";
+    } else if (normalizedName.includes('linguistic')) {
+      return "Linguistic";
+    }
+    return ""; 
+  };
+  
+  const defaultCategoryName = firstCategory ? mapCategoryName(firstCategory.name) : "";
+
+  return {
+    categoryId: defaultCategoryId,
+    levelSubjectId: 0,
+    staffId: "",
+    associationId: 0,
+    periodicity: "WEEKLY",
+    sessionType: "ONLINE", 
+    startDate: getStartDate(academicPeriods),
+    endDate: "",
+    maxStudentsCapacity: 1,
+    fees: 0,
+    generalLevels: defaultCategoryName,
+    sessionSchedules: [
+      {
+        classRoomId: 0,
+        sessionName: "",
+        day: "MONDAY", 
+        startTime: "09:00", 
+        endTime: "10:00"
+      },
+    ],
+    studentIds: [],
+  };
+};
+
 export const initialValues: SessionFormData = {
+  categoryId: 0,
   levelSubjectId: 0,
   staffId: "",
-  staffEmail: "",
   associationId: 0,
-  periodicity: "" as 'WEEKLY' | 'MONTHLY',
-  sessionType: "" as 'ONLINE' | 'FACE_TO_FACE',
+  periodicity:"WEEKLY",
+  sessionType: "" as 'ONLINE' | 'ONSITE',
   startDate: "",
   endDate: "",
   maxStudentsCapacity: 0,
-  placesAvailable: 0,
   fees: 0,
   generalLevels: "",
   sessionSchedules: [

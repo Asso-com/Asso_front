@@ -206,7 +206,7 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
                 name={fullName}
                 label={label}
                 options={options || []}
-                selectedValue={formikField.value}
+                value={formikField.value}
                 onChange={(value) => handleValueChange(value)} 
                 isError={isInvalid}
                 errorMessage={error}
