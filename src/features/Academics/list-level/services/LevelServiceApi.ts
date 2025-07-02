@@ -16,6 +16,17 @@ const LevelServiceApi = {
         }
     },
 
+    getLevelsByCategory: async (associationId: number, categoryId: number): Promise<any> => {
+        try {
+            const response = await axiosInstance.get<any>(
+                `/api/v1/level/association/${associationId}/category/${categoryId}`,
+            );
+            return response.data;
+        } catch (error) {
+            handleAxiosError(error);
+        }
+    },
+
     update: async (id: number, associationId: number, data: any): Promise<any> => {
         try {
             const response = await axiosInstance.put<any>(

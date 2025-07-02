@@ -15,7 +15,8 @@ const StudentSidebar = () => {
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
-  const { mutateAsync: createStudent, isPending } = useCreateStudent(associationId);
+  const { mutateAsync: createStudent, isPending } =
+    useCreateStudent(associationId);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const formRef = useRef<FormContentRef>(null);
 
@@ -27,7 +28,6 @@ const StudentSidebar = () => {
     if (values) {
       try {
         await createStudent(values);
-        formRef.current?.resetForm();
         handleCloseSidebar();
       } catch (error) {}
     }
@@ -50,6 +50,7 @@ const StudentSidebar = () => {
         isOpen={sidebarOpen}
         title={t("Add Student")}
         onClose={handleCloseSidebar}
+        size="lg"
         footer={
           <SidebarButtonsActions
             onSubmitForm={handleSubmitForm}

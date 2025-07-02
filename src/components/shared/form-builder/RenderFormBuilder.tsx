@@ -45,19 +45,19 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
   const fullName =
     arrayName !== undefined && index !== undefined
       ? `${arrayName}.${index}.${name}`
-      : name
+      : name;
 
   return (
     <Field name={fullName}>
       {({ field: formikField, form }: FieldProps) => {
-        const error = get(form.errors, fullName)
-        const touched = get(form.touched, fullName)
-        const isInvalid = !!error && !!touched
+        const error = get(form.errors, fullName);
+        const touched = get(form.touched, fullName);
+        const isInvalid = !!error && !!touched;
 
         const formattedValue =
           type === "date" && formikField.value
             ? new Date(formikField.value).toISOString().split("T")[0]
-            : formikField.value
+            : formikField.value;
 
         const handleValueChange = (value: any) => {
           form.setFieldValue(fullName, value);
@@ -69,14 +69,14 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
         const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           const formattedDate = new Date(e.target.value)
             .toISOString()
-            .split("T")[0]
+            .split("T")[0];
           formikField.onChange({
             target: {
               name: formikField.name,
               value: formattedDate,
             },
-          })
-        }
+          });
+        };
 
         switch (type) {
           case "phone":
@@ -233,7 +233,6 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
               />
             );
 
-
           default:
             return (
               <GenericInput
@@ -252,7 +251,7 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
         }
       }}
     </Field>
-  )
-}
+  );
+};
 
-export default RenderFormBuilder
+export default RenderFormBuilder;

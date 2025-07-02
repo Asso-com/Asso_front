@@ -8,7 +8,7 @@ const StudentServiceApi = {
   getAll: async (associationId: number): Promise<any> => {
     try {
       const response = await axiosInstance.get<any>(
-        `/api/v1/students/association/${associationId}`,
+        `/api/v1/students/association/${associationId}/listing`,
       );
       return response.data;
     } catch (error) {
@@ -44,10 +44,8 @@ const StudentServiceApi = {
         data
       );
       return response.data;
-    } catch (err) {
-
-
-      throw new Error('An unexpected error occurred.');
+    } catch (error) {
+      handleAxiosError(error);
     }
   },
 

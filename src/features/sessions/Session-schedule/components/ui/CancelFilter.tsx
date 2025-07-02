@@ -14,16 +14,15 @@ const CancelFilter: FC<CancelFilterProps> = ({ clearFilters }) => {
       <VStack spacing={6}>
         <Icon as={FiSearch} boxSize={16} color="gray.300" />
         <Heading size="lg" color="gray.400">
-          {t("noSessionsFound", "No sessions found")}
+          {t("No sessions found")}
         </Heading>
         <Text color="gray.500" textAlign="center" maxW="md">
           {t(
-            "tryChangingOrClearingFilters",
             "Try changing your search criteria or clearing the filters"
           )}
         </Text>
         <Button onClick={clearFilters} colorScheme="blue" size="lg">
-          {t("resetFilters", "Reset filters")}
+          {t("Reset filters")}
         </Button>
       </VStack>
     </Center>

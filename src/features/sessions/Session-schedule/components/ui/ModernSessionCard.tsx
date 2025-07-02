@@ -113,7 +113,7 @@ const ModernSessionCard: React.FC<{ session: SessionTracking }> = ({
 
       <CardBody p={6}>
         <VStack align="stretch" spacing={4}>
-          {/* Header */}
+       
           <Flex justify="space-between" align="start">
             <VStack align="start" spacing={2} flex={1}>
               <Heading size="md" color="gray.800" noOfLines={1}>
@@ -151,7 +151,7 @@ const ModernSessionCard: React.FC<{ session: SessionTracking }> = ({
 
           <Divider />
 
-          {/* Session Info */}
+ 
           <SimpleGrid columns={2} spacing={4}>
             <VStack align="start" spacing={3}>
               <HStack color="gray.600">
