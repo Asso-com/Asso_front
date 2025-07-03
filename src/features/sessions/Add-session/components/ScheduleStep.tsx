@@ -40,8 +40,6 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
 
   const {
     data: classRooms = [],
-    isLoading,
-    error,
   } = useFetchClassRoom(associationId);
 
   const roomOptions = classRooms.map(
@@ -50,22 +48,6 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
       value: Number(room.id),
     })
   );
-
-  // Separate fields by type for better organization
-  const dayField = formFields.schedule.find(field => field.name === "day");
-  const timeFields = formFields.schedule.filter(field => 
-    field.name === "startTime" || field.name === "endTime"
-  );
-  const classRoomField = formFields.schedule.find(field => field.name === "classRoomId");
-
-  // Enhanced classroom field with room options
-  const enhancedClassRoomField = classRoomField ? {
-    ...classRoomField,
-    options: roomOptions,
-    isLoading,
-    error: error?.message
-  } : null;
-
   return (
     <Card
       bg={cardBg}
@@ -129,6 +111,7 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
         field={{
           ...field,
           name: `sessionSchedules.${index}.${field.name}`,
+          ...(field.name === 'classRoomId' && { options: roomOptions }),
         }}
       />
     </GridItem>

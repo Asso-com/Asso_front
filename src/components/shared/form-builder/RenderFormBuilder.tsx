@@ -1,5 +1,5 @@
-import { Field, type FieldProps } from "formik"
-import { get } from "lodash"
+import { Field, type FieldProps } from "formik";
+import { get } from "lodash";
 import InputPhone from "../inputs/InputPhone";
 import GenericInput from "../inputs/GenericInput";
 import type { Field as FieldType } from "../../../types/formTypes";
@@ -13,17 +13,17 @@ import TimeInput from "../inputs/TimeInput";
 
 interface RenderFormBuilderProps {
   field: FieldType & {
-    onChange?: (value: any) => void; 
-  }
-  arrayName?: string
-  index?: number
-  labelDirection?: "top" | "left"
+    onChange?: (value: any) => void;
+  };
+  arrayName?: string;
+  index?: number;
+  labelDirection?: "top" | "left";
 }
 
 type Option = {
-  label: string
-  value: string | number
-}
+  label: string;
+  value: string | number;
+};
 
 const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
   field,
@@ -39,8 +39,8 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
     options,
     placeholder,
     inputProps,
-    onChange: customOnChange, 
-  } = field
+    onChange: customOnChange,
+  } = field;
 
   const fullName =
     arrayName !== undefined && index !== undefined
@@ -191,9 +191,11 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
                   form.setFieldValue(fullName, option?.value ?? "");
                 }}
                 onBlur={formikField.onBlur}
-                value={options?.find(
-                  (option) => option.value === formikField.value
-                )}
+                value={
+                  options?.find(
+                    (option) => option.value === formikField.value
+                  ) || null
+                }
                 menuPortalStyles={{ zIndex: 99999 }}
                 errorMessage={error}
                 {...inputProps}
@@ -207,7 +209,7 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
                 label={label}
                 options={options || []}
                 value={formikField.value}
-                onChange={(value) => handleValueChange(value)} 
+                onChange={(value) => handleValueChange(value)}
                 isError={isInvalid}
                 errorMessage={error}
                 isRequired={validationRules?.required}
