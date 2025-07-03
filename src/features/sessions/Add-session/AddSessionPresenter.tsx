@@ -37,15 +37,14 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
 }) => {
   const bgColor = useColorModeValue("gray.50", "gray.900");
   const [currentStep, setCurrentStep] = useState(0);
-  const [dynamicInitialValues, setDynamicInitialValues] = useState<SessionFormData | null>(null);
-  
+  const [dynamicInitialValues, setDynamicInitialValues] =
+    useState<SessionFormData | null>(null);
+
   const { mutate: createSession } = useCreateSession(associationId);
   const dispatch = useDispatch();
 
-  const {
-    data: categories = [],
-    isLoading: isLoadingCategories,
-  } = useFetchCategories(associationId);
+  const { data: categories = [], isLoading: isLoadingCategories } =
+    useFetchCategories(associationId);
 
   const normalizedData = useMemo((): AcademicPeriodWeek[] => {
     if (!data) return [];
@@ -59,7 +58,10 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
     }
   }, [categories, isLoadingCategories, normalizedData]);
 
-  const markAllTouchedByStep = (values: SessionFormData, currentStep: number) => {
+  const markAllTouchedByStep = (
+    values: SessionFormData,
+    currentStep: number
+  ) => {
     const touched: any = {};
 
     if (currentStep >= 0) {
@@ -73,12 +75,12 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
       touched.endDate = true;
       touched.maxStudentsCapacity = true;
       touched.fees = true;
-      touched.generalLevels = true;
+      touched.categoryId = true;
     }
     if (currentStep >= 1) {
       touched.sessionSchedules = values.sessionSchedules.map((schedule) => {
         const touchedSchedule: any = {};
-        Object.keys(schedule).forEach(key => {
+        Object.keys(schedule).forEach((key) => {
           touchedSchedule[key] = true;
         });
         return touchedSchedule;
@@ -103,7 +105,7 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
 
     if (currentStep === 0) {
       const hasBasicInfoErrors = Boolean(
-        errors.generalLevels ??
+        errors.category ??
           errors.levelSubjectId ??
           errors.staffId ??
           errors.periodicity ??
@@ -166,7 +168,14 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
   };
   if (!dynamicInitialValues || isLoadingCategories) {
     return (
-      <Box bg={bgColor} h="100%" p={2} display="flex" alignItems="center" justifyContent="center">
+      <Box
+        bg={bgColor}
+        h="100%"
+        p={2}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
         <div>Loading form...</div>
       </Box>
     );
@@ -209,7 +218,11 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
                         currentStep={currentStep}
                         isLastStep={currentStep === 2}
                         onNext={() =>
-                          handleNext(formik.validateForm, formik.setTouched, formik)
+                          handleNext(
+                            formik.validateForm,
+                            formik.setTouched,
+                            formik
+                          )
                         }
                         onPrevious={handlePrevious}
                         onSubmit={() => formik.submitForm()}

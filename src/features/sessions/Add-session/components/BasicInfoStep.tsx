@@ -32,21 +32,34 @@ const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
   const borderColor = useColorModeValue("blue.100", "blue.700");
   const { setFieldValue, values } = useFormikContext<SessionFormData>();
 
-  const { data: categories = [], isLoading: isLoadingCategories, error: categoryError } =
-    useFetchCategories(associationId);
+  const {
+    data: categories = [],
+    isLoading: isLoadingCategories,
+    error: categoryError,
+  } = useFetchCategories(associationId);
 
   const selectedCategory = values.categoryId || undefined;
 
-  const { data: subjectLevelOptions = [], isLoading: isLoadingSubjects, error: subjectError } =
-    useFetchSubjectLevelSelectByCategory(associationId, selectedCategory);
+  const {
+    data: subjectLevelOptions = [],
+    isLoading: isLoadingSubjects,
+    error: subjectError,
+  } = useFetchSubjectLevelSelectByCategory(associationId, selectedCategory);
 
-  const { data: staffOptions = [], isLoading: isLoadingStaff, error: staffError } =
-    useFetchStaff(associationId);
+  const {
+    data: staffOptions = [],
+    isLoading: isLoadingStaff,
+    error: staffError,
+  } = useFetchStaff(associationId);
 
   const getDateRange = () => {
     if (!academicPeriods.length) return { minISO: "", maxISO: "" };
-    const minDate = new Date(Math.min(...academicPeriods.map((p) => new Date(p.startDate).getTime())));
-    const maxDate = new Date(Math.max(...academicPeriods.map((p) => new Date(p.endDate).getTime())));
+    const minDate = new Date(
+      Math.min(...academicPeriods.map((p) => new Date(p.startDate).getTime()))
+    );
+    const maxDate = new Date(
+      Math.max(...academicPeriods.map((p) => new Date(p.endDate).getTime()))
+    );
     return {
       minISO: minDate.toISOString().split("T")[0],
       maxISO: maxDate.toISOString().split("T")[0],
@@ -55,75 +68,62 @@ const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
 
   const { minISO, maxISO } = getDateRange();
 
-  const teacherOptions = staffOptions.map((staff: { firstName: string; lastName: string; id: number }) => ({
-    label: `${staff.firstName} ${staff.lastName}`,
-    value: staff.id,
-  }));
+  const teacherOptions = staffOptions.map(
+    (staff: { firstName: string; lastName: string; id: number }) => ({
+      label: `${staff.firstName} ${staff.lastName}`,
+      value: staff.id,
+    })
+  );
 
-  const categoryOptions = categories.map((cat: { name: string; id: number }) => {
-    const name = cat.name.toLowerCase();
-    let mappedValue: "" | "Foundation" | "Linguistic" = "";
-    if (name.includes("foundation") || name.includes("foundantion")) mappedValue = "Foundation";
-    else if (name.includes("linguistic")) mappedValue = "Linguistic";
+ const categoryOptions = categories.map((cat: { name: string; id: number }) => ({
+  label: cat.name,   
+  value: cat.id, 
+}));
 
-    return { label: cat.name, value: mappedValue };
-  });
+const enhancedFields = formFields.basicInfo.map((field) => {
+  switch (field.name) {
+    case "categoryId":
+      return {
+        ...field,
+        options: categoryOptions,
+        isLoading: isLoadingCategories,
+        error: categoryError?.message,
+        onChange: (selectedValue: string) => {
+          setFieldValue("categoryId", Number(selectedValue));
+          setFieldValue("levelSubjectId", 0);
+        },
+      };
 
-  const enhancedFields = formFields.basicInfo.map((field) => {
-    switch (field.name) {
-      case "generalLevels":
-        return {
-          ...field,
-          options: categoryOptions,
-          isLoading: isLoadingCategories,
-          error: categoryError?.message,
-          onChange: (selectedValue: string) => {
-            const matchingCategory = categories.find((cat: { name: string; id: number }) => {
-              const name = cat.name.toLowerCase();
-              return (
-                (selectedValue === "Foundation" &&
-                  (name.includes("foundation") || name.includes("foundantion"))) ||
-                (selectedValue === "Linguistic" && name.includes("linguistic"))
-              );
-            });
+    case "levelSubjectId":
+      return {
+        ...field,
+        options: subjectLevelOptions,
+        isLoading: isLoadingSubjects,
+        error: subjectError?.message,
+      };
 
-            if (matchingCategory) {
-              setFieldValue("categoryId", matchingCategory.id);
-              setFieldValue("levelSubjectId", 0);
-              setFieldValue("generalLevels", selectedValue);
-            }
-          },
-        };
+    case "staffId":
+      return {
+        ...field,
+        options: teacherOptions,
+        isLoading: isLoadingStaff,
+        error: staffError?.message,
+      };
 
-      case "levelSubjectId":
-        return {
-          ...field,
-          options: subjectLevelOptions,
-          isLoading: isLoadingSubjects,
-          error: subjectError?.message,
-        };
+    case "startDate":
+    case "endDate":
+      return {
+        ...field,
+        academicPeriods,
+        min: minISO,
+        max: maxISO,
+      };
 
-      case "staffId":
-        return {
-          ...field,
-          options: teacherOptions,
-          isLoading: isLoadingStaff,
-          error: staffError?.message,
-        };
+    default:
+      return field;
+  }
+});
 
-      case "startDate":
-      case "endDate":
-        return {
-          ...field,
-          academicPeriods,
-          min: minISO,
-          max: maxISO,
-        };
-
-      default:
-        return field;
-    }
-  });
 
   return (
     <Card
@@ -139,7 +139,10 @@ const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
       <CardBody p={4}>
         <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={4}>
           {enhancedFields.map((field) => (
-            <GridItem key={field.name} colSpan={field.name === "generalLevels" ? 2 : 1}>
+            <GridItem
+              key={field.name}
+              colSpan={field.name === "categoryId" ? 2 : 1}
+            >
               <Box>
                 <RenderFormBuilder field={field} />
               </Box>
