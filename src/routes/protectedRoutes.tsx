@@ -27,6 +27,7 @@ import CoefficientSettingsContainer from "@features/system-settings/coefficients
 import LessonContainer from "@features/Lesson-plan/Lesson/LessonContainer.tsx";
 import TopicContainer from "@features/Lesson-plan/Topic/TopicContainer.tsx";
 import LocationContainer from "@features/Partner/location/LocationContainer";
+import ListOnlyPartenersPage from "@features/Partner/List-only-partners/ListOnlyPartenersPage";
 const protectedRoutes = [
   {
     element: <ProtectedLayout />,
@@ -86,7 +87,11 @@ const protectedRoutes = [
       },
 
       { path: "/partner/associations", element: <ListPartnerContainer /> },
-      { path: "/partner/associations/locations", element: <LocationContainer /> },
+      {
+        path: "/partner/associations/locations",
+        element: <LocationContainer />,
+      },
+      { path: "/partner/list", element: <ListOnlyPartenersPage /> },
 
       { path: "/LessonPlan/Lesson", element: <LessonContainer /> },
       { path: "/LessonPlan/Topic", element: <TopicContainer /> },
