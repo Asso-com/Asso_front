@@ -13,11 +13,14 @@ import {
   FormErrorMessage
 } from "@chakra-ui/react";
 import { FiClock, FiEdit2 } from "react-icons/fi";
+import TextLabel from "@components/ui/TextLabel"
 
 interface TimeInputProps {
+  label: string;
   name: string;
   value?: string;
   onChange?: (time: string) => void;
+  isRequired?: boolean;
   isDisabled?: boolean;
   isLoading?: boolean;
   isInvalid?: boolean;
@@ -25,12 +28,14 @@ interface TimeInputProps {
 }
 
 const TimeInput: React.FC<TimeInputProps> = ({
+  label,
   name,
   value = "",
   onChange,
   isDisabled = false,
   isLoading = false,
   isInvalid = false,
+  isRequired = false,
   errorMessage="",
 }) => {
   const [focused, setFocused] = useState(false);
@@ -58,6 +63,14 @@ const TimeInput: React.FC<TimeInputProps> = ({
 
   return (
     <FormControl isInvalid={isInvalid} isDisabled={isDisabled}>
+            <Flex align="center" mb={2}>
+              {label && <TextLabel label={label} />}
+              {isRequired && (
+                <Box as="span" color="red.500" ml={1}>
+                  *
+                </Box>
+              )}
+            </Flex>
       <Flex align="center" gap={4}>
         <Box position="relative" flex={1} maxW="300px">
           {isLoading ? (

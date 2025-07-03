@@ -97,6 +97,12 @@ export const formFields: { basicInfo: Field[]; schedule: Field[] } = {
       ],
       validationRules: { required: true },
     },
+     {
+      name: "classRoomId",
+      label: "Room",
+      type: "select",
+      validationRules: { required: true },
+    },
     {
       name: "startTime",
       label: "Start Time",
@@ -110,13 +116,7 @@ export const formFields: { basicInfo: Field[]; schedule: Field[] } = {
       type: "time",
       validationRules: { required: true },
       placeholder: "HH:MM:SS",
-    },
-    {
-      name: "classRoomId",
-      label: "Room",
-      type: "select",
-      validationRules: { required: true },
-    },
+    }
   ],
 };
 

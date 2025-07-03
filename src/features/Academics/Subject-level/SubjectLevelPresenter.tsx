@@ -194,7 +194,6 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
       <Box flex={1} overflow="auto" p={1}>
         <SubjectLevelAccordion
           levels={filteredRows}
-          filterText={filterText}
           associationId={associationId}
         />
 
