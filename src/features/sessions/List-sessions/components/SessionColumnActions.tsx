@@ -56,7 +56,7 @@ const SessionColumnActions: React.FC<ICellRendererParams> = (params) => {
           label="View Session Details"
           aria-label="View session details"
           icon={<InfoIcon />}
-          size="md"
+          size="sm"
           variant="ghost"
           colorScheme="blue"
           onClick={handleViewDetails}
@@ -66,7 +66,7 @@ const SessionColumnActions: React.FC<ICellRendererParams> = (params) => {
           aria-label="View lesson plan"
           icon={<ViewIcon />}
           label="View Lesson Plan"
-          size="md"
+          size="sm"
           variant="ghost"
           colorScheme="green"
           onClick={handleViewLessonPlan}
@@ -76,7 +76,7 @@ const SessionColumnActions: React.FC<ICellRendererParams> = (params) => {
           aria-label="View session schedule"
           icon={<CalendarIcon />}
           label="View Schedule"
-          size="md"
+          size="sm"
           variant="ghost"
           colorScheme="purple"
           onClick={handleViewSchedule}
@@ -85,7 +85,7 @@ const SessionColumnActions: React.FC<ICellRendererParams> = (params) => {
         <GenericIconButtonWithTooltip
           aria-label="Add students to session"
           icon={<AddIcon />}
-          size="md"
+          size="sm"
           label={isSessionFull ? "Session Full" : "Add Students"}
           variant="ghost"
           colorScheme={isSessionFull ? "red" : "orange"}
@@ -109,7 +109,7 @@ const SessionColumnActions: React.FC<ICellRendererParams> = (params) => {
         title={`Lesson Plan`}
         size="xl"
       >
-        <LessonTopicDetails />
+        <LessonTopicDetails sessionId={sessionData.id} />
       </GenericModal>
 
       <GenericModal
