@@ -80,9 +80,9 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
       <CardBody p={2} h="100%">
         <Box h="100%" overflowY="auto">
           <VStack spacing={4} align="stretch" px={2}>
-            {formik.values.sessionSchedules.map((session, index: number) => (
+            {formik.values.sessionSchedules.map((_, index: number) => (
               <Box
-                key={`session-${index}`}
+                key={formik.values.sessionSchedules[index]?.sessionName || `session-${index}`}
                 p={6}
                 bg={sessionCardBg}
                 border="2px solid"
@@ -122,46 +122,19 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
                     </Button>
                   )}
                 </Flex>
+<Grid templateColumns="repeat(2, 1fr)" gap={4} w="full">
+  {formFields.schedule.map((field) => (
+    <GridItem key={`${field.name}-${index}`}>
+      <RenderFormBuilder
+        field={{
+          ...field,
+          name: `sessionSchedules.${index}.${field.name}`,
+        }}
+      />
+    </GridItem>
+  ))}
+</Grid>
 
-                <VStack spacing={4} w="full">
-                  {/* First Line: Day */}
-                  {dayField && (
-                    <Box w="full">
-                      <RenderFormBuilder
-                        field={{ 
-                          ...dayField, 
-                          name: `sessionSchedules.${index}.${dayField.name}` 
-                        }}
-                      />
-                    </Box>
-                  )}
-
-                  {/* Second Line: Start Time and End Time */}
-                  <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full">
-                    {timeFields.map((field) => (
-                      <GridItem key={`${field.name}-${index}`}>
-                        <RenderFormBuilder
-                          field={{ 
-                            ...field, 
-                            name: `sessionSchedules.${index}.${field.name}` 
-                          }}
-                        />
-                      </GridItem>
-                    ))}
-                  </Grid>
-
-                  {/* Third Line: Classroom */}
-                  {enhancedClassRoomField && (
-                    <Box w="full">
-                      <RenderFormBuilder
-                        field={{ 
-                          ...enhancedClassRoomField, 
-                          name: `sessionSchedules.${index}.${enhancedClassRoomField.name}` 
-                        }}
-                      />
-                    </Box>
-                  )}
-                </VStack>
               </Box>
             ))}
             <Box textAlign="center">

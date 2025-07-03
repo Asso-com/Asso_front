@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 import { validateDateWithinAcademicPeriods } from "./validators";
 
-const transformNumber = (value: any, originalValue: any) => {
+const transformNumber = (originalValue: any) => {
   if (originalValue === "" || originalValue == null) return undefined;
   const num = Number(originalValue);
   return isNaN(num) ? undefined : num;
@@ -38,22 +38,36 @@ export const createFullInfoSchema = (academicPeriods: any[] = []) =>
         validateDateWithinAcademicPeriods(academicPeriods)
       ),
 
-    endDate: Yup.string()
-      .required("End date is required")
-      .test(
-        "within-academic-period",
-        "End date must be within the active academic period",
-        validateDateWithinAcademicPeriods(academicPeriods)
-      )
-      .test(
-        "after-start-date",
-        "End date must be after start date",
-        function (endDate) {
-          const { startDate } = this.parent;
-          if (!startDate || !endDate) return true;
-          return new Date(endDate) > new Date(startDate);
-        }
-      ),
+   endDate: Yup.string()
+  .required("End date is required")
+  .test("within-academic-period", function (value) {
+    if (!value) return true;
+
+    const inputDate = new Date(value);
+
+    const activePeriod = academicPeriods.find((p) => {
+      const start = new Date(p.startDate);
+      const end = new Date(p.endDate);
+      return p.active && inputDate >= start && inputDate <= end;
+    });
+
+    if (!activePeriod) {
+      const hint = academicPeriods.find((p) => p.active)?.endDate;
+      return this.createError({
+        path: this.path,
+        message: `End date must be within an active academic period (ends on ${new Date(hint).toLocaleDateString()})`,
+      });
+    }
+
+    return true;
+  })
+  .test("after-start-date", "End date must be after start date", function (endDate) {
+    const { startDate } = this.parent;
+    if (!startDate || !endDate) return true;
+    return new Date(endDate) > new Date(startDate);
+  })
+
+,
 
     maxStudentsCapacity: Yup.number()
       .transform(transformNumber)
