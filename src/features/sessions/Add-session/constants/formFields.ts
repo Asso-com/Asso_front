@@ -164,7 +164,6 @@ export const createInitialValues = (
     sessionSchedules: [
       {
         classRoomId: 0,
-        sessionName: "",
         day: "MONDAY",
         startTime: "09:00",
         endTime: "10:00",
@@ -189,7 +188,6 @@ export const initialValues: SessionFormData = {
   sessionSchedules: [
     {
       classRoomId: 0,
-      sessionName: "",
       day: "",
       startTime: "",
       endTime: "",

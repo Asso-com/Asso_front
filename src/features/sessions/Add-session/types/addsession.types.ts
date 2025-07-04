@@ -15,7 +15,6 @@ export interface SessionFormData {
 }
 
 export interface SessionSchedule {
-  sessionName?: string;
   classRoomId: number;
   day: string;
   startTime: string;
