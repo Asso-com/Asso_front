@@ -13,12 +13,13 @@ interface AcademicPeriodWeek {
 
 export const formFields: { basicInfo: Field[]; schedule: Field[] } = {
   basicInfo: [
-    {
-      name: "generalLevels",
-      label: "Category",
-      type: "radio",
-      validationRules: { required: true },
-    },
+{
+  name: "categoryId",
+  label: "Category",
+  type: "radio",
+  validationRules: { required: true },
+  options: [],
+},
     {
       name: "levelSubjectId",
       label: "Subject Level",
@@ -97,7 +98,7 @@ export const formFields: { basicInfo: Field[]; schedule: Field[] } = {
       ],
       validationRules: { required: true },
     },
-     {
+    {
       name: "classRoomId",
       label: "Room",
       type: "select",
@@ -116,7 +117,7 @@ export const formFields: { basicInfo: Field[]; schedule: Field[] } = {
       type: "time",
       validationRules: { required: true },
       placeholder: "HH:MM:SS",
-    }
+    },
   ],
 };
 
@@ -136,15 +137,17 @@ export const createInitialValues = (
   const defaultCategoryId = firstCategory ? Number(firstCategory.id) : 0;
   const mapCategoryName = (name: string): "" | "Foundation" | "Linguistic" => {
     const normalizedName = name.toLowerCase();
-    if (normalizedName.includes('foundation')) {
+    if (normalizedName.includes("foundation")) {
       return "Foundation";
-    } else if (normalizedName.includes('linguistic')) {
+    } else if (normalizedName.includes("linguistic")) {
       return "Linguistic";
     }
-    return ""; 
+    return "";
   };
-  
-  const defaultCategoryName = firstCategory ? mapCategoryName(firstCategory.name) : "";
+
+  const defaultCategoryName = firstCategory
+    ? mapCategoryName(firstCategory.name)
+    : "";
 
   return {
     categoryId: defaultCategoryId,
@@ -152,19 +155,18 @@ export const createInitialValues = (
     staffId: "",
     associationId: 0,
     periodicity: "WEEKLY",
-    sessionType: "ONLINE", 
+    sessionType: "ONLINE",
     startDate: getStartDate(academicPeriods),
     endDate: "",
     maxStudentsCapacity: 1,
     fees: 0,
-    generalLevels: defaultCategoryName,
+    category: defaultCategoryName,
     sessionSchedules: [
       {
         classRoomId: 0,
-        sessionName: "",
-        day: "MONDAY", 
-        startTime: "09:00", 
-        endTime: "10:00"
+        day: "MONDAY",
+        startTime: "09:00",
+        endTime: "10:00",
       },
     ],
     studentIds: [],
@@ -176,17 +178,16 @@ export const initialValues: SessionFormData = {
   levelSubjectId: 0,
   staffId: "",
   associationId: 0,
-  periodicity:"WEEKLY",
-  sessionType: "" as 'ONLINE' | 'ONSITE',
+  periodicity: "WEEKLY",
+  sessionType: "" as "ONLINE" | "ONSITE",
   startDate: "",
   endDate: "",
   maxStudentsCapacity: 0,
   fees: 0,
-  generalLevels: "",
+  category: "",
   sessionSchedules: [
     {
       classRoomId: 0,
-      sessionName: "",
       day: "",
       startTime: "",
       endTime: "",

@@ -9,13 +9,12 @@ export interface SessionFormData {
   endDate: string;
   maxStudentsCapacity: number;
   fees: number;
-  generalLevels: "Foundation" | "Linguistic" | "";
+  category: "Foundation" | "Linguistic" | "";
   sessionSchedules: SessionSchedule[];
   studentIds: string[];
 }
 
 export interface SessionSchedule {
-  sessionName?: string; 
   classRoomId: number;
   day: string;
   startTime: string;

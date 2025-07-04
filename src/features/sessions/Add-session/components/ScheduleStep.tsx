@@ -64,7 +64,7 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
           <VStack spacing={4} align="stretch" px={2}>
             {formik.values.sessionSchedules.map((_, index: number) => (
               <Box
-                key={formik.values.sessionSchedules[index]?.sessionName || `session-${index}`}
+                key={`session-${index}`}
                 p={6}
                 bg={sessionCardBg}
                 border="2px solid"
@@ -137,7 +137,6 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
                       day: "",
                       startTime: "",
                       endTime: "",
-                      sessionName: "",
                     },
                   ]);
                 }}

@@ -62,19 +62,6 @@ const SessionDetails: React.FC<SessionDetailsProps> = ({ sessionData }) => {
     </HStack>
   );
 
-  const getSessionTypeColor = (type: string) => {
-    switch (type.toLowerCase()) {
-      case "online":
-        return "green";
-      case "in-person":
-        return "blue";
-      case "hybrid":
-        return "purple";
-      default:
-        return "gray";
-    }
-  };
-
   const getAvailabilityColor = (available: number, total: number) => {
     const ratio = available / total;
     if (ratio > 0.5) return "green.500";
@@ -93,7 +80,7 @@ const SessionDetails: React.FC<SessionDetailsProps> = ({ sessionData }) => {
                 {sessionData.code}
               </Heading>
               <Badge
-                colorScheme={getSessionTypeColor(sessionData.sessionType)}
+                colorScheme={"gray"}
                 variant="solid"
                 px={3}
                 py={1}

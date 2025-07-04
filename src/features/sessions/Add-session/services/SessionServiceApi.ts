@@ -16,7 +16,7 @@ const SessionServiceApi = {
   create: async (payload: SessionFormData): Promise<SessionResponse> => {
     try {
       // Transform payload to match backend expectations
-      const { generalLevels, sessionSchedules, ...rest } = payload;
+      const { categoryId, sessionSchedules, ...rest } = payload;
       const transformedPayload = {
         ...rest,
         sessionSchedules: sessionSchedules.map((schedule) => ({

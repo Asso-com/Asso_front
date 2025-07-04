@@ -9,9 +9,9 @@ const transformNumber = (originalValue: any) => {
 
 export const createFullInfoSchema = (academicPeriods: any[] = []) =>
   Yup.object({
-    generalLevels: Yup.string()
-      .oneOf(["Foundation", "Linguistic"], "Please select a valid category")
-      .required("Category is required"),
+categoryId: Yup.number()
+  .min(1, "Category is required")
+  .required("Category is required"),
 
     levelSubjectId: Yup.number()
       .transform(transformNumber)
@@ -38,36 +38,40 @@ export const createFullInfoSchema = (academicPeriods: any[] = []) =>
         validateDateWithinAcademicPeriods(academicPeriods)
       ),
 
-   endDate: Yup.string()
-  .required("End date is required")
-  .test("within-academic-period", function (value) {
-    if (!value) return true;
+    endDate: Yup.string()
+      .required("End date is required")
+      .test("within-academic-period", function (value) {
+        if (!value) return true;
 
-    const inputDate = new Date(value);
+        const inputDate = new Date(value);
 
-    const activePeriod = academicPeriods.find((p) => {
-      const start = new Date(p.startDate);
-      const end = new Date(p.endDate);
-      return p.active && inputDate >= start && inputDate <= end;
-    });
+        const activePeriod = academicPeriods.find((p) => {
+          const start = new Date(p.startDate);
+          const end = new Date(p.endDate);
+          return p.active && inputDate >= start && inputDate <= end;
+        });
 
-    if (!activePeriod) {
-      const hint = academicPeriods.find((p) => p.active)?.endDate;
-      return this.createError({
-        path: this.path,
-        message: `End date must be within an active academic period (ends on ${new Date(hint).toLocaleDateString()})`,
-      });
-    }
+        if (!activePeriod) {
+          const hint = academicPeriods.find((p) => p.active)?.endDate;
+          return this.createError({
+            path: this.path,
+            message: `End date must be within an active academic period (ends on ${new Date(
+              hint
+            ).toLocaleDateString()})`,
+          });
+        }
 
-    return true;
-  })
-  .test("after-start-date", "End date must be after start date", function (endDate) {
-    const { startDate } = this.parent;
-    if (!startDate || !endDate) return true;
-    return new Date(endDate) > new Date(startDate);
-  })
-
-,
+        return true;
+      })
+      .test(
+        "after-start-date",
+        "End date must be after start date",
+        function (endDate) {
+          const { startDate } = this.parent;
+          if (!startDate || !endDate) return true;
+          return new Date(endDate) > new Date(startDate);
+        }
+      ),
 
     maxStudentsCapacity: Yup.number()
       .transform(transformNumber)
