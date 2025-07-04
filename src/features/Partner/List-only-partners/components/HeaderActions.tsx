@@ -53,7 +53,7 @@ const HeaderActions: React.FC<HeaderActionsProps> = ({ gridRef }) => {
             color="blue.700"
             letterSpacing="wide"
           >
-            {t("Association List")}
+            {t("Partner List")}
           </Text>
         </HStack>
 

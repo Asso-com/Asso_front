@@ -1,5 +1,17 @@
+import useFetchAssociations from "../list-partner/hooks/useFetchAssociations";
+import ListOnlyPartenersPresenter from "./ListOnlyPartenersPresenter";
+import type { Partner } from "./types";
+
 const ListOnlyPartenersPage = () => {
-  return <div>ListOnlyPartenersPage</div>;
+
+  const { data: foundPartners = [] } = useFetchAssociations()
+
+  return (
+    <ListOnlyPartenersPresenter
+      activePartners={foundPartners.length}
+      partners={foundPartners as Partner[]}
+    />
+  );
 };
 
 export default ListOnlyPartenersPage;

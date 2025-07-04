@@ -22,12 +22,12 @@ const fakeMenuItems: MenuItem[] = [
                 icon: "FaAngleDoubleRight",
 
             },
-            {
-                menu_id: 42,
-                menu_description: "Student Registration",
-                navLink: "/Student/AddStudent",
-                icon: "FaAngleDoubleRight",
-            },
+            // {
+            //     menu_id: 42,
+            //     menu_description: "Student Registration",
+            //     navLink: "/Student/AddStudent",
+            //     icon: "FaAngleDoubleRight",
+            // },
             {
                 menu_id: 43,
                 menu_description: "Location of Student",
