@@ -3,10 +3,9 @@ import ProtectedLayout from "../layouts/private-layout";
 import DashboardPage from "../features/dashboard/DashoardPage";
 import SchoolYearSettingsContainer from "@features/system-settings/school-year-settings/SchoolYearSettingsContainer";
 import StudentDetailsContainer from "@features/student-info/student-details/StudentDetailsContainer";
-import LinguisticLevelsRegistrationContainer from "@features/student-info/Linguistic-Levels-Registration/LinguisticLevelsRegistrationContainer";
+import LinguisticLevelsRegistrationContainer from "@features/student-info/not-academic-enrollments/NotAcademicEnrollmentsContainer";
 import LocationOfStudentContainer from "@features/student-info/location-student/LocationOfStudentContainer";
 import PaymentsContainer from "@features/student-info/payments/PaymentsContainer";
-import StudentRegistrationContainer from "@features/student-info/student-registration/StudentRegistrationContainer";
 import AddSessionContainer from "@features/sessions/Add-session/AddSessionContainer";
 import ListStudentSessionContainer from "@features/sessions/list-student-session/ListStudentSessionContainer";
 import AddStudentSessionContainer from "@features/sessions/Add-student-session/AddStudentSessionContainer";
@@ -58,10 +57,6 @@ const protectedRoutes = [
         element: <StudentDetailsContainer />,
       },
       { path: "/Student/Payments", element: <PaymentsContainer /> },
-      {
-        path: "/Student/AddStudent",
-        element: <StudentRegistrationContainer />,
-      },
 
       { path: "/Sessions/listSessions", element: <ListSessionsContainer /> },
       { path: "/Sessions/AddSession", element: <AddSessionContainer /> },

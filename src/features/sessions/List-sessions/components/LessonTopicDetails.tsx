@@ -20,7 +20,7 @@ interface LessonTopicDetailsProps {
 }
 
 const LessonTopicDetails: React.FC<LessonTopicDetailsProps> = ({ sessionId }) => {
-  const { data, isLoading, error } = useFetchLessonTopics(sessionId);
+  const { data, isLoading } = useFetchLessonTopics(sessionId);
 
   if (isLoading) {
     return (

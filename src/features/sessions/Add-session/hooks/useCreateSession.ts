@@ -4,18 +4,21 @@ import { showToast } from '@store/toastSlice';
 import SessionServiceApi from '../services/SessionServiceApi';
 import type { SessionFormData } from '../types/addsession.types';
 import type { SessionResponse } from '../services/SessionServiceApi';
+import { useNavigate } from 'react-router-dom';
 
 const useCreateSession = (associationId: number) => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return useMutation<SessionResponse, Error, SessionFormData>({
-      mutationFn: (payload) => {
-        return SessionServiceApi.create(payload);
-      },
+    mutationFn: (payload) => {
+      return SessionServiceApi.create(payload);
+    },
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sessions', associationId] });
+      navigate(`/Sessions/listSessions`);
       dispatch(
         showToast({
           title: 'Success',

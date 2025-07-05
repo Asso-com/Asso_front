@@ -36,7 +36,7 @@ const fakeMenuItems: MenuItem[] = [
             },
             {
                 menu_id: 44,
-                menu_description: "Linguistic Levels Registration",
+                menu_description: "Not Academic Enrollments",
                 navLink: "/Student/LinguisticLevelsRegistration",
                 icon: "FaAngleDoubleRight",
             },

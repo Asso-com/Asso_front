@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { FiGrid, FiList, FiSearch } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
+import StudentNonAcademicEnrollment from "./sidebar/StudentNonAcademicEnrollment";
 
 interface PanelOptionsProps {
   searchTerm: string;
@@ -102,6 +103,7 @@ const PanelOptions: React.FC<PanelOptionsProps> = ({
               onClick={() => setViewMode("list")}
             />
           </HStack>
+          <StudentNonAcademicEnrollment/>
         </Flex>
       </CardBody>
     </Card>

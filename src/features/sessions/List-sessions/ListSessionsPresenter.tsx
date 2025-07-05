@@ -44,7 +44,7 @@ const ListSessionsPresenter = ({ rows = [], total = 0 }: any) => {
             cellRenderer: SessionColumnActions,
             filter: false,
             sortable: false,
-            width: 140,
+            width: 300,
             pinned: "right",
           },
         ]}

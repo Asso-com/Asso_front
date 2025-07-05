@@ -8,19 +8,24 @@ import {
   FaUserGraduate,
 } from "react-icons/fa";
 import PanelOptions from "./components/PanelOptions";
-import mockStudents from "./data";
 import ClearFilter from "./components/ClearFilter";
-import useFilteredStudents from "./useFilteredStudents";
+import useFilteredStudents from "./hooks/useFilteredStudents";
 import StudentCard from "./components/StudentCard";
+import type { StudentEnrollmentDetails } from "./types";
+interface NotAcademicEnrollemntsPresenterProps {
+  studentEnrollmentDetails: StudentEnrollmentDetails[];
+}
 
-const LinguisticLevelsRegistrationContainer: React.FC = () => {
+const NotAcademicEnrollemntsPresenter: React.FC<
+  NotAcademicEnrollemntsPresenterProps
+> = ({ studentEnrollmentDetails }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLevel, setSelectedLevel] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const filteredStudents = useFilteredStudents({
-    students: mockStudents,
+    students: studentEnrollmentDetails,
     searchTerm,
     selectedLevel,
     selectedSubject,
@@ -28,18 +33,22 @@ const LinguisticLevelsRegistrationContainer: React.FC = () => {
 
   const uniqueLevels = [
     ...new Set(
-      mockStudents.flatMap((s) => s.enrolledSubjects.map((e) => e.level.code))
+      studentEnrollmentDetails.flatMap((s) =>
+        s.levelSubjects.map((e) => e.level.code)
+      )
     ),
   ];
   const uniqueSubjects = [
     ...new Set(
-      mockStudents.flatMap((s) => s.enrolledSubjects.map((e) => e.subject.name))
+      studentEnrollmentDetails.flatMap((s) =>
+        s.levelSubjects.map((e) => e.subject.name)
+      )
     ),
   ];
 
-  const totalStudents = mockStudents.length;
-  const totalEnrollments = mockStudents.reduce(
-    (sum, student) => sum + student.enrolledSubjects.length,
+  const totalStudents = studentEnrollmentDetails.length;
+  const totalEnrollments = studentEnrollmentDetails.reduce(
+    (sum, student) => sum + student.levelSubjects.length,
     0
   );
 
@@ -130,4 +139,4 @@ const LinguisticLevelsRegistrationContainer: React.FC = () => {
   );
 };
 
-export default LinguisticLevelsRegistrationContainer;
+export default NotAcademicEnrollemntsPresenter;

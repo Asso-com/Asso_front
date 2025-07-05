@@ -1,10 +1,10 @@
 // hooks/useFilteredStudents.ts
 import { useMemo } from "react";
-import type { StudentData } from "./types";
+import type { StudentEnrollmentDetails } from "../types";
 // If you don't have types, you can use `any` temporarily
 
 interface UseFilteredStudentsProps {
-  students: StudentData[];
+  students: StudentEnrollmentDetails[];
   searchTerm: string;
   selectedLevel: string;
   selectedSubject: string;
@@ -34,13 +34,13 @@ const useFilteredStudents = ({
 
       const matchesLevel =
         !selectedLevel ||
-        studentData.enrolledSubjects.some(
+        studentData.levelSubjects.some(
           (subject) => subject.level.code === selectedLevel
         );
 
       const matchesSubject =
         !selectedSubject ||
-        studentData.enrolledSubjects.some(
+        studentData.levelSubjects.some(
           (subject) => subject.subject.name === selectedSubject
         );
 

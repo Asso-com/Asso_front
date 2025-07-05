@@ -16,7 +16,7 @@ import {
   TagLeftIcon,
 } from "@chakra-ui/react";
 import { FiUser, FiMail, FiBook, FiGlobe } from "react-icons/fi";
-import type { EnrolledSubject, StudentData } from "../types";
+import type { EnrolledSubject, StudentEnrollmentDetails } from "../../not-academic-enrollments/types";
 import { useTranslation } from "react-i18next";
 import type { FC } from "react";
 
@@ -33,7 +33,7 @@ const getLevelColor = (levelCode: string) => {
 };
 
 interface StudentCardProps {
-  studentData: StudentData;
+  studentData: StudentEnrollmentDetails;
 }
 
 const StudentCard: FC<StudentCardProps> = ({ studentData }) => {
@@ -87,17 +87,17 @@ const StudentCard: FC<StudentCardProps> = ({ studentData }) => {
             py={1}
             borderRadius="full"
           >
-            {studentData.enrolledSubjects.length} {t("subjects")}
+            {studentData.levelSubjects.length} {t("subjects")}
           </Badge>
         </Box>
       </Box>
 
-      <CardBody p={6} pt={0}>
-        <Flex justify="space-between" align="flex-start" mb={6} mt={-8}>
+      <CardBody p={3} pt={0}>
+        <Flex justify="space-between" align="flex-start" mb={3} mt={-8}>
           <Box position="relative">
             <Avatar
               name={`${studentData.student.firstName} ${studentData.student.lastName}`}
-              size="xl"
+              size="lg"
               bg="white"
               color={accentColor}
               border="4px solid"
@@ -120,7 +120,7 @@ const StudentCard: FC<StudentCardProps> = ({ studentData }) => {
         </Flex>
         <VStack align="start" spacing={4}>
           <Box>
-            <Text fontWeight="bold" color={headingColor} fontSize="xl" mb={1}>
+            <Text fontWeight="bold" color={headingColor} fontSize="md" mb={1}>
               {studentData.student.firstName} {studentData.student.lastName}
             </Text>
             <HStack spacing={2}>
@@ -166,8 +166,8 @@ const StudentCard: FC<StudentCardProps> = ({ studentData }) => {
               </HStack>
             </Flex>
 
-            <Wrap spacing={2} mb={3}>
-              {studentData.enrolledSubjects
+            <Wrap spacing={2} mb={2}>
+              {studentData.levelSubjects
                 .slice(0, 3)
                 .map((subject: EnrolledSubject) => (
                   <WrapItem key={subject.id}>
@@ -186,7 +186,7 @@ const StudentCard: FC<StudentCardProps> = ({ studentData }) => {
                     </Tag>
                   </WrapItem>
                 ))}
-              {studentData.enrolledSubjects.length > 3 && (
+              {studentData.levelSubjects.length > 3 && (
                 <WrapItem>
                   <Tag
                     variant="outline"
@@ -197,7 +197,7 @@ const StudentCard: FC<StudentCardProps> = ({ studentData }) => {
                     borderColor={borderColor}
                   >
                     <TagLabel>
-                      +{studentData.enrolledSubjects.length - 3} {t("others")}
+                      +{studentData.levelSubjects.length - 3} {t("others")}
                     </TagLabel>
                   </Tag>
                 </WrapItem>

@@ -2,13 +2,13 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { switchLoadingModal } from '@components/shared/modal-overlay/ModalLoading';
 import StudentServiceApi from '../services/StudentServiceApi';
 
-const useFetchStudent = (associationId: number): UseQueryResult<any, Error> => {
+const useFetchStudentDetails = (associationId: number, studentId: string): UseQueryResult<any, Error> => {
     return useQuery<any, Error>({
-        queryKey: ['students', associationId],
+        queryKey: ['student-details', associationId, studentId],
         queryFn: async () => {
             switchLoadingModal();
             try {
-                const response = await StudentServiceApi.getAll(associationId);
+                const response = await StudentServiceApi.getStudentById(studentId, associationId);
                 return response;
             } catch (err) {
                 console.error("Error fetching Student:", err);
@@ -16,11 +16,9 @@ const useFetchStudent = (associationId: number): UseQueryResult<any, Error> => {
                 switchLoadingModal();
             }
         },
-        gcTime: 1000 * 60 * 5,
-        staleTime: 1000 * 60 * 2,
-        enabled: !!associationId,
-        retry: false
+        enabled: !!studentId && !!associationId,
     });
+
 };
 
-export default useFetchStudent;
+export default useFetchStudentDetails;

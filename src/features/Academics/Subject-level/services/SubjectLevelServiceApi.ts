@@ -14,7 +14,7 @@ export type SubjectLevelSelectOption = {
 };
 
 const SubjectLevelServiceApi = {
-  
+
   getAll: async (associationId: number): Promise<SubjectLevelItem[]> => {
     try {
       const response = await axiosInstance.get<SubjectLevelItem[]>(
@@ -27,20 +27,29 @@ const SubjectLevelServiceApi = {
   },
 
   getSelectOptionsByCategory: async (
-  associationId: number | string,
-  categoryId: number | string
-): Promise<SubjectLevelSelectOption[]> => {
-  try {
-    const response = await axiosInstance.get<SubjectLevelSelectOption[]>(
-      `/api/v1/level-subjects/select/association/${associationId}/category/${categoryId}`
-    );
-    return response.data;
-  } catch (error) {
-    handleAxiosError(error);
-    return [];
-  }
-},
-
+    associationId: number | string,
+    categoryId: number | string
+  ): Promise<SubjectLevelSelectOption[]> => {
+    try {
+      const response = await axiosInstance.get<SubjectLevelSelectOption[]>(
+        `/api/v1/level-subjects/select/association/${associationId}/category/${categoryId}`
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+      return [];
+    }
+  },
+  getSelectNoAcademicByAssociation: async (associationId: number): Promise<SubjectLevelSelectOption[]> => {
+    try {
+      const response = await axiosInstance.get<SubjectLevelSelectOption[]>(
+        `/api/v1/level-subjects/no-academic/select/association/${associationId}`
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  },
 
   getSelectOptions: async (associationId: number): Promise<SubjectLevelSelectOption[]> => {
     try {
@@ -50,7 +59,7 @@ const SubjectLevelServiceApi = {
       return response.data;
     } catch (error) {
       handleAxiosError(error);
-      return []; // Par sécurité pour éviter undefined
+      return [];
     }
   },
 

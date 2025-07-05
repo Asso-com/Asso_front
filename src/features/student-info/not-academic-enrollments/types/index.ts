@@ -1,3 +1,8 @@
+export interface StudentEnrollmentRequest {
+  studentId: string,
+  levelSubjectIds: number[]
+}
+
 export interface Level {
   id: number;
   code: string;
@@ -13,7 +18,7 @@ interface Subject {
 
 export interface EnrolledSubject {
   id: string;
-  levelSubjectId: number;
+  //levelSubjectId: number;
   level: Level;
   subject: Subject;
   createdAt: string;
@@ -35,8 +40,8 @@ export interface Student {
   email: string;
 }
 
-export interface StudentData {
+export interface StudentEnrollmentDetails {
   student: Student;
   academicPeriod: AcademicPeriod;
-  enrolledSubjects: EnrolledSubject[];
+  levelSubjects: EnrolledSubject[];
 }

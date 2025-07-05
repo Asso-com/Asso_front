@@ -1,86 +1,89 @@
-import React, { useMemo } from "react";
-import { Box, SimpleGrid } from "@chakra-ui/react";
-import { Form, Formik, type FormikHelpers } from "formik";
-import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder"; 
-import type { Field } from "@/types/formTypes"; 
-import FooterActions from "@components/shared/FooterActions";
+import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import type { RootState } from "@store/index"; 
-import useUpdateStudent from "../../hooks/useUpdateStudent";
-import createValidationSchema from "@utils/createValidationSchema";
-import { studentFields } from "../../constants/StudentFields";
+import { Spinner } from "@chakra-ui/react";
+import { MdEdit } from "react-icons/md";
 
-interface EditStudentProps {
-  details?: Record<string, any>;
-  onClose: () => void;
+import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
+import RightSidebar from "@components/shared/RigthSidebar";
+import SidebarButtonsActions from "@components/shared/SidebarButtonsActions";
+
+import FormContent, { type FormContentRef } from "../sidebar/FormContent";
+import useFetchStudentDetails from "../../hooks/getStudentById";
+import type { RootState } from "@store/index";
+import type { StudentDetails } from "../../types";
+
+interface EnrollementProps {
+  studentDetails?: StudentDetails;
 }
 
-interface FormValues {
-  [key: string]: any;
-}
-
-const EditStudent: React.FC<EditStudentProps> = ({ details, onClose }) => {
+const EditStudent: React.FC<EnrollementProps> = ({ studentDetails }) => {
+  const { t } = useTranslation();
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
 
-  const { mutateAsync: updateStudent, isPending } =
-    useUpdateStudent(associationId);
+  const [studentId, setStudentId] = useState<string>("");
+  const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
 
-  const initialValues: FormValues = useMemo(() => {
-    return studentFields.reduce((acc: FormValues, field: Field) => {
-      acc[field.name] = details?.[field.name] ?? "";
-      return acc;
-    }, {});
-  }, [details]);
+  const formRef = useRef<FormContentRef>(null);
 
-  const validationSchema = createValidationSchema(studentFields);
+  const { data: studentData, isFetching } = useFetchStudentDetails(
+    associationId,
+    studentId
+  );
 
-  const onSubmit = async (
-    values: FormValues,
-    { setSubmitting }: FormikHelpers<FormValues>
-  ) => {
-    try {
-      const StudentId = details?.id;
-      await updateStudent({ StudentId, data: values });
-      onClose();
-    } catch (error) {
-    } finally {
-      setSubmitting(false);
+  const openEditModal = () => {
+    if (!studentDetails?.id) return;
+    setStudentId(studentDetails.id);
+    setIsEditOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsEditOpen(false);
+  };
+
+  const handleSubmit = async () => {
+    if (formRef.current) {
+      const formData = await formRef.current.submitForm();
+      if (formData) {
+        console.log("Submitting student update:", formData);
+        // TODO: Send formData to your API
+      }
     }
   };
 
   return (
-    <Box p={4}>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        enableReinitialize
-        validateOnBlur={false}
-        onSubmit={onSubmit}
-      >
-        {({ isSubmitting, handleSubmit, dirty }) => (
-          <Form>
-            <SimpleGrid columns={2} spacing={4} mt={2}>
-              {studentFields.filter((field) => field.name !== "active").map(
-                (field: Field) => (
-                  <RenderFormBuilder key={field.name} field={field} />
-                )
-              )}
-            </SimpleGrid>
+    <>
+      <GenericIconButtonWithTooltip
+        icon={<MdEdit size={22} />}
+        label={t("Edit")}
+        ariaLabel="edit_btn"
+        variant="ghost"
+        colorScheme="green"
+        size="sm"
+        onClick={openEditModal}
+      />
 
-            <FooterActions
-              onClose={onClose}
-              handleSave={handleSubmit}
-              isDisabled={!dirty}
-              isSaving={isSubmitting || isPending}
-              cancelText="Cancel"
-              saveText="Edit Student"
-            />
-          </Form>
+      <RightSidebar
+        isOpen={isEditOpen}
+        title={t("Edit Student")}
+        onClose={closeEditModal}
+        size="lg"
+        footer={
+          <SidebarButtonsActions
+            onSubmitForm={handleSubmit}
+            onClose={closeEditModal}
+          />
+        }
+      >
+        {isFetching ? (
+          <Spinner size="lg" />
+        ) : (
+          <FormContent ref={formRef} editData={studentData} isEditMode />
         )}
-      </Formik>
-    </Box>
+      </RightSidebar>
+    </>
   );
 };
 

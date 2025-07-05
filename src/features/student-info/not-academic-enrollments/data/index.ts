@@ -1,6 +1,6 @@
-import type { StudentData } from "../types";
+import type { StudentEnrollmentDetails } from "../../not-academic-enrollments/types";
 
-const mockStudents: StudentData[] = [
+const mockStudents: StudentEnrollmentDetails[] = [
     {
         student: {
             id: "6b197dc7-55be-4e58-8c71-4dfadd33083d",
@@ -15,10 +15,10 @@ const mockStudents: StudentData[] = [
             description: "Mathematics Class - Algebra Basics",
             active: true,
         },
-        enrolledSubjects: [
+        levelSubjects: [
             {
                 id: "37fa1e27-cd32-402d-9632-c699e3e18088",
-                levelSubjectId: 35,
+                //levelSubjectId: 35,
                 level: {
                     id: 19,
                     code: "A1",
@@ -31,7 +31,7 @@ const mockStudents: StudentData[] = [
             },
             {
                 id: "3ea849c2-15b1-4537-8114-7841b97ef2bd",
-                levelSubjectId: 34,
+                //levelSubjectId: 34,
                 level: {
                     id: 19,
                     code: "A1",
@@ -58,10 +58,10 @@ const mockStudents: StudentData[] = [
             description: "Mathematics Class - Algebra Basics",
             active: true,
         },
-        enrolledSubjects: [
+        levelSubjects: [
             {
                 id: "48fa2e38-de43-513e-a743-d800f4f29199",
-                levelSubjectId: 36,
+                //levelSubjectId: 36,
                 level: {
                     id: 20,
                     code: "B1",
@@ -74,7 +74,7 @@ const mockStudents: StudentData[] = [
             },
             {
                 id: "59fb3f49-ef54-624f-b854-e911g5g3a2aa",
-                levelSubjectId: 37,
+                //levelSubjectId: 37,
                 level: {
                     id: 21,
                     code: "B2",
@@ -87,7 +87,7 @@ const mockStudents: StudentData[] = [
             },
             {
                 id: "6afc4g5a-fg65-735g-c965-fa22h6h4b3bb",
-                levelSubjectId: 38,
+                //levelSubjectId: 38,
                 level: {
                     id: 19,
                     code: "A1",
@@ -114,10 +114,10 @@ const mockStudents: StudentData[] = [
             description: "Mathematics Class - Algebra Basics",
             active: true,
         },
-        enrolledSubjects: [
+        levelSubjects: [
             {
                 id: "7bgd5h6b-gh76-846h-d076-gb33i7i5c4cc",
-                levelSubjectId: 39,
+                //levelSubjectId: 39,
                 level: { id: 22, code: "C1", name: "Niveau avancé (C1)", order: 5 },
                 subject: { id: 3, name: "Anglais", code: "SUB-LANG-002" },
                 createdAt: "2025-07-03T14:15:20",

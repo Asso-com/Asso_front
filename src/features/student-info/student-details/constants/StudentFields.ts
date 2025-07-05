@@ -223,10 +223,7 @@ export const levelFields: Field[] = [
     type: 'select',
     label: 'Level/Grade',
     placeholder: 'Select level',
-    options: [
-      { value: 1, label: 'Grade 1' },
-      { value: 2, label: 'Grade 2' },
-    ],
+    options: [],
     validationRules: { required: true }
   },
 ];
