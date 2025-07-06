@@ -43,6 +43,7 @@ const ColumnAction: React.FC<ICellRendererParams<StudentDetails>> = (
   };
 
   const handleEnrollmentToggle = async () => {
+    if (isEnrolled) return 
     openEnrollmentModal();
   };
 

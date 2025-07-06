@@ -27,6 +27,7 @@ import LessonContainer from "@features/Lesson-plan/Lesson/LessonContainer.tsx";
 import TopicContainer from "@features/Lesson-plan/Topic/TopicContainer.tsx";
 import LocationContainer from "@features/Partner/location/LocationContainer";
 import ListOnlyPartenersPage from "@features/Partner/List-only-partners/ListOnlyPartenersPage";
+import BookListContainer from "@features/Library/BookListContainer";
 const protectedRoutes = [
   {
     element: <ProtectedLayout />,
@@ -107,6 +108,8 @@ const protectedRoutes = [
       },
 
       { path: "/HumanResource/listStaff", element: <StaffContainer /> },
+
+      { path: "/Library/BookList", element: <BookListContainer /> },
     ],
   },
 ];

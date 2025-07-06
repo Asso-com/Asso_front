@@ -70,60 +70,61 @@ const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
 
   const teacherOptions = staffOptions.map(
     (staff: { firstName: string; lastName: string; id: number }) => ({
-      label: `${staff.firstName} ${staff.lastName}`,
+      label: `${staff.firstName || ""} ${staff.lastName || ""}`,
       value: staff.id,
     })
   );
 
- const categoryOptions = categories.map((cat: { name: string; id: number }) => ({
-  label: cat.name,   
-  value: cat.id, 
-}));
+  const categoryOptions = categories.map(
+    (cat: { name: string; id: number }) => ({
+      label: cat.name,
+      value: cat.id,
+    })
+  );
 
-const enhancedFields = formFields.basicInfo.map((field) => {
-  switch (field.name) {
-    case "categoryId":
-      return {
-        ...field,
-        options: categoryOptions,
-        isLoading: isLoadingCategories,
-        error: categoryError?.message,
-        onChange: (selectedValue: string) => {
-          setFieldValue("categoryId", Number(selectedValue));
-          setFieldValue("levelSubjectId", 0);
-        },
-      };
+  const enhancedFields = formFields.basicInfo.map((field) => {
+    switch (field.name) {
+      case "categoryId":
+        return {
+          ...field,
+          options: categoryOptions,
+          isLoading: isLoadingCategories,
+          error: categoryError?.message,
+          onChange: (selectedValue: string) => {
+            setFieldValue("categoryId", Number(selectedValue));
+            setFieldValue("levelSubjectId", 0);
+          },
+        };
 
-    case "levelSubjectId":
-      return {
-        ...field,
-        options: subjectLevelOptions,
-        isLoading: isLoadingSubjects,
-        error: subjectError?.message,
-      };
+      case "levelSubjectId":
+        return {
+          ...field,
+          options: subjectLevelOptions,
+          isLoading: isLoadingSubjects,
+          error: subjectError?.message,
+        };
 
-    case "staffId":
-      return {
-        ...field,
-        options: teacherOptions,
-        isLoading: isLoadingStaff,
-        error: staffError?.message,
-      };
+      case "staffId":
+        return {
+          ...field,
+          options: teacherOptions,
+          isLoading: isLoadingStaff,
+          error: staffError?.message,
+        };
 
-    case "startDate":
-    case "endDate":
-      return {
-        ...field,
-        academicPeriods,
-        min: minISO,
-        max: maxISO,
-      };
+      case "startDate":
+      case "endDate":
+        return {
+          ...field,
+          academicPeriods,
+          min: minISO,
+          max: maxISO,
+        };
 
-    default:
-      return field;
-  }
-});
-
+      default:
+        return field;
+    }
+  });
 
   return (
     <Card
