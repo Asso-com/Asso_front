@@ -1,47 +1,36 @@
-import type { SessionTracking } from "./types";
+import type { SessionSchuduleDate } from "./types";
 
 export const dayNames: Record<string, string> = {
-    Monday: "Monday",
-    Tuesday: "Tuesday",
-    Wednesday: "Wednesday",
-    Thursday: "Thursday",
-    Friday: "Friday",
-    Saturday: "Saturday",
-    Sunday: "Sunday",
+    MONDAY: "Monday",
+    TUESDAY: "Tuesday",
+    WEDNESDAY: "Wednesday",
+    THURSDAY: "Thursday",
+    FRIDAY: "Friday",
+    SATURDAY: "Saturday",
+    SUNDAY: "Sunday",
 };
-
-export const subjectColors: Record<string, string> = {
-    Mathematics: "blue",
-    Physics: "purple",
-    French: "green",
-    English: "orange",
-    Spanish: "red",
-    History: "teal",
-    Biology: "cyan",
-};
-
 
 export const daysOfWeek: (keyof typeof dayNames)[] = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+    "SUNDAY",
 ];
 
 export const groupSessionsByDay = (
-    sessions: SessionTracking[]
-): Record<keyof typeof dayNames, SessionTracking[]> => {
-    const grouped: Record<keyof typeof dayNames, SessionTracking[]> = {
-        Monday: [],
-        Tuesday: [],
-        Wednesday: [],
-        Thursday: [],
-        Friday: [],
-        Saturday: [],
-        Sunday: [],
+    sessions: SessionSchuduleDate[]
+): Record<keyof typeof dayNames, SessionSchuduleDate[]> => {
+    const grouped: Record<keyof typeof dayNames, SessionSchuduleDate[]> = {
+        MONDAY: [],
+        TUESDAY: [],
+        WEDNESDAY: [],
+        THURSDAY: [],
+        FRIDAY: [],
+        SATURDAY: [],
+        SUNDAY: [],
     };
 
     daysOfWeek.forEach((day) => {

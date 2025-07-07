@@ -19,25 +19,19 @@ import {
 } from "@chakra-ui/react";
 import { FiCalendar } from "react-icons/fi";
 import ModernSessionCard from "./ModernSessionCard";
-import { daysOfWeek } from "../../sessionUtils";
-import type { SessionTracking } from "../../types";
+import { dayNames, daysOfWeek } from "../../sessionUtils";
+import type { SessionSchuduleDate } from "../../types";
 import { useTranslation } from "react-i18next";
 
 interface DayPresentationProps {
-  sessionsByDay: Record<string, SessionTracking[]>;
+  sessionsByDay: Record<string, SessionSchuduleDate[]>;
+  subjectColors: Record<string, string>;
 }
 
-const dayNames: Record<string, string> = {
-  Monday: "Monday",
-  Tuesday: "Tuesday",
-  Wednesday: "Wednesday",
-  Thursday: "Thursday",
-  Friday: "Friday",
-  Saturday: "Saturday",
-  Sunday: "Sunday",
-};
-
-const DayPresentation: React.FC<DayPresentationProps> = ({ sessionsByDay }) => {
+const DayPresentation: React.FC<DayPresentationProps> = ({
+  sessionsByDay,
+  subjectColors,
+}) => {
   const { t } = useTranslation();
   const cardBgColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.600");
@@ -86,6 +80,7 @@ const DayPresentation: React.FC<DayPresentationProps> = ({ sessionsByDay }) => {
                     <ModernSessionCard
                       key={session.sessionDateId}
                       session={session}
+                      subjectColors={subjectColors}
                     />
                   ))}
                 </SimpleGrid>

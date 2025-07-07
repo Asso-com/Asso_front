@@ -8,11 +8,11 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { FiCheckCircle, FiClock } from "react-icons/fi";
-import type { SessionTracking } from "../../types";
+import type { SessionSchuduleDate } from "../../types";
 import { useTranslation } from "react-i18next";
 
 interface StatsHeaderProps {
-  filteredSessions: SessionTracking[];
+  filteredSessions: SessionSchuduleDate[];
 }
 
 const StatsHeader: React.FC<StatsHeaderProps> = ({ filteredSessions }) => {
@@ -42,7 +42,7 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({ filteredSessions }) => {
             <HStack>
               <Icon as={FiCheckCircle} color="green.500" />
               <Text fontSize="sm" color="gray.600">
-                {filteredSessions.filter((s) => s.isValidated).length}{" "}
+                {filteredSessions.filter((s) => s.validated).length}{" "}
                 {t("validated")}
               </Text>
             </HStack>
@@ -51,7 +51,7 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({ filteredSessions }) => {
               <Text fontSize="sm" color="gray.600">
                 {
                   filteredSessions.filter(
-                    (s) => !s.isAttendanceMarked && !s.isCanceled
+                    (s) => !s.attendanceMarked && !s.canceled
                   ).length
                 }{" "}
                 {t("pending")}
