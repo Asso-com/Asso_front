@@ -8,7 +8,6 @@ const useFetchSessionsByAssociation = (
   return useQuery<SessionResponse[], Error>({
     queryKey: ["sessions", associationId],
     queryFn: () => SessionServiceApi.getAllByAssociation(associationId),
-    staleTime: 5 * 60 * 1000,  
     retry: false,
     enabled: associationId !== 0,
   });
