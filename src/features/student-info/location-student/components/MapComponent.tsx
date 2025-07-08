@@ -16,7 +16,7 @@ interface MapComponentProps {
   selectedStudentId: string | null;
 }
 
-const MapComponent = ({ onCenter, studentsWithLocation }: MapComponentProps) => {
+const MapComponent = ({ onCenter, studentsWithLocation, selectedStudentId }: MapComponentProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const markersRef = useRef<{ marker: google.maps.Marker; student: ProcessedStudentData }[]>([]);
@@ -35,11 +35,152 @@ const MapComponent = ({ onCenter, studentsWithLocation }: MapComponentProps) => 
     { lat: 48.944, lng: 2.316 },
   ];
 
+  // Fonction pour créer un marqueur comme dans l'image
+  const createLocationMarker = (student: ProcessedStudentData, isSelected: boolean = false) => {
+    const size = isSelected ? 35 : 28;
+    const circleRadius = size * 0.4;
+    const emoji = '👨‍🎓';
+    const bgColor = student.enrolledInCurrentPeriod ? '#4285F4' : '#FF8C00'; // Bleu Google ou orange
+    const strokeColor = '#FFFFFF';
+    const strokeWidth = 2;
+    
+    const svgMarker = `
+      <svg width="${size}" height="${size + 10}" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="shadow${student.id}" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.3)"/>
+          </filter>
+        </defs>
+        
+        <!-- Cercle principal -->
+        <circle cx="${size/2}" cy="${circleRadius + 2}" r="${circleRadius}" 
+                fill="${bgColor}" 
+                stroke="${strokeColor}" 
+                stroke-width="${strokeWidth}" 
+                filter="url(#shadow${student.id})"/>
+        
+        <!-- Triangle pointu vers le bas -->
+        <path d="M ${size/2 - 6} ${circleRadius + circleRadius + 2} 
+                 L ${size/2} ${size + 8} 
+                 L ${size/2 + 6} ${circleRadius + circleRadius + 2} Z" 
+              fill="${bgColor}" 
+              stroke="${strokeColor}" 
+              stroke-width="${strokeWidth}"
+              filter="url(#shadow${student.id})"/>
+        
+        <!-- Emoji centré dans le cercle -->
+        <text x="${size/2}" y="${circleRadius + 6}" 
+              text-anchor="middle" 
+              font-size="${circleRadius * 1.2}" 
+              font-family="Arial, sans-serif">${emoji}</text>
+        
+        ${isSelected ? `
+          <!-- Anneau de sélection -->
+          <circle cx="${size/2}" cy="${circleRadius + 2}" r="${circleRadius + 4}" 
+                  fill="none" 
+                  stroke="#FF0000" 
+                  stroke-width="2" 
+                  stroke-dasharray="4,4">
+            <animateTransform attributeName="transform" 
+                            type="rotate" 
+                            values="0 ${size/2} ${circleRadius + 2};360 ${size/2} ${circleRadius + 2}" 
+                            dur="2s" 
+                            repeatCount="indefinite"/>
+          </circle>
+        ` : ''}
+      </svg>
+    `;
+
+    return {
+      url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgMarker),
+      scaledSize: new window.google.maps.Size(size, size + 10),
+      anchor: new window.google.maps.Point(size/2, size + 8), // Ancrage à la pointe
+    };
+  };
+
+  // Fonction pour créer le marqueur de sélection spécial
+  const createSelectedMarker = () => {
+    const size = 42;
+    const circleRadius = size * 0.4;
+    const emoji = '🎯';
+    
+    const svgMarker = `
+      <svg width="${size}" height="${size + 12}" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="glowSelected" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(255,0,0,0.5)"/>
+          </filter>
+        </defs>
+        
+        <!-- Cercle extérieur pulsant -->
+        <circle cx="${size/2}" cy="${circleRadius + 2}" r="${circleRadius + 6}" 
+                fill="none" 
+                stroke="#FF0000" 
+                stroke-width="2" 
+                stroke-dasharray="6,6"
+                opacity="0.8">
+          <animateTransform attributeName="transform" 
+                          type="rotate" 
+                          values="0 ${size/2} ${circleRadius + 2};360 ${size/2} ${circleRadius + 2}" 
+                          dur="2s" 
+                          repeatCount="indefinite"/>
+          <animate attributeName="r" 
+                   values="${circleRadius + 6};${circleRadius + 8};${circleRadius + 6}" 
+                   dur="1.5s" 
+                   repeatCount="indefinite"/>
+        </circle>
+        
+        <!-- Cercle principal -->
+        <circle cx="${size/2}" cy="${circleRadius + 2}" r="${circleRadius}" 
+                fill="#FF4444" 
+                stroke="#FFFFFF" 
+                stroke-width="3" 
+                filter="url(#glowSelected)"/>
+        
+        <!-- Triangle pointu vers le bas -->
+        <path d="M ${size/2 - 7} ${circleRadius + circleRadius + 2} 
+                 L ${size/2} ${size + 10} 
+                 L ${size/2 + 7} ${circleRadius + circleRadius + 2} Z" 
+              fill="#FF4444" 
+              stroke="#FFFFFF" 
+              stroke-width="3"
+              filter="url(#glowSelected)"/>
+        
+        <!-- Emoji centré -->
+        <text x="${size/2}" y="${circleRadius + 6}" 
+              text-anchor="middle" 
+              font-size="${circleRadius * 1.1}" 
+              font-family="Arial, sans-serif">${emoji}</text>
+        
+        <!-- Effet de pulsation -->
+        <circle cx="${size/2}" cy="${circleRadius + 2}" r="${circleRadius}" 
+                fill="#FF4444" 
+                stroke="none" 
+                opacity="0.3">
+          <animate attributeName="r" 
+                   values="${circleRadius};${circleRadius + 4};${circleRadius}" 
+                   dur="1s" 
+                   repeatCount="indefinite"/>
+          <animate attributeName="opacity" 
+                   values="0.3;0.1;0.3" 
+                   dur="1s" 
+                   repeatCount="indefinite"/>
+        </circle>
+      </svg>
+    `;
+
+    return {
+      url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgMarker),
+      scaledSize: new window.google.maps.Size(size, size + 12),
+      anchor: new window.google.maps.Point(size/2, size + 10),
+    };
+  };
+
   const initializeMap = () => {
     if (mapRef.current && window.google && window.google.maps) {
       const initialMap = new window.google.maps.Map(mapRef.current, {
         center: { lat: 48.936616, lng: 2.324789 },
-        zoom: 13,
+        zoom: 15,
         styles: mapStyles,
         gestureHandling: 'greedy',
         clickableIcons: false,
@@ -53,11 +194,11 @@ const MapComponent = ({ onCenter, studentsWithLocation }: MapComponentProps) => 
       // Ajouter le contour de Villeneuve-la-Garenne
       const villeneuvePolygon = new window.google.maps.Polygon({
         paths: villeneuveCoords,
-        strokeColor: "#3182ce",
+        strokeColor: "#4285F4",
         strokeOpacity: 0.8,
         strokeWeight: 3,
-        fillColor: "#3182ce",
-        fillOpacity: 0.1,
+        fillColor: "#4285F4",
+        fillOpacity: 0.15,
       });
       villeneuvePolygon.setMap(initialMap);
       villeneuvePolygonRef.current = villeneuvePolygon;
@@ -70,7 +211,7 @@ const MapComponent = ({ onCenter, studentsWithLocation }: MapComponentProps) => 
         onCenter((lat: number, lon: number, studentId: string) => {
           initialMap.panTo({ lat, lng: lon });
           setTimeout(() => {
-            initialMap.setZoom(17);
+            initialMap.setZoom(18);
             addSelectedMarker(initialMap, lat, lon, studentId);
           }, 200);
         });
@@ -84,58 +225,63 @@ const MapComponent = ({ onCenter, studentsWithLocation }: MapComponentProps) => 
       selectedMarkerRef.current.setMap(null);
     }
 
+    // Trouver l'étudiant
+    const student = studentsWithLocation.find(s => s.id === studentId);
+    if (!student) return;
+
     // Créer un nouveau marqueur spécial pour la sélection
     const selectedMarker = new window.google.maps.Marker({
       position: { lat, lng: lon },
       map: mapInstance,
-      icon: {
-        path: window.google.maps.SymbolPath.CIRCLE,
-        scale: 15,
-        fillColor: "#FF0000",
-        fillOpacity: 0.9,
-        strokeColor: "#FFFFFF",
-        strokeWeight: 3,
-      },
+      icon: createSelectedMarker(),
       zIndex: 1000,
-      animation: window.google.maps.Animation.BOUNCE,
+      animation: window.google.maps.Animation.DROP,
     });
-
-    // Arrêter l'animation après 2 secondes
-    setTimeout(() => {
-      selectedMarker.setAnimation(null);
-    }, 2000);
 
     selectedMarkerRef.current = selectedMarker;
 
-    // Trouver l'étudiant et afficher l'info window
-    const student = studentsWithLocation.find(s => s.id === studentId);
-    if (student) {
-      const infoWindow = new window.google.maps.InfoWindow({
-        content: `
-          <div style="padding: 15px; font-family: Arial, sans-serif; max-width: 300px;">
-            <h4 style="margin: 0 0 8px 0; color: #1a365d; font-size: 16px; font-weight: bold;">
-              🎯 ${student.name}
+    // Créer l'info window
+    const infoWindow = new window.google.maps.InfoWindow({
+      content: `
+        <div style="padding: 15px; font-family: Arial, sans-serif; max-width: 300px; border-radius: 8px;">
+          <div style="display: flex; align-items: center; margin-bottom: 10px;">
+            <span style="font-size: 24px; margin-right: 10px;">🎯</span>
+            <h4 style="margin: 0; color: #1a365d; font-size: 16px; font-weight: bold;">
+              ${student.name}
             </h4>
-            <p style="margin: 0 0 6px 0; color: #666; font-size: 13px;">
-              🆔 ${student.registrationId}
+          </div>
+          
+          <div style="background: #f8f9fa; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
+            <p style="margin: 0 0 4px 0; color: #666; font-size: 13px;">
+              🆔 <strong>ID:</strong> ${student.registrationId}
             </p>
-            <p style="margin: 0 0 6px 0; color: #666; font-size: 13px;">
-              📧 ${student.email}
+            <p style="margin: 0 0 4px 0; color: #666; font-size: 13px;">
+              📧 <strong>Email:</strong> ${student.email}
             </p>
-            <p style="margin: 0 0 6px 0; color: #4a5568; font-size: 13px;">
-              🏫 ${student.establishment}
+            <p style="margin: 0 0 4px 0; color: #4a5568; font-size: 13px;">
+              🏫 <strong>School:</strong> ${student.establishment}
             </p>
-            <p style="margin: 0 0 8px 0; color: #4a5568; font-size: 13px;">
-              📍 ${student.address}
+            <p style="margin: 0 0 4px 0; color: #4a5568; font-size: 13px;">
+              📍 <strong>Address:</strong> ${student.address}
             </p>
-            <p style="margin: 0; color: ${student.enrolledInCurrentPeriod ? '#38A169' : '#D69E2E'}; font-size: 13px; font-weight: bold;">
+          </div>
+          
+          <div style="text-align: center; padding: 6px; border-radius: 6px; background: ${student.enrolledInCurrentPeriod ? '#d4edda' : '#fff3cd'};">
+            <p style="margin: 0; color: ${student.enrolledInCurrentPeriod ? '#155724' : '#856404'}; font-size: 13px; font-weight: bold;">
               ${student.enrolledInCurrentPeriod ? '✅ Currently Enrolled' : '⏸️ Not Enrolled'}
             </p>
           </div>
-        `,
-      });
-      infoWindow.open(mapInstance, selectedMarker);
-    }
+        </div>
+      `,
+      disableAutoPan: false,
+      pixelOffset: new window.google.maps.Size(0, -15),
+    });
+
+    infoWindow.open(mapInstance, selectedMarker);
+
+    selectedMarker.addListener('click', () => {
+      infoWindow.close();
+    });
   };
 
   useEffect(() => {
@@ -182,35 +328,29 @@ const MapComponent = ({ onCenter, studentsWithLocation }: MapComponentProps) => 
   const updateMarkers = (mapInstance: google.maps.Map) => {
     if (!window.google || !window.google.maps) return;
 
-    // Nettoyer les anciens marqueurs
     markersRef.current.forEach(({ marker }) => marker.setMap(null));
     markersRef.current = [];
 
-    // Créer des marqueurs SEULEMENT pour les étudiants avec location
     studentsWithLocation.forEach((student) => {
-      const markerIcon = {
-        path: window.google.maps.SymbolPath.CIRCLE,
-        scale: 8,
-        fillColor: student.enrolledInCurrentPeriod ? "#48BB78" : "#ED8936",
-        fillOpacity: 0.9,
-        strokeColor: "#ffffff",
-        strokeWeight: 2,
-      };
-
       const marker = new window.google.maps.Marker({
         position: { lat: student.lat, lng: student.lon },
         map: mapInstance,
         title: student.name,
-        icon: markerIcon,
-        optimized: true,
+        icon: createLocationMarker(student, selectedStudentId === student.id),
+        optimized: false,
+        zIndex: selectedStudentId === student.id ? 999 : 1,
       });
 
       const infoWindow = new window.google.maps.InfoWindow({
         content: `
-          <div style="padding: 10px; font-family: Arial, sans-serif; max-width: 280px;">
-            <h4 style="margin: 0 0 6px 0; color: #1a365d; font-size: 14px; font-weight: bold;">
-              ${student.name}
-            </h4>
+          <div style="padding: 12px; font-family: Arial, sans-serif; max-width: 280px;">
+            <div style="display: flex; align-items: center; margin-bottom: 8px;">
+              <span style="font-size: 20px; margin-right: 8px;">👨‍🎓</span>
+              <h4 style="margin: 0; color: #1a365d; font-size: 14px; font-weight: bold;">
+                ${student.name}
+              </h4>
+            </div>
+            
             <p style="margin: 0 0 4px 0; color: #666; font-size: 12px;">
               🆔 ${student.registrationId}
             </p>
@@ -228,6 +368,7 @@ const MapComponent = ({ onCenter, studentsWithLocation }: MapComponentProps) => 
             </p>
           </div>
         `,
+        pixelOffset: new window.google.maps.Size(0, -10),
       });
 
       marker.addListener('click', () => {
@@ -239,10 +380,10 @@ const MapComponent = ({ onCenter, studentsWithLocation }: MapComponentProps) => 
   };
 
   useEffect(() => {
-    if (map && isGoogleLoaded && studentsWithLocation.length > 0) {
+    if (map && isGoogleLoaded) {
       updateMarkers(map);
     }
-  }, [map, studentsWithLocation, isGoogleLoaded]);
+  }, [map, studentsWithLocation, selectedStudentId, isGoogleLoaded]);
 
   return <Box ref={mapRef} width="100%" height="100vh" />;
 };
