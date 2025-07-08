@@ -80,7 +80,7 @@ const ModernSessionCard: React.FC<{
   session: SessionSchuduleDate;
   subjectColors: Record<string, string>;
 }> = ({ session, subjectColors }) => {
-  console.log(session);
+
   const { t } = useTranslation();
   const cardBgColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.600");

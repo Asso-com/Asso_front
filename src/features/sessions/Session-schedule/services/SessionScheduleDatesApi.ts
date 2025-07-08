@@ -24,6 +24,16 @@ const SessionScheduleDatesApi = {
             handleAxiosError(error);
         }
     },
+    deleteSessionDates: async (associationId: number, periodWeeksId: number) => {
+        try {
+            const response = await axiosInstance.delete<any>(
+                `/api/v1/session-schedule-dates/associations/${associationId}/period-weeks/${periodWeeksId}`,
+            );
+            return response.data;
+        } catch (error) {
+            handleAxiosError(error);
+        }
+    }
 
 }
 export default SessionScheduleDatesApi
