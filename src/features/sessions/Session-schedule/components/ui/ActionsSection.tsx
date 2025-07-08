@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@store/index";
 
 import useCreateSessionDates from "../../hooks/useCreateSessionDates";
+import useDeleteSessionDates from "../../hooks/useDeleteSessionDates";
 
 interface Props {
   periodWeeksId: number;
@@ -27,6 +28,9 @@ const ActionsSection: React.FC<Props> = ({ periodWeeksId }) => {
 
   const { mutateAsync: generateSessions, isPending: isGenerating } =
     useCreateSessionDates(associationId, periodWeeksId);
+
+  const { mutateAsync: clearSessionDates, isPending: isClearing } =
+    useDeleteSessionDates(associationId, periodWeeksId);
 
   return (
     <ButtonGroup spacing={3} size="sm">
@@ -69,8 +73,8 @@ const ActionsSection: React.FC<Props> = ({ periodWeeksId }) => {
           colorScheme="red"
           variant="outline"
           leftIcon={<FiTrash2 />}
-          // onClick={onClearSessionDates}
-          // isLoading={isClearing}
+          onClick={() => clearSessionDates()}
+          isLoading={isClearing}
           loadingText={t("Clearing...")}
           borderColor={dangerColor}
           color={dangerColor}

@@ -29,6 +29,27 @@ const DatePeriodNavigator: React.FC<DatePeriodNavigatorProps> = ({
     useState<number>(defaultSelectedIndex);
   const [selectedPeriod, setSelectedPeriod] = useState<DatePeriod | null>(null);
 
+  // Move all useColorModeValue calls to the top level
+  const bgLight = useColorModeValue("#fff", "#2D3748");
+  const borderLight = useColorModeValue("#E2E8F0", "#4A5568");
+  const borderFocus = useColorModeValue("#3182ce", "#63B3ED");
+  const textColor = useColorModeValue("#2D3748", "#F7FAFC");
+  const placeholderColor = useColorModeValue("#A0AEC0", "#718096");
+  const hoverBg = useColorModeValue("#F7FAFC", "#4A5568");
+  const hoverBorder = useColorModeValue("#CBD5E0", "#718096");
+  const optionHoverBg = useColorModeValue("#EBF8FF", "#2A4365");
+  const selectedBg = useColorModeValue("#3182ce", "#63B3ED");
+  const selectedActiveBg = useColorModeValue("#2B6CB0", "#4299E1");
+  const optionActiveBg = useColorModeValue("#BEE3F8", "#2A4365");
+  const dropdownColor = useColorModeValue("#718096", "#A0AEC0");
+  const dropdownHoverColor = useColorModeValue("#4A5568", "#CBD5E0");
+  const boxShadowLight = useColorModeValue(
+    "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+    "0 10px 15px -3px rgba(0, 0, 0, 0.3)"
+  );
+  const containerBg = useColorModeValue("gray.50", "gray.700");
+  const containerBorder = useColorModeValue("gray.200", "gray.600");
+
   // Initialize with the specified default or first option
   useEffect(() => {
     if (weeksOptions.length > 0 && selectedPeriod === null) {
@@ -81,29 +102,44 @@ const DatePeriodNavigator: React.FC<DatePeriodNavigatorProps> = ({
     [weeksOptions, updateSelection]
   );
 
+  // Now create the colorValues object using the hook values
   const colorValues = useMemo(
     () => ({
-      bgLight: useColorModeValue("#fff", "#2D3748"),
-      borderLight: useColorModeValue("#E2E8F0", "#4A5568"),
-      borderFocus: useColorModeValue("#3182ce", "#63B3ED"),
-      textColor: useColorModeValue("#2D3748", "#F7FAFC"),
-      placeholderColor: useColorModeValue("#A0AEC0", "#718096"),
-      hoverBg: useColorModeValue("#F7FAFC", "#4A5568"),
-      hoverBorder: useColorModeValue("#CBD5E0", "#718096"),
-      optionHoverBg: useColorModeValue("#EBF8FF", "#2A4365"),
-      selectedBg: useColorModeValue("#3182ce", "#63B3ED"),
-      selectedActiveBg: useColorModeValue("#2B6CB0", "#4299E1"),
-      optionActiveBg: useColorModeValue("#BEE3F8", "#2A4365"),
-      dropdownColor: useColorModeValue("#718096", "#A0AEC0"),
-      dropdownHoverColor: useColorModeValue("#4A5568", "#CBD5E0"),
-      boxShadowLight: useColorModeValue(
-        "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-        "0 10px 15px -3px rgba(0, 0, 0, 0.3)"
-      ),
-      containerBg: useColorModeValue("gray.50", "gray.700"),
-      containerBorder: useColorModeValue("gray.200", "gray.600"),
+      bgLight,
+      borderLight,
+      borderFocus,
+      textColor,
+      placeholderColor,
+      hoverBg,
+      hoverBorder,
+      optionHoverBg,
+      selectedBg,
+      selectedActiveBg,
+      optionActiveBg,
+      dropdownColor,
+      dropdownHoverColor,
+      boxShadowLight,
+      containerBg,
+      containerBorder,
     }),
-    []
+    [
+      bgLight,
+      borderLight,
+      borderFocus,
+      textColor,
+      placeholderColor,
+      hoverBg,
+      hoverBorder,
+      optionHoverBg,
+      selectedBg,
+      selectedActiveBg,
+      optionActiveBg,
+      dropdownColor,
+      dropdownHoverColor,
+      boxShadowLight,
+      containerBg,
+      containerBorder,
+    ]
   );
 
   const selectStyles = useMemo<StylesConfig<DatePeriod>>(
@@ -227,10 +263,10 @@ const DatePeriodNavigator: React.FC<DatePeriodNavigatorProps> = ({
     <Box width="25vw" minWidth="300px" position="relative">
       <HStack
         spacing={0}
-        bg={colorValues.containerBg}
+        bg={containerBg}
         rounded="xl"
         border="1px solid"
-        borderColor={colorValues.containerBorder}
+        borderColor={containerBorder}
       >
         <GenericIconButtonWithTooltip
           icon={<ChevronLeftIcon />}

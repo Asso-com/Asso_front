@@ -79,7 +79,6 @@ const SessionScheduleContainer = () => {
     clearFilters,
     subjectColors,
   } = useSessionFilters(sessions);
-  console.log("subjectColors", subjectColors);
 
   const sessionsByDay = useMemo(() => {
     return groupSessionsByDay(filteredSessions);
