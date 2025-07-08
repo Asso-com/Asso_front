@@ -4,7 +4,7 @@ import DashboardPage from "../features/dashboard/DashoardPage";
 import SchoolYearSettingsContainer from "@features/system-settings/school-year-settings/SchoolYearSettingsContainer";
 import StudentDetailsContainer from "@features/student-info/student-details/StudentDetailsContainer";
 import LinguisticLevelsRegistrationContainer from "@features/student-info/not-academic-enrollments/NotAcademicEnrollmentsContainer";
-import LocationOfStudentContainer from "@features/student-info/location-student/LocationOfStudentContainer";
+import LocationOfStudentContainer from "@features/student-info/location-student/LocationStudentContainer";
 import PaymentsContainer from "@features/student-info/payments/PaymentsContainer";
 import AddSessionContainer from "@features/sessions/Add-session/AddSessionContainer";
 import ListStudentSessionContainer from "@features/sessions/list-student-session/ListStudentSessionContainer";

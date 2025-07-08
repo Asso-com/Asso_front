@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import PartnerLocationList from "./components/PartnerLocationList";
 import MapControls from "./components/MapControls";
@@ -9,7 +9,7 @@ const GOOGLE_MAPS_API_KEY = "AIzaSyB2t6SKuPzb_lo3qNnUuYFqdiI4UC1tjZA";
 
 declare global {
   interface Window {
-    google: any;
+    google: typeof google;
   }
 }
 
@@ -159,7 +159,10 @@ const LocationContainer: React.FC = () => {
             });
           });
 
-          bounds.extend(marker.getPosition());
+          const position = marker.getPosition();
+          if (position) {
+            bounds.extend(position);
+          }
           markersRef.current.push({ marker, partner });
         } catch (error) {}
       });
@@ -167,11 +170,6 @@ const LocationContainer: React.FC = () => {
       index = endIndex;
       if (index < partners.length) {
         setTimeout(addBatch, 10);
-      } else {
-        // All markers added, fit bounds
-        // if (markersRef.current.length > 0) {
-        //   mapInstanceRef.current.fitBounds(bounds)
-        // }
       }
     };
     addBatch();
@@ -199,9 +197,12 @@ const LocationContainer: React.FC = () => {
 
     try {
       const bounds = new window.google.maps.LatLngBounds();
-      markersRef.current.forEach(({ marker }) =>
-        bounds.extend(marker.getPosition())
-      );
+      markersRef.current.forEach(({ marker }) => {
+        const position = marker.getPosition();
+        if (position) {
+          bounds.extend(position);
+        }
+      });
       mapInstanceRef.current.fitBounds(bounds);
     } catch (error) {}
   }, []);
