@@ -13,12 +13,13 @@ export interface StudentResponse {
   levelName: string | null;
   gender: 'MALE' | 'FEMALE';
   enrolledInCurrentPeriod: boolean;
+  latitude: number | null;
+  longitude: number | null;
+  qpv: boolean
 }
 
 export interface ProcessedStudentData {
   id: string;
-  lat: number;
-  lon: number;
   name: string;
   email: string;
   registrationId: string;
@@ -27,5 +28,7 @@ export interface ProcessedStudentData {
   city: string;
   enrolledInCurrentPeriod: boolean;
   searchText: string;
-  hasLocation: boolean;
+  latitude: number
+  longitude: number
+  isQpv: boolean
 }
