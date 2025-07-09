@@ -1,6 +1,13 @@
-import { useState, useMemo } from "react";
-import { Box, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
-import sessionsData from "./data";
+import { useState, useMemo, useCallback, useEffect } from "react";
+import {
+  Box,
+  SimpleGrid,
+  useColorModeValue,
+  Spinner,
+  Center,
+  Alert,
+  AlertIcon,
+} from "@chakra-ui/react";
 import StatsHeader from "./components/ui/StatsHeader";
 import CancelFilter from "./components/ui/CancelFilter";
 import ModernSessionCard from "./components/ui/ModernSessionCard";
@@ -8,12 +15,53 @@ import DayPresentation from "./components/ui/DayPresentation";
 import FilterPanel from "./components/filters/FilterPanel";
 import { useSessionFilters } from "./hooks/useSessionFilters";
 import { dayNames, groupSessionsByDay } from "./sessionUtils";
-import type { SessionTracking } from "./types";
+import type { SessionSchuduleDate } from "./types";
+import { useSelector } from "react-redux";
+import type { RootState } from "@store/index";
+import useFetchAcademicPeriodWeeks from "@features/system-settings/academic-period-weeks/hooks/useFetchAcademicPeriodWeeks";
+import type { DatePeriod } from "./components/ui/DatePeriodNavigator";
+import useSessionDates from "./hooks/useSessionDates";
+import useWeeksOptions from "./hooks/useWeeksOptions";
 
 const SessionScheduleContainer = () => {
-  const [viewMode, setViewMode] = useState<"grouped" | "cards">("grouped");
+  const [viewMode, setViewMode] = useState<"grouped" | "cards">("cards");
+  const [selectedWeekId, setSelectedWeekId] = useState<number>(0);
+
   const bgColor = useColorModeValue("gray.50", "gray.900");
 
+  const associationId = useSelector(
+    (state: RootState) => state.authSlice.associationId
+  );
+
+  // Fetch academic weeks
+  const { data: weeksData, isLoading: weeksLoading } =
+    useFetchAcademicPeriodWeeks(associationId);
+
+  const weeksOptions = useWeeksOptions(weeksData);
+
+  // Auto-select first week when weeks are loaded
+  useEffect(() => {
+    if (weeksOptions.length > 0 && !selectedWeekId) {
+      setSelectedWeekId(weeksOptions[0].value);
+    }
+  }, [weeksOptions, selectedWeekId]);
+
+  // Fetch sessions dates
+  const {
+    data: sessions = [],
+    isFetching: sessionsLoading,
+    error: sessionsError,
+  } = useSessionDates(associationId, selectedWeekId);
+
+  const handleWeekChange = useCallback((selectedWeek: DatePeriod) => {
+    setSelectedWeekId(selectedWeek.value);
+  }, []);
+
+  const handleViewModeChange = useCallback((mode: "grouped" | "cards") => {
+    setViewMode(mode);
+  }, []);
+
+  // Session filters hook
   const {
     selectedDay,
     selectedLevel,
@@ -29,24 +77,67 @@ const SessionScheduleContainer = () => {
     filterOptions,
     hasActiveFilters,
     clearFilters,
-  } = useSessionFilters(sessionsData);
+    subjectColors,
+  } = useSessionFilters(sessions);
 
   const sessionsByDay = useMemo(() => {
     return groupSessionsByDay(filteredSessions);
   }, [filteredSessions]);
 
+  if (weeksLoading) {
+    return (
+      <Box
+        bg={bgColor}
+        minH="100%"
+        height="100%"
+        display="flex"
+        flexDirection="column"
+        overflow="hidden"
+        gap={2}
+        p={4}
+      >
+        <Center flex={1}>
+          <Spinner size="xl" />
+        </Center>
+      </Box>
+    );
+  }
+
+  // No weeks available
+  if (weeksOptions.length === 0) {
+    return (
+      <Box
+        bg={bgColor}
+        minH="100%"
+        height="100%"
+        display="flex"
+        flexDirection="column"
+        overflow="hidden"
+        gap={2}
+        p={4}
+      >
+        <Alert status="info">
+          <AlertIcon />
+          No academic weeks available.
+        </Alert>
+      </Box>
+    );
+  }
+
   return (
     <Box
       bg={bgColor}
-      minH={"100%"}
-      height={"100%"}
+      minH="100%"
+      height="100%"
       display="flex"
       flexDirection="column"
       overflow="hidden"
       gap={2}
-      p={4}
     >
       <FilterPanel
+        selectedWeekId={selectedWeekId}
+        handleWeekChange={handleWeekChange}
+        weeksOptions={weeksOptions}
         selectedDay={selectedDay}
         setSelectedDay={setSelectedDay}
         selectedLevel={selectedLevel}
@@ -61,26 +152,43 @@ const SessionScheduleContainer = () => {
         hasActiveFilters={hasActiveFilters}
         clearFilters={clearFilters}
         viewMode={viewMode}
-        setViewMode={setViewMode}
+        setViewMode={handleViewModeChange}
         dayNames={dayNames}
       />
 
-      <Box flex={1} overflow="auto">
-        <StatsHeader filteredSessions={filteredSessions} />
-
-        {viewMode === "grouped" ? (
-          <DayPresentation sessionsByDay={sessionsByDay} />
-        ) : filteredSessions.length > 0 ? (
-          <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} spacing={6}>
-            {filteredSessions.map((session: SessionTracking) => (
-              <ModernSessionCard
-                key={session.sessionDateId}
-                session={session}
-              />
-            ))}
-          </SimpleGrid>
+      <Box flex={1} overflow="auto" p={2}>
+        {sessionsLoading ? (
+          <Center p={8}>
+            <Spinner size="lg" />
+          </Center>
+        ) : sessionsError ? (
+          <Alert status="error">
+            <AlertIcon />
+            Error loading sessions
+          </Alert>
         ) : (
-          <CancelFilter clearFilters={clearFilters} />
+          <>
+            <StatsHeader filteredSessions={filteredSessions} />
+
+            {viewMode === "grouped" ? (
+              <DayPresentation
+                sessionsByDay={sessionsByDay}
+                subjectColors={subjectColors}
+              />
+            ) : filteredSessions.length > 0 ? (
+              <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} spacing={6}>
+                {filteredSessions.map((session: SessionSchuduleDate) => (
+                  <ModernSessionCard
+                    key={session.sessionDateId}
+                    session={session}
+                    subjectColors={subjectColors}
+                  />
+                ))}
+              </SimpleGrid>
+            ) : (
+              <CancelFilter clearFilters={clearFilters} />
+            )}
+          </>
         )}
       </Box>
     </Box>

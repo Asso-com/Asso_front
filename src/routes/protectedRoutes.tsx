@@ -3,10 +3,9 @@ import ProtectedLayout from "../layouts/private-layout";
 import DashboardPage from "../features/dashboard/DashoardPage";
 import SchoolYearSettingsContainer from "@features/system-settings/school-year-settings/SchoolYearSettingsContainer";
 import StudentDetailsContainer from "@features/student-info/student-details/StudentDetailsContainer";
-import LinguisticLevelsRegistrationContainer from "@features/student-info/Linguistic-Levels-Registration/LinguisticLevelsRegistrationContainer";
-import LocationOfStudentContainer from "@features/student-info/location-student/LocationOfStudentContainer";
+import LinguisticLevelsRegistrationContainer from "@features/student-info/not-academic-enrollments/NotAcademicEnrollmentsContainer";
+import LocationOfStudentContainer from "@features/student-info/location-student/LocationStudentContainer";
 import PaymentsContainer from "@features/student-info/payments/PaymentsContainer";
-import StudentRegistrationContainer from "@features/student-info/student-registration/StudentRegistrationContainer";
 import AddSessionContainer from "@features/sessions/Add-session/AddSessionContainer";
 import ListStudentSessionContainer from "@features/sessions/list-student-session/ListStudentSessionContainer";
 import AddStudentSessionContainer from "@features/sessions/Add-student-session/AddStudentSessionContainer";
@@ -18,7 +17,6 @@ import ListLevelContainer from "@features/Academics/list-level/ListLevelContaine
 import ListSubjectContainer from "@features/Academics/Subject/ListSubjectContainer";
 import SubjectLevelContainer from "@features/Academics/Subject-level/SubjectLevelContainer";
 import ListPartnerContainer from "@features/Partner/list-partner/ListPartnerContainer";
-import LocationContainer from "@features/Partner/location/LocationContainer";
 import AcademicPeriodWeeksContainer from "@features/system-settings/academic-period-weeks/AcademicPeriodWeeksContainer";
 import DepartmentContainer from "@features/Academics/department/DepartmentContainer";
 import CategoriesLevelsContainer from "@features/Academics/Categories-levels/CategoriesLevelsContainer";
@@ -27,6 +25,9 @@ import ClassRoomContainer from "@features/Academics/Class-room/ClassRoomContaine
 import CoefficientSettingsContainer from "@features/system-settings/coefficients/CoefficientSettingsContainer.tsx";
 import LessonContainer from "@features/Lesson-plan/Lesson/LessonContainer.tsx";
 import TopicContainer from "@features/Lesson-plan/Topic/TopicContainer.tsx";
+import LocationContainer from "@features/Partner/location/LocationContainer";
+import ListOnlyPartenersPage from "@features/Partner/List-only-partners/ListOnlyPartenersPage";
+import BookListContainer from "@features/Library/BookListContainer";
 const protectedRoutes = [
   {
     element: <ProtectedLayout />,
@@ -57,10 +58,6 @@ const protectedRoutes = [
         element: <StudentDetailsContainer />,
       },
       { path: "/Student/Payments", element: <PaymentsContainer /> },
-      {
-        path: "/Student/AddStudent",
-        element: <StudentRegistrationContainer />,
-      },
 
       { path: "/Sessions/listSessions", element: <ListSessionsContainer /> },
       { path: "/Sessions/AddSession", element: <AddSessionContainer /> },
@@ -85,8 +82,12 @@ const protectedRoutes = [
         element: <SessionScheduleContainer />,
       },
 
-      { path: "/Partner/listPartner", element: <ListPartnerContainer /> },
-      { path: "/Partner/location", element: <LocationContainer /> },
+      { path: "/partner/associations", element: <ListPartnerContainer /> },
+      {
+        path: "/partner/associations/locations",
+        element: <LocationContainer />,
+      },
+      { path: "/partner/list", element: <ListOnlyPartenersPage /> },
 
       { path: "/LessonPlan/Lesson", element: <LessonContainer /> },
       { path: "/LessonPlan/Topic", element: <TopicContainer /> },
@@ -107,6 +108,8 @@ const protectedRoutes = [
       },
 
       { path: "/HumanResource/listStaff", element: <StaffContainer /> },
+
+      { path: "/Library/BookList", element: <BookListContainer /> },
     ],
   },
 ];

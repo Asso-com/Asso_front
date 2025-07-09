@@ -20,8 +20,6 @@ const useFetchSubjectLevel = (
         switchLoadingModal();
       }
     },
-    staleTime: 0,
-    gcTime: 0,
     enabled: !!associationId,
     retry: false,
   });

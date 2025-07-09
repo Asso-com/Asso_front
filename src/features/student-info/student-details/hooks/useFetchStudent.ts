@@ -16,8 +16,8 @@ const useFetchStudent = (associationId: number): UseQueryResult<any, Error> => {
                 switchLoadingModal();
             }
         },
-        gcTime: 1000 * 60 * 10,
-        staleTime: 1000 * 60 * 5,
+        gcTime: 1000 * 60 * 5,
+        staleTime: 1000 * 60 * 2,
         enabled: !!associationId,
         retry: false
     });

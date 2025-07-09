@@ -22,12 +22,12 @@ const fakeMenuItems: MenuItem[] = [
                 icon: "FaAngleDoubleRight",
 
             },
-            {
-                menu_id: 42,
-                menu_description: "Student Registration",
-                navLink: "/Student/AddStudent",
-                icon: "FaAngleDoubleRight",
-            },
+            // {
+            //     menu_id: 42,
+            //     menu_description: "Student Registration",
+            //     navLink: "/Student/AddStudent",
+            //     icon: "FaAngleDoubleRight",
+            // },
             {
                 menu_id: 43,
                 menu_description: "Location of Student",
@@ -36,7 +36,7 @@ const fakeMenuItems: MenuItem[] = [
             },
             {
                 menu_id: 44,
-                menu_description: "Linguistic Levels Registration",
+                menu_description: "Not Academic Enrollments",
                 navLink: "/Student/LinguisticLevelsRegistration",
                 icon: "FaAngleDoubleRight",
             },
@@ -179,13 +179,13 @@ const fakeMenuItems: MenuItem[] = [
         module_code: "EDUCATION",
         children: [
 
-               {
+            {
                 menu_id: 80,
                 menu_description: "Department",
                 navLink: "/Academics/Department",
                 icon: "FaAngleDoubleRight",
             },
-             {
+            {
                 menu_id: 81,
                 menu_description: "Subject",
                 navLink: "/Academics/listSubject",
@@ -203,22 +203,22 @@ const fakeMenuItems: MenuItem[] = [
                 navLink: "/Academics/listLevel",
                 icon: "FaAngleDoubleRight",
             },
-           
+
             {
                 menu_id: 84,
                 menu_description: "Subject Level",
                 navLink: "/Academics/SubjectLevel",
                 icon: "FaAngleDoubleRight",
             },
-          
+
             {
                 menu_id: 85,
                 menu_description: "Class Room",
                 navLink: "/Academics/ClassRoom",
                 icon: "FaAngleDoubleRight",
             },
-            
-          
+
+
         ],
     },
     {
@@ -240,7 +240,7 @@ const fakeMenuItems: MenuItem[] = [
                 navLink: "/HumanResource/addStaff",
                 icon: "FaAngleDoubleRight",
             },
-           
+
             {
                 menu_id: 93,
                 menu_description: "Staff Attendance",
@@ -306,14 +306,20 @@ const fakeMenuItems: MenuItem[] = [
         children: [
             {
                 menu_id: 121,
-                menu_description: "List of Partners",
-                navLink: "/Partner/listPartner",
+                menu_description: "List of Associations",
+                navLink: "/partner/associations",
                 icon: "FaAngleDoubleRight",
             },
             {
                 menu_id: 122,
-                menu_description: "Partner Location",
-                navLink: "/Partner/location",
+                menu_description: "location of Associations",
+                navLink: "/partner/associations/locations",
+                icon: "FaAngleDoubleRight",
+            },
+            {
+                menu_id: 200,
+                menu_description: "List of Partners",
+                navLink: "/partner/list",
                 icon: "FaAngleDoubleRight",
             },
         ],
@@ -391,7 +397,7 @@ const fakeMenuItems: MenuItem[] = [
                 navLink: "/Settings/EmailSettings",
                 icon: "FaAngleDoubleRight",
             },
-            
+
         ],
     },
 ];

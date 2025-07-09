@@ -1,6 +1,7 @@
 
 import { axiosInstance } from "../../../../services/api-services/axiosInstance";
 import handleAxiosError from "@utils/handleAxiosError";
+import type { EnrollementAcademic } from "../types";
 
 
 const StudentServiceApi = {
@@ -9,6 +10,17 @@ const StudentServiceApi = {
     try {
       const response = await axiosInstance.get<any>(
         `/api/v1/students/association/${associationId}/listing`,
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  },
+  createEnrollment: async (associationId: number, data: EnrollementAcademic): Promise<any> => {
+    try {
+      const response = await axiosInstance.post<any>(
+        `/api/v1/enrollments/association/${associationId}/enroll`,
+        data
       );
       return response.data;
     } catch (error) {
@@ -56,6 +68,17 @@ const StudentServiceApi = {
       const response = await axiosInstance.post(
         `/api/v1/students/inscription`,
         data
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  },
+
+  getStudentById: async (StudentId: string, associationId: number): Promise<any> => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/v1/students/association/${associationId}/student/${StudentId}/parents`
       );
       return response.data;
     } catch (error) {

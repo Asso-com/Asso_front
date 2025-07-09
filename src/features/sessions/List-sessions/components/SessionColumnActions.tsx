@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import { ViewIcon, CalendarIcon, AddIcon, InfoIcon } from "@chakra-ui/icons";
+import { ViewIcon, CalendarIcon, InfoIcon } from "@chakra-ui/icons";
 import type { ICellRendererParams } from "ag-grid-community";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
 import { useState } from "react";
@@ -9,6 +9,7 @@ import SessionDetails from "./SessionDetails";
 import LessonTopicDetails from "./LessonTopicDetails";
 import SessionScheduleDetails from "./SessionSheduleDetails";
 import StudentEnrollment from "./StudentEnrollment";
+import { FaUsers } from "react-icons/fa";
 
 const SessionColumnActions: React.FC<ICellRendererParams> = (params) => {
   const sessionData: Session = params.data;
@@ -56,7 +57,7 @@ const SessionColumnActions: React.FC<ICellRendererParams> = (params) => {
           label="View Session Details"
           aria-label="View session details"
           icon={<InfoIcon />}
-          size="sm"
+          size={{ base: "sm", md: "md" }}
           variant="ghost"
           colorScheme="blue"
           onClick={handleViewDetails}
@@ -66,7 +67,7 @@ const SessionColumnActions: React.FC<ICellRendererParams> = (params) => {
           aria-label="View lesson plan"
           icon={<ViewIcon />}
           label="View Lesson Plan"
-          size="sm"
+          size={{ base: "sm", md: "md" }}
           variant="ghost"
           colorScheme="green"
           onClick={handleViewLessonPlan}
@@ -76,7 +77,7 @@ const SessionColumnActions: React.FC<ICellRendererParams> = (params) => {
           aria-label="View session schedule"
           icon={<CalendarIcon />}
           label="View Schedule"
-          size="sm"
+          size={{ base: "sm", md: "md" }}
           variant="ghost"
           colorScheme="purple"
           onClick={handleViewSchedule}
@@ -84,11 +85,11 @@ const SessionColumnActions: React.FC<ICellRendererParams> = (params) => {
 
         <GenericIconButtonWithTooltip
           aria-label="Add students to session"
-          icon={<AddIcon />}
-          size="sm"
+          icon={<FaUsers size={22} />}
+          size={{ base: "sm", md: "md" }}
           label={isSessionFull ? "Session Full" : "Add Students"}
           variant="ghost"
-          colorScheme={isSessionFull ? "red" : "orange"}
+          colorScheme={isSessionFull ? "red" : "blue"}
           onClick={handleAddStudents}
           isDisabled={isSessionFull}
         />

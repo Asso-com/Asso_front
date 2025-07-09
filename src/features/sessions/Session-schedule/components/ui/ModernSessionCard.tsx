@@ -21,16 +21,16 @@ import {
   FiCheckCircle,
   FiClock,
   FiMapPin,
+  FiVideo,
   FiXCircle,
 } from "react-icons/fi";
 import React from "react";
-import type { SessionTracking } from "../../types";
-import { dayNames, subjectColors } from "../../sessionUtils";
+import type { SessionSchuduleDate } from "../../types";
+import { dayNames } from "../../sessionUtils";
 import { useTranslation } from "react-i18next";
 
-
-const getStatusInfo = (session: SessionTracking,t: any) => {
-  if (session.isCanceled) {
+const getStatusInfo = (session: SessionSchuduleDate, t: any) => {
+  if (session.canceled) {
     return {
       badge: (
         <Badge colorScheme="red" variant="solid">
@@ -41,7 +41,7 @@ const getStatusInfo = (session: SessionTracking,t: any) => {
       color: "red",
     };
   }
-  if (session.isValidated) {
+  if (session.validated) {
     return {
       badge: (
         <Badge colorScheme="green" variant="solid">
@@ -52,7 +52,7 @@ const getStatusInfo = (session: SessionTracking,t: any) => {
       color: "green",
     };
   }
-  if (session.isAttendanceMarked) {
+  if (session.attendanceMarked) {
     return {
       badge: (
         <Badge colorScheme="blue" variant="solid">
@@ -76,14 +76,17 @@ const getStatusInfo = (session: SessionTracking,t: any) => {
 
 const formatTime = (time: string): string => time.slice(0, 5);
 
-const ModernSessionCard: React.FC<{ session: SessionTracking }> = ({
-  session,
-}) => {
-  const {t} = useTranslation();
+const ModernSessionCard: React.FC<{
+  session: SessionSchuduleDate;
+  subjectColors: Record<string, string>;
+}> = ({ session, subjectColors }) => {
+
+  const { t } = useTranslation();
   const cardBgColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.600");
   const subjectColor = subjectColors[session.subject] || "gray";
-  const statusInfo = getStatusInfo(session,t);
+  const statusInfo = getStatusInfo(session, t);
+  const isOnlineSession = !session.classRoom;
 
   return (
     <Card
@@ -98,8 +101,8 @@ const ModernSessionCard: React.FC<{ session: SessionTracking }> = ({
       }}
       transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
       border="1px"
-      borderColor={session.isCanceled ? "red.200" : borderColor}
-      opacity={session.isCanceled ? 0.7 : 1}
+      borderColor={session.canceled ? "red.200" : borderColor}
+      opacity={session.canceled ? 0.7 : 1}
       position="relative"
     >
       <Box
@@ -113,12 +116,13 @@ const ModernSessionCard: React.FC<{ session: SessionTracking }> = ({
 
       <CardBody p={6}>
         <VStack align="stretch" spacing={4}>
-       
           <Flex justify="space-between" align="start">
             <VStack align="start" spacing={2} flex={1}>
-              <Heading size="md" color="gray.800" noOfLines={1}>
-                {session.level}
-              </Heading>
+              <Flex align="center" gap={2}>
+                <Heading size="md" color="gray.800" noOfLines={1}>
+                  {session.level}
+                </Heading>
+              </Flex>
               <HStack wrap="wrap" spacing={2}>
                 <Badge
                   colorScheme={subjectColor}
@@ -151,7 +155,6 @@ const ModernSessionCard: React.FC<{ session: SessionTracking }> = ({
 
           <Divider />
 
- 
           <SimpleGrid columns={2} spacing={4}>
             <VStack align="start" spacing={3}>
               <HStack color="gray.600">
@@ -170,28 +173,52 @@ const ModernSessionCard: React.FC<{ session: SessionTracking }> = ({
                 <Icon as={FiClock} />
                 <VStack align="start" spacing={0}>
                   <Text fontSize="sm" fontWeight="medium">
-                    {formatTime(session.start_time)} -{" "}
-                    {formatTime(session.end_time)}
+                    {formatTime(session.startTime)} -{" "}
+                    {formatTime(session.endTime)}
                   </Text>
-                  {/* <Text fontSize="xs" color="gray.500">
-                    2 hours
-                  </Text> */}
                 </VStack>
               </HStack>
             </VStack>
 
             <VStack align="start" spacing={3}>
-              <HStack color="gray.600">
-                <Icon as={FiMapPin} />
-                <VStack align="start" spacing={0}>
-                  <Text fontSize="sm" fontWeight="medium" noOfLines={1}>
-                    {session.classRoom.split(" - ")[0]}
-                  </Text>
-                  <Text fontSize="xs" color="gray.500" noOfLines={1}>
-                    {session.classRoom.split(" - ")[1]}
-                  </Text>
-                </VStack>
-              </HStack>
+              {isOnlineSession ? (
+                <Box
+                  bg="teal.50"
+                  p={2}
+                  borderRadius="lg"
+                  border="1px solid"
+                  borderColor="teal.200"
+                  width="full"
+                >
+                  <HStack color="teal.600" spacing={2}>
+                    <Box
+                      bg="teal.100"
+                      p={2}
+                      borderRadius="md"
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <Icon as={FiVideo} boxSize={4} />
+                    </Box>
+                    <Text fontSize="xs" color="teal.500">
+                      {t("Virtual Classroom")}
+                    </Text>
+                  </HStack>
+                </Box>
+              ) : (
+                <HStack color="gray.600">
+                  <Icon as={FiMapPin} />
+                  <VStack align="start" spacing={0}>
+                    <Text fontSize="sm" fontWeight="medium" noOfLines={1}>
+                      {session.classRoom.split(" - ")[0]}
+                    </Text>
+                    <Text fontSize="xs" color="gray.500" noOfLines={1}>
+                      {session.classRoom.split(" - ")[1]}
+                    </Text>
+                  </VStack>
+                </HStack>
+              )}
 
               <HStack color="gray.600">
                 <Avatar

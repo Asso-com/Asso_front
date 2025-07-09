@@ -1,12 +1,23 @@
-import { useState, useMemo } from "react";
-import type { SessionTracking } from "../types";
+import { useState, useMemo, useEffect } from "react";
+import type { SessionSchuduleDate } from "../types";
 
-export const useSessionFilters = (sessionsData: SessionTracking[]) => {
+const baseColors = ["blue", "orange", "green", "purple", "red", "cyan", "teal"];
+
+const generateRandomColor = () => {
+  const index = Math.floor(Math.random() * baseColors.length);
+  return baseColors[index];
+};
+
+export const useSessionFilters = (sessionsData: SessionSchuduleDate[]) => {
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedLevel, setSelectedLevel] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedStaff, setSelectedStaff] = useState("");
+
+  useEffect(() => {
+    clearFilters();
+  }, [sessionsData]);
 
   const filterOptions = useMemo(() => {
     const levels = [...new Set(sessionsData.map((session) => session.level))];
@@ -25,8 +36,16 @@ export const useSessionFilters = (sessionsData: SessionTracking[]) => {
     return { days, subjects, staff, levels };
   }, [sessionsData]);
 
+  const subjectColors = useMemo(() => {
+    const colorsMap: Record<string, string> = {};
+    filterOptions.subjects.forEach((subject) => {
+      colorsMap[subject] = generateRandomColor();
+    });
+    return colorsMap;
+  }, [filterOptions.subjects]);
+
   const filteredSessions = useMemo(() => {
-    return sessionsData.filter((session: SessionTracking) => {
+    return sessionsData.filter((session: SessionSchuduleDate) => {
       const matchesDay = !selectedDay || session.day === selectedDay;
       const matchesLevel = !selectedLevel || session.level === selectedLevel;
       const matchesSubject =
@@ -39,16 +58,16 @@ export const useSessionFilters = (sessionsData: SessionTracking[]) => {
       if (selectedStatus) {
         switch (selectedStatus) {
           case "validated":
-            matchesStatus = session.isValidated;
+            matchesStatus = session.validated;
             break;
           case "attendance_taken":
-            matchesStatus = session.isAttendanceMarked && !session.isValidated;
+            matchesStatus = session.attendanceMarked && !session.validated;
             break;
           case "pending":
-            matchesStatus = !session.isAttendanceMarked && !session.isCanceled;
+            matchesStatus = !session.attendanceMarked && !session.canceled;
             break;
           case "canceled":
-            matchesStatus = session.isCanceled;
+            matchesStatus = session.canceled;
             break;
           default:
             matchesStatus = true;
@@ -102,5 +121,6 @@ export const useSessionFilters = (sessionsData: SessionTracking[]) => {
     filterOptions,
     hasActiveFilters,
     clearFilters,
+    subjectColors,
   };
 };

@@ -1,192 +1,283 @@
-import { useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { Box, HStack, useColorModeValue } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import Select, { type SingleValue, type StylesConfig } from "react-select";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
 
-interface DatePeriod {
-  value: string;
+export interface DatePeriod {
+  value: number;
   label: string;
 }
 
-// Static Options
-const datePeriods: DatePeriod[] = [
-  {
-    value: "2024-06-23_2024-06-29",
-    label: "Date From: 23 Jun. 2024 Date To: 29 Jun. 2024",
-  },
-  {
-    value: "2024-06-16_2024-06-22",
-    label: "Date From: 16 Jun. 2024 Date To: 22 Jun. 2024",
-  },
-  {
-    value: "2024-06-09_2024-06-15",
-    label: "Date From: 09 Jun. 2024 Date To: 15 Jun. 2024",
-  },
-  {
-    value: "2024-06-02_2024-06-08",
-    label: "Date From: 02 Jun. 2024 Date To: 08 Jun. 2024",
-  },
-  {
-    value: "2024-05-26_2024-06-01",
-    label: "Date From: 26 May. 2024 Date To: 01 Jun. 2024",
-  },
-  {
-    value: "2024-05-19_2024-05-25",
-    label: "Date From: 19 May. 2024 Date To: 25 May. 2024",
-  },
-  {
-    value: "2024-05-12_2024-05-18",
-    label: "Date From: 12 May. 2024 Date To: 18 May. 2024",
-  },
-  {
-    value: "2024-05-05_2024-05-11",
-    label: "Date From: 05 May. 2024 Date To: 11 May. 2024",
-  },
-  {
-    value: "2024-04-28_2024-05-04",
-    label: "Date From: 28 Apr. 2024 Date To: 04 May. 2024",
-  },
-  {
-    value: "2024-04-21_2024-04-27",
-    label: "Date From: 21 Apr. 2024 Date To: 27 Apr. 2024",
-  },
-];
+interface DatePeriodNavigatorProps {
+  weeksOptions: DatePeriod[];
+  onPeriodChange?: (period: DatePeriod) => void;
+  defaultSelectedIndex?: number;
+}
 
-const DatePeriodNavigator = () => {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [selectedPeriod, setSelectedPeriod] = useState<DatePeriod>(
-    datePeriods[0]
+const DatePeriodNavigator: React.FC<DatePeriodNavigatorProps> = ({
+  weeksOptions,
+  onPeriodChange,
+  defaultSelectedIndex = 0,
+}) => {
+
+  if (weeksOptions.length === 0) {
+    return null;
+  }
+
+  const [currentIndex, setCurrentIndex] =
+    useState<number>(defaultSelectedIndex);
+  const [selectedPeriod, setSelectedPeriod] = useState<DatePeriod | null>(null);
+
+  // Move all useColorModeValue calls to the top level
+  const bgLight = useColorModeValue("#fff", "#2D3748");
+  const borderLight = useColorModeValue("#E2E8F0", "#4A5568");
+  const borderFocus = useColorModeValue("#3182ce", "#63B3ED");
+  const textColor = useColorModeValue("#2D3748", "#F7FAFC");
+  const placeholderColor = useColorModeValue("#A0AEC0", "#718096");
+  const hoverBg = useColorModeValue("#F7FAFC", "#4A5568");
+  const hoverBorder = useColorModeValue("#CBD5E0", "#718096");
+  const optionHoverBg = useColorModeValue("#EBF8FF", "#2A4365");
+  const selectedBg = useColorModeValue("#3182ce", "#63B3ED");
+  const selectedActiveBg = useColorModeValue("#2B6CB0", "#4299E1");
+  const optionActiveBg = useColorModeValue("#BEE3F8", "#2A4365");
+  const dropdownColor = useColorModeValue("#718096", "#A0AEC0");
+  const dropdownHoverColor = useColorModeValue("#4A5568", "#CBD5E0");
+  const boxShadowLight = useColorModeValue(
+    "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+    "0 10px 15px -3px rgba(0, 0, 0, 0.3)"
+  );
+  const containerBg = useColorModeValue("gray.50", "gray.700");
+  const containerBorder = useColorModeValue("gray.200", "gray.600");
+
+  // Initialize with the specified default or first option
+  useEffect(() => {
+    if (weeksOptions.length > 0 && selectedPeriod === null) {
+      const initialIndex = Math.min(
+        defaultSelectedIndex,
+        weeksOptions.length - 1
+      );
+      const initialPeriod = weeksOptions[initialIndex];
+      setSelectedPeriod(initialPeriod);
+      setCurrentIndex(initialIndex);
+      onPeriodChange?.(initialPeriod);
+    }
+  }, [weeksOptions, selectedPeriod, defaultSelectedIndex, onPeriodChange]);
+
+  const updateSelection = useCallback(
+    (newIndex: number) => {
+      if (newIndex >= 0 && newIndex < weeksOptions.length) {
+        const newPeriod = weeksOptions[newIndex];
+        setCurrentIndex(newIndex);
+        setSelectedPeriod(newPeriod);
+        onPeriodChange?.(newPeriod);
+      }
+    },
+    [weeksOptions, onPeriodChange]
   );
 
-  const handlePrevious = () => {
-    if (currentIndex < datePeriods.length - 1) {
-      const newIndex = currentIndex + 1;
-      setCurrentIndex(newIndex);
-      setSelectedPeriod(datePeriods[newIndex]);
-    }
-  };
-
-  const handleNext = () => {
+  const handlePrevious = useCallback(() => {
     if (currentIndex > 0) {
-      const newIndex = currentIndex - 1;
-      setCurrentIndex(newIndex);
-      setSelectedPeriod(datePeriods[newIndex]);
+      updateSelection(currentIndex - 1);
     }
-  };
+  }, [currentIndex, updateSelection]);
 
-  const handleSelectChange = (option: SingleValue<DatePeriod>) => {
-    if (option) {
-      const index = datePeriods.findIndex(
-        (item) => item.value === option.value
-      );
-      setSelectedPeriod(option);
-      setCurrentIndex(index);
+  const handleNext = useCallback(() => {
+    if (currentIndex < weeksOptions.length - 1) {
+      updateSelection(currentIndex + 1);
     }
-  };
+  }, [currentIndex, weeksOptions.length, updateSelection]);
 
-  const selectStyles: StylesConfig<DatePeriod> = {
-    control: (provided, state) => ({
-      ...provided,
-      backgroundColor: useColorModeValue("#fff", "#2D3748"),
-      borderColor: state.isFocused
-        ? useColorModeValue("#3182ce", "#63B3ED")
-        : useColorModeValue("#E2E8F0", "#4A5568"),
-      borderWidth: 0,
-      borderLeftWidth: 1,
-      borderRightWidth: 1,
-      borderRadius: "0px",
-      boxShadow: state.isFocused
-        ? `0 0 0 1px ${useColorModeValue("#3182ce", "#63B3ED")}`
-        : "none",
-      height: "48px",
-      fontSize: "14px",
-      color: useColorModeValue("#2D3748", "#F7FAFC"),
-      "&:hover": {
-        borderColor: useColorModeValue("#CBD5E0", "#718096"),
-        backgroundColor: useColorModeValue("#F7FAFC", "#4A5568"),
-      },
+  const handleSelectChange = useCallback(
+    (option: SingleValue<DatePeriod>) => {
+      if (option) {
+        const index = weeksOptions.findIndex(
+          (item) => item.value === option.value
+        );
+        if (index !== -1) {
+          updateSelection(index);
+        }
+      }
+    },
+    [weeksOptions, updateSelection]
+  );
+
+  // Now create the colorValues object using the hook values
+  const colorValues = useMemo(
+    () => ({
+      bgLight,
+      borderLight,
+      borderFocus,
+      textColor,
+      placeholderColor,
+      hoverBg,
+      hoverBorder,
+      optionHoverBg,
+      selectedBg,
+      selectedActiveBg,
+      optionActiveBg,
+      dropdownColor,
+      dropdownHoverColor,
+      boxShadowLight,
+      containerBg,
+      containerBorder,
     }),
-    menu: (provided) => ({
-      ...provided,
-      backgroundColor: useColorModeValue("#fff", "#2D3748"),
-      border: `1px solid ${useColorModeValue("#E2E8F0", "#4A5568")}`,
-      borderRadius: "8px",
-      boxShadow: useColorModeValue(
-        "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-        "0 10px 15px -3px rgba(0, 0, 0, 0.3)"
-      ),
-      zIndex: 1000,
-      marginTop: "4px",
+    [
+      bgLight,
+      borderLight,
+      borderFocus,
+      textColor,
+      placeholderColor,
+      hoverBg,
+      hoverBorder,
+      optionHoverBg,
+      selectedBg,
+      selectedActiveBg,
+      optionActiveBg,
+      dropdownColor,
+      dropdownHoverColor,
+      boxShadowLight,
+      containerBg,
+      containerBorder,
+    ]
+  );
+
+  const selectStyles = useMemo<StylesConfig<DatePeriod>>(
+    () => ({
+      control: (provided, state) => ({
+        ...provided,
+        backgroundColor: colorValues.bgLight,
+        borderColor: state.isFocused
+          ? colorValues.borderFocus
+          : colorValues.borderLight,
+        borderWidth: 0,
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderRadius: "0px",
+        boxShadow: state.isFocused
+          ? `0 0 0 1px ${colorValues.borderFocus}`
+          : "none",
+        height: "48px",
+        minHeight: "48px",
+        fontSize: "14px",
+        cursor: "pointer",
+        "&:hover": {
+          borderColor: colorValues.hoverBorder,
+          backgroundColor: colorValues.hoverBg,
+        },
+      }),
+      menu: (provided) => ({
+        ...provided,
+        backgroundColor: colorValues.bgLight,
+        border: `1px solid ${colorValues.borderLight}`,
+        borderRadius: "8px",
+        boxShadow: colorValues.boxShadowLight,
+        zIndex: 1001,
+        marginTop: "4px",
+        position: "absolute",
+        width: "100%",
+        minWidth: "200px",
+        maxWidth: "400px",
+        overflow: "hidden",
+      }),
+      menuList: (provided) => ({
+        ...provided,
+        maxHeight: "200px",
+        overflowY: "auto",
+        overflowX: "hidden",
+        padding: "4px",
+      }),
+      option: (provided, state) => ({
+        ...provided,
+        backgroundColor: state.isSelected
+          ? colorValues.selectedBg
+          : state.isFocused
+          ? colorValues.optionHoverBg
+          : "transparent",
+        color: state.isSelected ? "#fff" : colorValues.textColor,
+        fontSize: "14px",
+        padding: "12px 16px",
+        borderRadius: "6px",
+        margin: "2px 4px",
+        cursor: "pointer",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        "&:active": {
+          backgroundColor: state.isSelected
+            ? colorValues.selectedActiveBg
+            : colorValues.optionActiveBg,
+        },
+      }),
+      singleValue: (provided) => ({
+        ...provided,
+        color: colorValues.textColor,
+        fontSize: "14px",
+        fontWeight: 500,
+      }),
+      placeholder: (provided) => ({
+        ...provided,
+        color: colorValues.placeholderColor,
+        fontSize: "14px",
+      }),
+      dropdownIndicator: (provided, state) => ({
+        ...provided,
+        color: colorValues.dropdownColor,
+        padding: "8px",
+        transform: state.selectProps.menuIsOpen
+          ? "rotate(180deg)"
+          : "rotate(0deg)",
+        transition: "transform 0.2s ease",
+        "&:hover": {
+          color: colorValues.dropdownHoverColor,
+        },
+      }),
+      indicatorSeparator: (provided) => ({
+        ...provided,
+        backgroundColor: colorValues.borderLight,
+      }),
+      valueContainer: (provided) => ({
+        ...provided,
+        padding: "0 16px",
+      }),
+      input: (provided) => ({
+        ...provided,
+        color: colorValues.textColor,
+        margin: "0",
+        paddingBottom: "0",
+        paddingTop: "0",
+      }),
     }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isSelected
-        ? useColorModeValue("#3182ce", "#63B3ED")
-        : state.isFocused
-        ? useColorModeValue("#EBF8FF", "#2A4365")
-        : "transparent",
-      color: state.isSelected
-        ? "#fff"
-        : useColorModeValue("#2D3748", "#F7FAFC"),
-      fontSize: "14px",
-      padding: "12px 16px",
-      borderRadius: "6px",
-      margin: "2px 0",
+    [colorValues]
+  );
+
+  const navigationState = useMemo(
+    () => ({
+      isPrevDisabled: currentIndex <= 0,
+      isNextDisabled: currentIndex >= weeksOptions.length - 1,
     }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: useColorModeValue("#2D3748", "#F7FAFC"),
-      fontSize: "14px",
-      fontWeight: 500,
-    }),
-    placeholder: (provided) => ({
-      ...provided,
-      color: useColorModeValue("#A0AEC0", "#718096"),
-      fontSize: "14px",
-    }),
-    dropdownIndicator: (provided, state) => ({
-      ...provided,
-      color: useColorModeValue("#718096", "#A0AEC0"),
-      padding: "8px",
-      transform: state.selectProps.menuIsOpen
-        ? "rotate(180deg)"
-        : "rotate(0deg)",
-      transition: "transform 0.2s",
-    }),
-    indicatorSeparator: (provided) => ({
-      ...provided,
-      backgroundColor: useColorModeValue("#E2E8F0", "#4A5568"),
-    }),
-    valueContainer: (provided) => ({
-      ...provided,
-      padding: "0 16px",
-    }),
-    input: (provided) => ({
-      ...provided,
-      color: useColorModeValue("#2D3748", "#F7FAFC"),
-    }),
-  };
+    [currentIndex, weeksOptions.length]
+  );
 
   return (
-    <Box width="auto">
+    <Box width="25vw" minWidth="300px" position="relative">
       <HStack
         spacing={0}
-        bg={useColorModeValue("gray.50", "gray.700")}
+        bg={containerBg}
         rounded="xl"
-        overflow="hidden"
         border="1px solid"
-        borderColor={useColorModeValue("gray.200", "gray.600")}
+        borderColor={containerBorder}
       >
         <GenericIconButtonWithTooltip
           icon={<ChevronLeftIcon />}
           aria-label="Previous period"
           label="Previous period"
           onClick={handlePrevious}
-          isDisabled={currentIndex >= datePeriods.length - 1}
+          isDisabled={navigationState.isPrevDisabled}
           bg="blue.500"
           color="white"
-          rounded="none"
+          roundedLeft="xl"
+          roundedRight="none"
           h="48px"
           w="48px"
           _hover={{ bg: "blue.600" }}
@@ -194,15 +285,21 @@ const DatePeriodNavigator = () => {
           _disabled={{ bg: "gray.400", cursor: "not-allowed" }}
         />
 
-        <Box flex={1}>
+        <Box flex={1} position="relative" zIndex={1}>
           <Select
             value={selectedPeriod}
             onChange={handleSelectChange as any}
-            options={datePeriods}
+            options={weeksOptions}
             styles={selectStyles}
             placeholder="Select date period..."
             isSearchable={false}
-            components={{ IndicatorSeparator: () => null }}
+            isClearable={false}
+            isDisabled={false}
+            closeMenuOnSelect={true}
+            blurInputOnSelect={true}
+            components={{
+              IndicatorSeparator: () => null,
+            }}
           />
         </Box>
 
@@ -211,10 +308,11 @@ const DatePeriodNavigator = () => {
           label="Next period"
           aria-label="Next period"
           onClick={handleNext}
-          isDisabled={currentIndex <= 0}
+          isDisabled={navigationState.isNextDisabled}
           bg="blue.500"
           color="white"
-          rounded="none"
+          roundedLeft="none"
+          roundedRight="xl"
           h="48px"
           w="48px"
           _hover={{ bg: "blue.600" }}
