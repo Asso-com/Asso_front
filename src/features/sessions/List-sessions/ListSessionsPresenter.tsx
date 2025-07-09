@@ -8,7 +8,11 @@ import SessionColumnDefs from "./constants/Coldefs";
 import SessionColumnActions from "./components/SessionColumnActions";
 import SessionHeaderActions from "./components/SessionHeaderActions";
 
-const ListSessionsPresenter = ({ rows = [], total = 0 }: any) => {
+const ListSessionsPresenter = ({
+  rows = [],
+  total = 0,
+  associationId,
+}: any) => {
   const gridRef = useRef<AgGridReactType>(null);
   const [isGridInitialized, setIsGridInitialized] = useState(false);
 
@@ -42,6 +46,7 @@ const ListSessionsPresenter = ({ rows = [], total = 0 }: any) => {
             headerName: "Actions",
             field: "actions",
             cellRenderer: SessionColumnActions,
+            cellRendererParams: { associationId },
             filter: false,
             sortable: false,
             width: 300,

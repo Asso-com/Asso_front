@@ -7,7 +7,7 @@ const ListSessionsContainer = () => {
     (state: RootState) => state.authSlice.associationId
   );
   const { data } = useFetchSessionsByAssociation(associationId);
-  return <ListSessionsPresenter rows={data} total={data?.length} />;
+  return <ListSessionsPresenter associationId={associationId} rows={data} total={data?.length} />;
 };
 
 export default ListSessionsContainer;

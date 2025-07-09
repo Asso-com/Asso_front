@@ -46,3 +46,17 @@ export interface SessionSchedulesResponse {
   attendanceType: string;
   classRoomId: number;
 }
+export interface StudentsEnrollmentRequest {
+  associationId: number;
+  studentIds: string[]; 
+  sessionId: number;
+}
+
+export interface StudentEnrollmentResponse {
+  id: string; 
+  studentId: string; 
+  studentName: string;
+  levelName: string;
+  registrationId: string;
+  enrolled: boolean;
+}

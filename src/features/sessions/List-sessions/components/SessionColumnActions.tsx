@@ -10,9 +10,13 @@ import LessonTopicDetails from "./LessonTopicDetails";
 import SessionScheduleDetails from "./SessionSheduleDetails";
 import StudentEnrollment from "./StudentEnrollment";
 import { FaUsers } from "react-icons/fa";
+interface SessionCellRendererParams extends ICellRendererParams {
+  associationId: number;
+}
 
-const SessionColumnActions: React.FC<ICellRendererParams> = (params) => {
+const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
   const sessionData: Session = params.data;
+  const associationId = params.associationId;
 
   const [modalState, setModalState] = useState({
     viewSession: false,
@@ -131,7 +135,7 @@ const SessionColumnActions: React.FC<ICellRendererParams> = (params) => {
         title={`Add Students`}
         size="4xl"
       >
-        <StudentEnrollment />
+        <StudentEnrollment sessionId={sessionData.id} associationId={associationId} />
       </GenericModal>
     </>
   );
