@@ -17,7 +17,10 @@ const useFetchLevelsByCategory = (associationId: number, categoryId: number): Us
                 switchLoadingModal();
             }
         },
-
+        enabled: !!associationId && !!categoryId,
+        retry: false,
+        gcTime: 1000 * 60 * 4,
+        staleTime: 1000 * 60 * 2,
     });
 };
 

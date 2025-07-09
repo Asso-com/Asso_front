@@ -10,6 +10,7 @@ import SidebarButtonsActions from "@components/shared/SidebarButtonsActions";
 
 import FormContent, { type FormContentRef } from "../sidebar/FormContent";
 import useFetchStudentDetails from "../../hooks/getStudentById";
+import useUpdateStudent from "../../hooks/useUpdateStudent";
 import type { RootState } from "@store/index";
 import type { StudentDetails } from "../../types";
 
@@ -33,6 +34,8 @@ const EditStudent: React.FC<EnrollementProps> = ({ studentDetails }) => {
     studentId
   );
 
+  const updateStudentMutation = useUpdateStudent(associationId);
+
   const openEditModal = () => {
     if (!studentDetails?.id) return;
     setStudentId(studentDetails.id);
@@ -47,8 +50,12 @@ const EditStudent: React.FC<EnrollementProps> = ({ studentDetails }) => {
     if (formRef.current) {
       const formData = await formRef.current.submitForm();
       if (formData) {
-        console.log("Submitting student update:", formData);
-        // TODO: Send formData to your API
+        try {
+          await updateStudentMutation.mutateAsync({ data: formData });
+          closeEditModal();
+        } catch (error) {
+          console.error("Error updating student:", error);
+        }
       }
     }
   };
@@ -74,6 +81,7 @@ const EditStudent: React.FC<EnrollementProps> = ({ studentDetails }) => {
           <SidebarButtonsActions
             onSubmitForm={handleSubmit}
             onClose={closeEditModal}
+            isLoading={updateStudentMutation.isPending}
           />
         }
       >
