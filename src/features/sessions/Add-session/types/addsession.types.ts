@@ -23,7 +23,7 @@ export interface SessionSchedule {
 
 export interface Student {
   studentId: number;
-  studentName: number;
+  studentName: string;
   levelName: string;
 }
 

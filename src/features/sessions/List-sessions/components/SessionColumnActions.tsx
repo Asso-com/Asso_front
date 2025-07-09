@@ -125,7 +125,7 @@ const SessionColumnActions: React.FC<ICellRendererParams> = (params) => {
         isOpen={modalState.enrollment}
         onClose={() => toggleModal("enrollment")}
         title={`Add Students`}
-        size="lg"
+        size="4xl"
       >
         <StudentEnrollment />
       </GenericModal>
