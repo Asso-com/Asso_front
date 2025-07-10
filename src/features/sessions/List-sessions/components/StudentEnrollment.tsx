@@ -45,12 +45,13 @@ const StudentEnrollment = ({ sessionId, associationId }: StudentEnrollmentProps)
       studentIds: changedStudents,
     });
   };
-  const mappedStudents = students.map((s: any) => ({
-    studentId: s.studentId,
-    studentName: s.studentName,
-    email: s.email ?? "",
-    levelName: s.levelName ?? "",
-  }));
+const mappedStudents = students.map((s: any) => ({
+  studentId: s.studentId,
+  studentName: s.studentName,
+  registrationId: s.registrationId,
+  email: s.email ?? "",
+  levelName: s.levelName ?? "",
+}));
   return (
     <VStack spacing={4} w="100%" h="100%">
       <Box w="100%" h="500px">

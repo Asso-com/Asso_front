@@ -59,12 +59,12 @@ const StudentTable = forwardRef<AgGridReact<any>, StudentTableProps>(
         filter: false,
         resizable: false,
       },
-      {
-        field: "studentId",
-        headerName: t("studentId"),
-        flex: 1,
-        filter: "agTextColumnFilter",
-      },
+{
+  field: "registrationId",
+  headerName: t("Registration ID"),
+  flex: 1,
+  filter: "agTextColumnFilter",
+},
       {
         field: "studentName",
         headerName: t("Name"),
