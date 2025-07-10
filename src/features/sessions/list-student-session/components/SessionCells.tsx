@@ -1,34 +1,54 @@
 import { useState } from "react";
 import { Tooltip } from "@chakra-ui/react";
-import { MdDelete, MdEdit } from "react-icons/md";
 import GenericModal from "@components/ui/GenericModal";
-import type { Session, Student } from "../types/sessions.types";
-import { Flex } from "@chakra-ui/react";
-import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
+import type { Student } from "../types/sessions.types";
+import type { Session } from "../types/sessions.types";
 
-export const SessionDetailsCell = ({ data }: { data: Session }) => (
+const capitalizeWords = (text: string): string =>
+  text
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+export const TitleCell = ({ data }: { data: Session }) => (
   <div className="flex flex-col gap-3 p-2">
     <div className="rounded-xl bg-blue-100 p-2 shadow-sm font-semibold text-blue-900">
       {data.title}
     </div>
-    <div className="text-sm space-y-1">
-      <div className="bg-green-100 text-green-800 px-2 py-1 rounded">
-        Date : {new Date(data.date).toLocaleDateString("fr-FR")}
-      </div>
-      <div className="bg-purple-100 text-purple-800 px-2 py-1 rounded">
-        Formateur : {data.teacher}
-      </div>
-      <div className="bg-orange-100 text-orange-800 px-2 py-1 rounded">
-        Durée : {data.duration}
-      </div>
+  </div>
+);
+
+export const DateCell = ({ data }: { data: Session }) => (
+  <div className="flex flex-col gap-1 p-2 text-sm">
+    <div className="bg-green-100 text-green-800 px-2 py-1 rounded">
+      Start: {new Date(data.startdate).toLocaleDateString("fr-FR")}
+    </div>
+    <div className="bg-green-100 text-green-800 px-2 py-1 rounded">
+      End: {new Date(data.enddate).toLocaleDateString("fr-FR")}
     </div>
   </div>
 );
 
+export const TeacherCell = ({ data }: { data: Session }) => (
+  <div className="p-2">
+    <div className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">
+      {data.teacher}
+    </div>
+  </div>
+);
+
+export const FrequencyCell = ({ data }: { data: Session }) => (
+  <div className="p-2">
+    <div className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-sm">
+      {capitalizeWords(data.Frequency)}
+    </div>
+  </div>
+);
 export const StudentsCell = ({ students }: { students: Student[] }) => {
-  const limit = 5;
+  const limit = 6;
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState<Student[]>([]);
+
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -59,7 +79,7 @@ export const StudentsCell = ({ students }: { students: Student[] }) => {
       }}
     >
       {students.slice(0, limit).map((student) => (
-        <Tooltip key={student.id} label={student.name} placement="top" hasArrow>
+        <Tooltip key={student.id} label={capitalizeWords(student.name)} placement="top" hasArrow>
           <div
             style={{
               display: "flex",
@@ -74,47 +94,35 @@ export const StudentsCell = ({ students }: { students: Student[] }) => {
               transition: "background 0.2s",
             }}
           >
-            {student.avatar ? (
-              <img
-                src={student.avatar}
-                alt={student.name}
-                style={{
-                  width: "24px",
-                  height: "24px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                }}
-              />
-            ) : (
-              <span
-                style={{
-                  width: "20px",
-                  height: "20px",
-                  backgroundColor: "#3B82F6",
-                  color: "#FFFFFF",
-                  borderRadius: "50%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "9px",
-                }}
-              >
-                {getInitials(student.name)}
-              </span>
-            )}
             <span
               style={{
-                maxWidth: "80px",
+                width: "20px",
+                height: "20px",
+                backgroundColor: "#3B82F6",
+                color: "#FFFFFF",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "9px",
+              }}
+            >
+              {getInitials(student.name)}
+            </span>
+            <span
+              style={{
+                maxWidth: "180px",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
               }}
             >
-              {student.name}
+              {capitalizeWords(student.name)}
             </span>
           </div>
         </Tooltip>
       ))}
+
       {students.length > limit && (
         <button
           style={{
@@ -135,7 +143,7 @@ export const StudentsCell = ({ students }: { students: Student[] }) => {
       <GenericModal
         isOpen={isOpen}
         onClose={handleClose}
-        title="all_participants"
+        title="All Students"
         size="md"
         closeOnOverlayClick={false}
       >
@@ -160,85 +168,27 @@ export const StudentsCell = ({ students }: { students: Student[] }) => {
                 borderBottom: "1px solid #E2E8F0",
               }}
             >
-              {student.avatar ? (
-                <img
-                  src={student.avatar}
-                  alt={student.name}
-                  style={{
-                    width: "32px",
-                    height: "32px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}
-                />
-              ) : (
-                <span
-                  style={{
-                    width: "32px",
-                    height: "32px",
-                    backgroundColor: "#3B82F6",
-                    color: "#FFFFFF",
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {getInitials(student.name)}
-                </span>
-              )}
-              <span>{student.name}</span>
+              <span
+                style={{
+                  width: "32px",
+                  height: "32px",
+                  backgroundColor: "#3B82F6",
+                  color: "#FFFFFF",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                }}
+              >
+                {getInitials(student.name)}
+              </span>
+              <span>{capitalizeWords(student.name)}</span>
             </div>
           ))}
         </div>
       </GenericModal>
     </div>
-  );
-};
-
-export const ActionsCell = ({
-  data,
-  onEdit,
-  onDelete,
-}: {
-  data: Session;
-  onEdit: any;
-  onDelete: any;
-}) => {
-  const [editModalOpen, setEditModalOpen] = useState(false);
-
-  const toggleEditModal = () => setEditModalOpen(!editModalOpen);
-
-  return (
-    <Flex align="center" justify="center" gap={2} height="100%">
-      <GenericIconButtonWithTooltip
-        icon={<MdEdit size={24} />}
-        label="Modifier"
-        ariaLabel="edit_btn"
-        variant="ghost"
-        colorScheme="green"
-        size="md"
-        onClick={() => onEdit(data)}
-      />
-      <GenericIconButtonWithTooltip
-        icon={<MdDelete size={24} />}
-        label="Supprimer"
-        ariaLabel="delete_btn"
-        variant="ghost"
-        colorScheme="red"
-        size="md"
-        onClick={() => onDelete(data)}
-      />
-      <GenericModal
-        isOpen={editModalOpen}
-        onClose={toggleEditModal}
-        title="Modifier Session"
-        size="md"
-      >
-        {/* Modal content goes here */}
-      </GenericModal>
-    </Flex>
   );
 };
