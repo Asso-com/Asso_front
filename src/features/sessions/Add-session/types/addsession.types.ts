@@ -9,7 +9,6 @@ export interface SessionFormData {
   endDate: string;
   maxStudentsCapacity: number;
   fees: number;
-  category: "Foundation" | "Linguistic" | "";
   sessionSchedules: SessionSchedule[];
   studentIds: string[];
 }

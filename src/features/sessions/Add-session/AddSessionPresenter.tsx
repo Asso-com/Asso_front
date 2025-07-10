@@ -103,38 +103,49 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
     const stepTouched = markAllTouchedByStep(formik.values, currentStep);
     setTouched(stepTouched);
 
-    if (currentStep === 0) {
-      const hasBasicInfoErrors = Boolean(
-        errors.category ??
-          errors.levelSubjectId ??
-          errors.staffId ??
-          errors.periodicity ??
-          errors.sessionType ??
-          errors.startDate ??
-          errors.endDate ??
-          errors.maxStudentsCapacity ??
-          errors.fees
-      );
-      if (!hasBasicInfoErrors) setCurrentStep(1);
-    } else if (currentStep === 1) {
-      const newErrors = await validateForm();
-      if (
-        typeof newErrors.sessionSchedules === "string" &&
-        newErrors.sessionSchedules.includes("overlapping")
-      ) {
-        dispatch(
-          showToast({
-            title: "Attention",
-            message: newErrors.sessionSchedules,
-            type: "warning",
-          })
-        );
+  if (currentStep === 0) {
+    const hasBasicInfoErrors = Boolean(
+      errors.levelSubjectId ??
+      errors.staffId ??
+      errors.periodicity ??
+      errors.sessionType ??
+      errors.startDate ??
+      errors.endDate ??
+      errors.maxStudentsCapacity ??
+      errors.fees
+    );
+    if (!hasBasicInfoErrors) {
+      if (formik.values.sessionSchedules.length === 0) {
+        const newSchedule = {
+          classRoomId: 0,
+          day: "MONDAY",
+          startTime: "09:00",
+          endTime: "10:00",
+          sessionType: formik.values.sessionType,
+        };
+        formik.setFieldValue("sessionSchedules", [newSchedule]);
       }
-      if (!newErrors.sessionSchedules) {
-        setCurrentStep(2);
-      }
+      setCurrentStep(1);
     }
-  };
+  } else if (currentStep === 1) {
+    const newErrors = await validateForm();
+    if (
+      typeof newErrors.sessionSchedules === "string" &&
+      newErrors.sessionSchedules.includes("overlapping")
+    ) {
+      dispatch(
+        showToast({
+          title: "Attention",
+          message: newErrors.sessionSchedules,
+          type: "warning",
+        })
+      );
+    }
+    if (!newErrors.sessionSchedules) {
+      setCurrentStep(2);
+    }
+  }
+};
 
   const handlePrevious = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 0));

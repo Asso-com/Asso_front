@@ -139,6 +139,7 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
                       day: "",
                       startTime: "",
                       endTime: "",
+                      sessionType: formik.values.sessionType,
                     },
                   ]);
                 }}

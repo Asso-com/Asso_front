@@ -151,16 +151,6 @@ export const createInitialValues = (
   const firstCategory = categories[0];
   const defaultCategoryId = firstCategory ? Number(firstCategory.id) : 0;
 
-  const mapCategoryName = (name: string): "" | "Foundation" | "Linguistic" => {
-    const normalizedName = name.toLowerCase();
-    if (normalizedName.includes("foundation")) return "Foundation";
-    if (normalizedName.includes("linguistic")) return "Linguistic";
-    return "";
-  };
-
-  const defaultCategoryName = firstCategory
-    ? mapCategoryName(firstCategory.name)
-    : "";
 
   return {
     categoryId: defaultCategoryId,
@@ -173,41 +163,15 @@ export const createInitialValues = (
     endDate: getActivePeriodEndDate(academicPeriods),
     maxStudentsCapacity: 1,
     fees: 0,
-    category: defaultCategoryName,
     sessionSchedules: [
-      {
+     /* {
         classRoomId: 0,
         day: "MONDAY",
         sessionType: "ONLINE",
         startTime: "09:00",
         endTime: "10:00",
-      },
+      },*/
     ],
     studentIds: [],
   };
-};
-
-
-export const initialValues: SessionFormData = {
-  categoryId: 0,
-  levelSubjectId: 0,
-  staffId: "",
-  associationId: 0,
-  periodicity: "WEEKLY",
-  sessionType: "" as "ONLINE" | "ONSITE",
-  startDate: "",
-  endDate: "",
-  maxStudentsCapacity: 0,
-  fees: 0,
-  category: "",
-  sessionSchedules: [
-    {
-      classRoomId: 0,
-      day: "",
-      sessionType: "ONLINE",
-      startTime: "",
-      endTime: "",
-    },
-  ],
-  studentIds: [],
 };
