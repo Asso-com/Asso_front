@@ -75,12 +75,12 @@ const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
     })
   );
 
-  const categoryOptions = categories.map(
-    (cat: { name: string; id: number }) => ({
-      label: cat.name,
-      value: cat.id,
-    })
-  );
+const categoryOptions = categories
+  .filter((cat: { name: string; id: number; active: boolean }) => cat.active)
+  .map((cat: { name: string; id: number }) => ({
+    label: cat.name,
+    value: cat.id,
+  }));
 
   const enhancedFields = formFields.basicInfo.map((field) => {
     switch (field.name) {
