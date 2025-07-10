@@ -14,10 +14,7 @@ import { useSelector } from "react-redux";
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import createValidationSchema from "@utils/createValidationSchema";
 import { getDefaultFormValues } from "@utils/getDefaultValueByType";
-import {
-  studentFields,
-  levelFields,
-} from "../../constants/StudentFields";
+import { studentFields, levelFields } from "../../constants/StudentFields";
 import type { RootState } from "@store/index";
 import type { Field } from "@/types/formTypes";
 import useFetchLevelsByCategory from "@features/Academics/list-level/hooks/useFetchLevelsByCategory";
@@ -44,6 +41,10 @@ export type FormContentRef = {
 };
 
 interface EditData {
+  studentId?: string;
+  fatherId?: string;
+  motherId?: string;
+  tutorId?: string;
   studentData?: any;
   fatherData?: any;
   motherData?: any;
@@ -181,7 +182,6 @@ const FormContent = forwardRef<FormContentRef, FormContentProps>(
       },
       []
     );
-
     // Imperative handle
     useImperativeHandle(
       ref,
@@ -200,7 +200,19 @@ const FormContent = forwardRef<FormContentRef, FormContentProps>(
           const { studentData, fatherData, motherData, tutorData } =
             separateFormData(values);
 
-          return {
+          // Prepare IDs for edit mode
+          let studentId = null,
+            fatherId = null,
+            motherId = null,
+            tutorId = null;
+          if (isEditMode && editData) {
+            studentId = editData.studentId ?? null;
+            fatherId = editData.fatherId ?? null;
+            motherId = editData.motherId ?? null;
+            tutorId = editData.tutorId ?? null;
+          }
+
+          const result = {
             associationId,
             // Use levelId from editData in edit mode, otherwise from form values
             levelId:
@@ -219,9 +231,21 @@ const FormContent = forwardRef<FormContentRef, FormContentProps>(
               gender: "FEMALE",
             },
             tutorData: guardianStates.isOtherGuardian
-              ? { ...tutorData, isGuardian: true }
+              ? { ...tutorData, isGuardian: true, gender: "MALE" }
               : null,
           };
+
+          // Only in edit mode, add the IDs
+          if (isEditMode) {
+            return {
+              ...result,
+              studentId,
+              fatherId,
+              motherId,
+              tutorId,
+            };
+          }
+          return result;
         },
 
         resetForm: () => {

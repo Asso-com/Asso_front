@@ -24,7 +24,7 @@ export const studentFields: Field[] = [
   },
   {
     name: 'gender',
-    type: 'select',
+    type: 'radio',
     label: 'Gender',
     options: [
       { value: 'FEMALE', label: 'Female' },
@@ -214,7 +214,8 @@ export const guardianFields: Field[] = [
     label: "Guardian's Phone",
     placeholder: "Enter guardian's phone number",
     validationRules: { required: true, }
-  }
+  },
+  
 ];
 
 export const levelFields: Field[] = [

@@ -8,7 +8,7 @@ const useFetchLessonTopics = (
   return useQuery<LessonWithTopicsDto[], Error>({
     queryKey: ["lesson-topics", sessionId],
     queryFn: () => SessionServiceApi.getLessonTopicsDetails(sessionId),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 2 * 60 * 1000,
     retry: false,
     enabled: sessionId !== 0,
   });

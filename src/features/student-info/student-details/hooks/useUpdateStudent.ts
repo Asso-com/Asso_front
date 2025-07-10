@@ -4,7 +4,6 @@ import { showToast } from '@store/toastSlice';
 import StudentServiceApi from '../services/StudentServiceApi';
 
 interface StudentUpdatePayload {
-  StudentId: number;
   data: any;
 }
 
@@ -13,14 +12,20 @@ const useUpdateStudent = (associationId: number) => {
   const dispatch = useDispatch();
 
   return useMutation({
-    mutationFn: async ({ StudentId, }: StudentUpdatePayload) => {
-      return StudentServiceApi.update(StudentId);
+    mutationFn: async ({ data }: StudentUpdatePayload) => {
+      return StudentServiceApi.update(data);
     },
 
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: ['students', associationId],
       });
+
+      if (variables.data.studentId) {
+        queryClient.invalidateQueries({
+          queryKey: ['student-details', associationId, variables.data.studentId],
+        });
+      }
 
       dispatch(
         showToast({

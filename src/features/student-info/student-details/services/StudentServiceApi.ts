@@ -86,13 +86,10 @@ const StudentServiceApi = {
     }
   },
 
-  update: async (id: number,): Promise<any> => {
+  update: async (data: any): Promise<any> => {
     try {
       const response = await axiosInstance.put(
-        `/api/v1/student/${id}`,
-        {
-          /* data */
-        }
+        `/api/v1/students`, data
       );
       return response.data;
     } catch (error) {
