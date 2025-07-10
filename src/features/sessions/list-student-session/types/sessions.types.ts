@@ -1,7 +1,6 @@
 export interface Student {
   id: number;
   name: string;
-  avatar?: string;
 }
 
 export interface Session {

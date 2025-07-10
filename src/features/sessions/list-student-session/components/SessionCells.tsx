@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Tooltip } from "@chakra-ui/react";
 import GenericModal from "@components/ui/GenericModal";
-import type { Student } from "../types/sessions.types";
-import type { Session } from "../types/sessions.types";
+import type { Student, Session } from "../types/sessions.types";
 
 const capitalizeWords = (text: string): string =>
   text
