@@ -95,7 +95,6 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
           variant="ghost"
           colorScheme={isSessionFull ? "red" : "blue"}
           onClick={handleAddStudents}
-          isDisabled={isSessionFull}
         />
       </Flex>
 
