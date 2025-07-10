@@ -1,4 +1,3 @@
-// components/ScheduleStep.tsx
 import React from "react";
 import {
   Card,
@@ -48,6 +47,7 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
       value: Number(room.id),
     })
   );
+
   return (
     <Card
       bg={cardBg}
@@ -104,20 +104,22 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
                     </Button>
                   )}
                 </Flex>
-<Grid templateColumns="repeat(2, 1fr)" gap={4} w="full">
-  {formFields.schedule.map((field) => (
-    <GridItem key={`${field.name}-${index}`}>
-      <RenderFormBuilder
-        field={{
-          ...field,
-          name: `sessionSchedules.${index}.${field.name}`,
-          ...(field.name === 'classRoomId' && { options: roomOptions }),
-        }}
-      />
-    </GridItem>
-  ))}
-</Grid>
-
+                <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full">
+                  {formFields.schedule.map((field) => (
+                    <GridItem
+                      key={`${field.name}-${index}`}
+                      colSpan={field.name === "sessionType" ? 2 : 1}
+                    >
+                      <RenderFormBuilder
+                        field={{
+                          ...field,
+                          name: `sessionSchedules.${index}.${field.name}`,
+                          ...(field.name === "classRoomId" && { options: roomOptions }),
+                        }}
+                      />
+                    </GridItem>
+                  ))}
+                </Grid>
               </Box>
             ))}
             <Box textAlign="center">

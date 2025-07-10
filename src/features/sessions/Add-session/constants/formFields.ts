@@ -104,6 +104,17 @@ export const formFields: { basicInfo: Field[]; schedule: Field[] } = {
       type: "select",
       validationRules: { required: true },
     },
+        {
+      name: "sessionType",
+      label: "Session Type",
+      type: "radio",
+      options: [
+        { label: "Online", value: "ONLINE" },
+        { label: "Onsite", value: "ONSITE" },
+      ],
+      validationRules: { required: true },
+    },
+    
     {
       name: "startTime",
       label: "Start Time",
@@ -121,7 +132,11 @@ export const formFields: { basicInfo: Field[]; schedule: Field[] } = {
   ],
 };
 
-// Helper function to get the earliest start date from academic periods
+const getActivePeriodEndDate = (academicPeriods: AcademicPeriodWeek[]): string => {
+  const activePeriod = academicPeriods.find((p) => p.active);
+  if (!activePeriod) return "";
+  return new Date(activePeriod.endDate).toISOString().split("T")[0];
+};
 const getStartDate = (academicPeriods: AcademicPeriodWeek[]): string => {
   if (!academicPeriods.length) return "";
   const minDate = new Date(
@@ -135,13 +150,11 @@ export const createInitialValues = (
 ): SessionFormData => {
   const firstCategory = categories[0];
   const defaultCategoryId = firstCategory ? Number(firstCategory.id) : 0;
+
   const mapCategoryName = (name: string): "" | "Foundation" | "Linguistic" => {
     const normalizedName = name.toLowerCase();
-    if (normalizedName.includes("foundation")) {
-      return "Foundation";
-    } else if (normalizedName.includes("linguistic")) {
-      return "Linguistic";
-    }
+    if (normalizedName.includes("foundation")) return "Foundation";
+    if (normalizedName.includes("linguistic")) return "Linguistic";
     return "";
   };
 
@@ -157,7 +170,7 @@ export const createInitialValues = (
     periodicity: "WEEKLY",
     sessionType: "ONLINE",
     startDate: getStartDate(academicPeriods),
-    endDate: "",
+    endDate: getActivePeriodEndDate(academicPeriods),
     maxStudentsCapacity: 1,
     fees: 0,
     category: defaultCategoryName,
@@ -165,6 +178,7 @@ export const createInitialValues = (
       {
         classRoomId: 0,
         day: "MONDAY",
+        sessionType: "ONLINE",
         startTime: "09:00",
         endTime: "10:00",
       },
@@ -172,6 +186,7 @@ export const createInitialValues = (
     studentIds: [],
   };
 };
+
 
 export const initialValues: SessionFormData = {
   categoryId: 0,
@@ -189,6 +204,7 @@ export const initialValues: SessionFormData = {
     {
       classRoomId: 0,
       day: "",
+      sessionType: "ONLINE",
       startTime: "",
       endTime: "",
     },

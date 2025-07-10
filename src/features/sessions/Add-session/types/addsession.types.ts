@@ -17,6 +17,7 @@ export interface SessionFormData {
 export interface SessionSchedule {
   classRoomId: number;
   day: string;
+  sessionType: "ONLINE" | "ONSITE";
   startTime: string;
   endTime: string;
 }
