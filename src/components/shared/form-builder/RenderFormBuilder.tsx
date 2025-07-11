@@ -10,6 +10,7 @@ import GenericRadioGroup from "../inputs/GenericRadioGroup";
 import MultiTextInput from "../inputs/MultiTextInput";
 import FileInput from "../inputs/FileInput";
 import TimeInput from "../inputs/TimeInput";
+import ColorInput from "../inputs/ColorInput";
 
 interface RenderFormBuilderProps {
   field: FieldType & {
@@ -228,6 +229,23 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
                 id={fullName}
                 placeholder={placeholder}
                 value={formikField.value || ""}
+                onChange={(value) => form.setFieldValue(fullName, value)}
+                formikField={formikField}
+                labelDirection={labelDirection}
+                {...inputProps}
+              />
+            );
+
+          case "color":
+            return (
+              <ColorInput
+                label={label}
+                isRequired={validationRules?.required}
+                isInvalid={isInvalid}
+                errorMessage={error}
+                id={fullName}
+                placeholder={placeholder}
+                value={formikField.value || "#000000"}
                 onChange={(value) => form.setFieldValue(fullName, value)}
                 formikField={formikField}
                 labelDirection={labelDirection}

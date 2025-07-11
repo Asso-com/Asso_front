@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import { ViewIcon, CalendarIcon, InfoIcon } from "@chakra-ui/icons";
+import { ViewIcon, CalendarIcon, InfoIcon, BellIcon } from "@chakra-ui/icons";
 import type { ICellRendererParams } from "ag-grid-community";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
 import { useState } from "react";
@@ -9,6 +9,7 @@ import SessionDetails from "./SessionDetails";
 import LessonTopicDetails from "./LessonTopicDetails";
 import SessionScheduleDetails from "./SessionSheduleDetails";
 import StudentEnrollment from "./StudentEnrollment";
+import EventCreation from "./EventCreation";
 import { FaUsers } from "react-icons/fa";
 interface SessionCellRendererParams extends ICellRendererParams {
   associationId: number;
@@ -23,6 +24,7 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
     enrollment: false,
     viewSchedule: false,
     viewLessonPlan: false,
+    createEvent: false,
   });
 
   const toggleModal = (modalName: keyof typeof modalState) => {
@@ -50,6 +52,10 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
   const handleAddStudents = () => {
     console.log("Add students to session:", sessionData.id);
     toggleModal("enrollment");
+  };
+  const handleCreateEvent = () => {
+    console.log("Create event for session:", sessionData.id);
+    toggleModal("createEvent");
   };
 
   const isSessionFull = sessionData.placesAvailable === 0;
@@ -96,6 +102,15 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
           colorScheme={isSessionFull ? "red" : "blue"}
           onClick={handleAddStudents}
         />
+                <GenericIconButtonWithTooltip
+          aria-label="Create Event"
+          icon={<BellIcon />}
+          label="Create Event"
+          size={{ base: "sm", md: "lg" }}
+          variant="ghost"
+          colorScheme="pink"
+          onClick={handleCreateEvent}
+        />
       </Flex>
 
       <GenericModal
@@ -135,6 +150,14 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
         size="4xl"
       >
         <StudentEnrollment sessionId={sessionData.id} associationId={associationId} />
+      </GenericModal>
+      <GenericModal
+        isOpen={modalState.createEvent}
+        onClose={() => toggleModal("createEvent")}
+        title={`Create Event`}
+        size="4xl"
+      >
+        <EventCreation sessionData={sessionData} />
       </GenericModal>
     </>
   );

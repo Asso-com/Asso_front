@@ -44,7 +44,8 @@ export type FieldType =
     | 'checkbox'
     | 'time'
     | 'multi-select-checkbox'
-    | 'string-array';
+    | 'string-array'
+    | 'color';
 
 export interface Field {
     name: string;
