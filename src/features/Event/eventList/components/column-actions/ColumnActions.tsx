@@ -44,7 +44,6 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
         colorScheme="red"
         size="sm"
         disabled={params.data.standard}
-        // TODO: Add your delete logic here
       />
 
       <GenericIconButtonWithTooltip

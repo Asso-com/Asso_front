@@ -4,19 +4,14 @@ import SidebarButtonsActions from "@components/shared/SidebarButtonsActions";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import FormContent from "./FormContent";
-
 import type { FormContentRef } from "./FormContent";
-import type { RootState } from "@store/index";
-import { useSelector } from "react-redux";
-import useCreateEvent from "../../hooks/useCreateEvent";
+
+//import useCreateEvent from "../../hooks/useCreateEvent";
 
 const EventSidebar = () => {
   const { t } = useTranslation();
-  const associationId = useSelector(
-    (state: RootState) => state.authSlice.associationId
-  );
+ ;
 
-  const { mutateAsync: createEvent, isPending } = useCreateEvent(associationId);
 
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
@@ -26,20 +21,8 @@ const EventSidebar = () => {
   const formRef = useRef<FormContentRef>(null);
 
   const handleSubmitForm = async () => {
-    const values = await formRef.current?.submitForm();
-    if (values) {
-      const newEvent = {
-        name: String(values.name),
-        categoryId: Number(values.categoryId),
-        active: Boolean(values.active),
-      };
-      try {
-        await createEvent(newEvent);
-        handleCloseSidebar();
-      } catch (error) {
-        console.error("Create event failed", error);
-      }
-    }
+    //const values = await formRef.current?.submitForm();
+    
   };
 
   return (
@@ -62,7 +45,6 @@ const EventSidebar = () => {
           <SidebarButtonsActions
             onSubmitForm={handleSubmitForm}
             onClose={handleCloseSidebar}
-            isLoading={isPending}
           />
         }
       >

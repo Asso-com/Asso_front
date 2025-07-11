@@ -25,7 +25,7 @@ export type FormContentRef = {
 
 const FormContent = forwardRef<FormContentRef>((_, ref) => {
   const [initialValues, setInitialValues] = useState<FormValues>({});
-  const [formFields, setFormFields] = useState<Field[]>(LevelFields);
+  const [formFields] = useState<Field[]>(LevelFields);
   const formikRef = useRef<FormikProps<FormValues>>(null);
 
   const associationId = useSelector(

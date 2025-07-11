@@ -1,15 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Box, SimpleGrid } from "@chakra-ui/react";
-import { Form, Formik, type FormikHelpers } from "formik";
-import { useSelector } from "react-redux";
-
+import { Form, Formik } from "formik";
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import FooterActions from "@components/shared/FooterActions";
 import createValidationSchema from "@utils/createValidationSchema";
-
 import type { Field } from "@/types/formTypes";
-import type { RootState } from "@store/index";
-
 import EventFields from "../../constants/EventFields";
 //import useUpdateEvent from "../../hooks/useUpdateEvent";
 
@@ -23,13 +18,10 @@ interface FormValues {
 }
 
 const EditEvent: React.FC<EditEventProps> = ({ details, onClose }) => {
-  const associationId = useSelector(
-    (state: RootState) => state.authSlice.associationId
-  );
 
   //const { mutateAsync: updateEvent, isPending } = useUpdateEvent(associationId);
 
-  const [formFields, setFormFields] = useState<Field[]>(() => EventFields);
+  const [formFields] = useState<Field[]>(() => EventFields);
 
   const initialValues: FormValues = useMemo(() => {
     return formFields.reduce((acc: FormValues, field: Field) => {
@@ -44,8 +36,8 @@ const EditEvent: React.FC<EditEventProps> = ({ details, onClose }) => {
   );
 
   const onSubmit = async (
-    values: FormValues,
-    { setSubmitting }: FormikHelpers<FormValues>
+    //values: FormValues,
+    //{ setSubmitting }: FormikHelpers<FormValues>
   ) => {
     try {
       //await updateEvent({
@@ -56,7 +48,7 @@ const EditEvent: React.FC<EditEventProps> = ({ details, onClose }) => {
     } catch (error) {
       console.error("Update event failed", error);
     } finally {
-      setSubmitting(false);
+      //setSubmitting(false);
     }
   };
 
@@ -69,7 +61,7 @@ const EditEvent: React.FC<EditEventProps> = ({ details, onClose }) => {
         validateOnBlur={false}
         onSubmit={onSubmit}
       >
-        {({ isSubmitting, handleSubmit, dirty }) => (
+        {({ isSubmitting, handleSubmit }) => (
           <Form>
             <SimpleGrid columns={1} spacing={4} mb={2}>
               {formFields
