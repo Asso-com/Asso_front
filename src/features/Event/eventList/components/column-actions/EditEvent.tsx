@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
 import { Box, SimpleGrid } from "@chakra-ui/react";
-import { Form, Formik } from "formik";
+import { Formik, Form } from "formik";
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import FooterActions from "@components/shared/FooterActions";
 import createValidationSchema from "@utils/createValidationSchema";
 import type { Field } from "@/types/formTypes";
 import EventFields from "../../constants/EventFields";
-//import useUpdateEvent from "../../hooks/useUpdateEvent";
+// import useUpdateEvent from "../../hooks/useUpdateEvent";
 
 interface EditEventProps {
   details?: Record<string, any>;
@@ -18,8 +18,7 @@ interface FormValues {
 }
 
 const EditEvent: React.FC<EditEventProps> = ({ details, onClose }) => {
-
-  //const { mutateAsync: updateEvent, isPending } = useUpdateEvent(associationId);
+  // const { mutateAsync: updateEvent, isPending } = useUpdateEvent(details?.associationId);
 
   const [formFields] = useState<Field[]>(() => EventFields);
 
@@ -30,25 +29,20 @@ const EditEvent: React.FC<EditEventProps> = ({ details, onClose }) => {
     }, {});
   }, [details, formFields]);
 
-  const validationSchema = useMemo(
-    () => createValidationSchema(formFields),
-    [formFields]
-  );
+  const validationSchema = useMemo(() => {
+    return createValidationSchema(formFields);
+  }, [formFields]);
 
-  const onSubmit = async (
-    //values: FormValues,
-    //{ setSubmitting }: FormikHelpers<FormValues>
-  ) => {
+  const onSubmit = async (values: FormValues) => {
     try {
-      //await updateEvent({
-      //  eventId: details?.id,
-      //  data: values,
-      //});
+      // await updateEvent({
+      //   eventId: details?.id,
+      //   data: values,
+      // });
+      console.log("Form values submitted:", values);
       onClose();
     } catch (error) {
-      console.error("Update event failed", error);
-    } finally {
-      //setSubmitting(false);
+      console.error("Échec de la mise à jour de l'événement", error);
     }
   };
 
@@ -65,7 +59,7 @@ const EditEvent: React.FC<EditEventProps> = ({ details, onClose }) => {
           <Form>
             <SimpleGrid columns={1} spacing={4} mb={2}>
               {formFields
-                .filter((field) => field.name !== "active")
+                .filter((field) => field.name !== "active") // exclude "active"
                 .map((field) => (
                   <RenderFormBuilder key={field.name} field={field} />
                 ))}
