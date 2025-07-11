@@ -1,5 +1,5 @@
-import { Field, type FieldProps } from "formik"
-import { get } from "lodash"
+import { Field, type FieldProps } from "formik";
+import { get } from "lodash";
 import InputPhone from "../inputs/InputPhone";
 import GenericInput from "../inputs/GenericInput";
 import type { Field as FieldType } from "../../../types/formTypes";
@@ -10,20 +10,21 @@ import GenericRadioGroup from "../inputs/GenericRadioGroup";
 import MultiTextInput from "../inputs/MultiTextInput";
 import FileInput from "../inputs/FileInput";
 import TimeInput from "../inputs/TimeInput";
+import MultiSelectDropdown from "../inputs/MultiSelectDropdown";
 
 interface RenderFormBuilderProps {
   field: FieldType & {
-    onChange?: (value: any) => void; 
-  }
-  arrayName?: string
-  index?: number
-  labelDirection?: "top" | "left"
+    onChange?: (value: any) => void;
+  };
+  arrayName?: string;
+  index?: number;
+  labelDirection?: "top" | "left";
 }
 
 type Option = {
-  label: string
-  value: string | number
-}
+  label: string;
+  value: string | number;
+};
 
 const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
   field,
@@ -39,8 +40,8 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
     options,
     placeholder,
     inputProps,
-    onChange: customOnChange, 
-  } = field
+    onChange: customOnChange,
+  } = field;
 
   const fullName =
     arrayName !== undefined && index !== undefined
@@ -50,7 +51,8 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
   return (
     <Field name={fullName}>
       {({ field: formikField, form }: FieldProps) => {
-        const error = get(form.errors, fullName);
+        const rawError = get(form.errors, fullName);
+        const error = typeof rawError === "string" ? rawError : undefined;
         const touched = get(form.touched, fullName);
         const isInvalid = !!error && !!touched;
 
@@ -207,7 +209,7 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
                 label={label}
                 options={options || []}
                 selectedValue={formikField.value}
-                onChange={(value) => handleValueChange(value)} 
+                onChange={(value) => handleValueChange(value)}
                 isError={isInvalid}
                 errorMessage={error}
                 isRequired={validationRules?.required}
@@ -215,7 +217,38 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
                 {...inputProps}
               />
             );
+          //           case "datetime-local":
+          // return (
+          //   <GenericInput
+          //     label={label}
+          //     isRequired={validationRules?.required}
+          //     isInvalid={isInvalid}
+          //     errorMessage={error}
+          //     id={fullName}
+          //     placeholder={placeholder}
+          //     type="datetime-local"
+          //     formikField={formikField}
+          //     labelDirection={labelDirection}
+          //     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          //       form.setFieldValue(fullName, e.target.value)
+          //     }
+          //     value={formikField.value || ""}
+          //     {...inputProps}
+          //   />
+          // );
 
+          case "multiselect":
+            return (
+              <MultiSelectDropdown
+                label={label}
+                value={formikField.value || []}
+                onChange={handleValueChange}
+                options={options || []}
+                placeholder={placeholder}
+                isInvalid={isInvalid}
+                errorMessage={error}
+              />
+            );
           case "time":
             return (
               <TimeInput

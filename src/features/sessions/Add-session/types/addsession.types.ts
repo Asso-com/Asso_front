@@ -4,14 +4,14 @@ export interface SessionFormData {
   staffId: string;
   staffEmail: string;
   associationId: number;
-  periodicity: 'WEEKLY' | 'MONTHLY';
-  sessionType: 'ONLINE' | 'FACE_TO_FACE';
+  periodicity: "WEEKLY" | "MONTHLY";
+  sessionType: "ONLINE" | "FACE_TO_FACE";
   startDate: string;
   endDate: string;
   maxStudentsCapacity: number;
   placesAvailable: number;
   fees: number;
-  generalLevels: 'Foundantion' | 'Linguistic' | '';
+  generalLevels: "Foundantion" | "Linguistic" | "";
   sessionSchedules: SessionSchedule[];
   studentIds: string[];
 }
@@ -40,7 +40,14 @@ export interface Field {
   options?: { label: string; value: any }[];
 }
 
-export type FieldType = 'text' | 'number' | 'email' | 'date' | 'select' | 'radio' | 'time';
+export type FieldType =
+  | "text"
+  | "number"
+  | "email"
+  | "date"
+  | "select"
+  | "radio"
+  | "time";
 
 export interface ValidationRules {
   required?: boolean;
@@ -52,5 +59,5 @@ export interface ValidationRules {
 export interface SessionStep {
   title: string;
   description: string;
-  icon: any; 
+  icon: any;
 }

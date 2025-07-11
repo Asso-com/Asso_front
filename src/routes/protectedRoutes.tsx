@@ -27,6 +27,8 @@ import ClassRoomContainer from "@features/Academics/Class-room/ClassRoomContaine
 import CoefficientSettingsContainer from "@features/system-settings/coefficients/CoefficientSettingsContainer.tsx";
 import LessonContainer from "@features/Lesson-plan/Lesson/LessonContainer.tsx";
 import TopicContainer from "@features/Lesson-plan/Topic/TopicContainer.tsx";
+import FamilyDetailsContainer from "@features/gestionFamily/family-details/FamilyDetailsContainer";
+import ListReunionContainer from "@features/gestionFamily/list-reunion-family/ListReunionContainer";
 const protectedRoutes = [
   {
     element: <ProtectedLayout />,
@@ -107,6 +109,8 @@ const protectedRoutes = [
       },
 
       { path: "/HumanResource/listStaff", element: <StaffContainer /> },
+       { path:"/families", element: <FamilyDetailsContainer  /> },
+        { path:"/list-reu-families", element: <ListReunionContainer  /> },
     ],
   },
 ];
