@@ -20,6 +20,7 @@ const useFetchFamilies = (
       }
     },
     enabled: !!associationId,
+    refetchOnWindowFocus: false
   });
 };
 

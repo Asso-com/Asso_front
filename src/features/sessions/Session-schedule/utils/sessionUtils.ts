@@ -1,4 +1,4 @@
-import type { SessionSchuduleDate } from "./types";
+import type { SessionSchuduleDate } from "../types";
 
 export const dayNames: Record<string, string> = {
     MONDAY: "Monday",

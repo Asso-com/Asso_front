@@ -4,7 +4,7 @@ import { showToast } from '@store/toastSlice';
 import SessionServiceApi from '../services/sessionServiceApi';
 import type { StudentsEnrollmentRequest } from '../types/session.types';
 
-const useAssignStudentsToSession = (sessionId: number, associationId: number) => {
+const useAssignStudentsToSession = (associationId: number) => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
@@ -14,13 +14,13 @@ const useAssignStudentsToSession = (sessionId: number, associationId: number) =>
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['session-enrollment-status', sessionId, associationId],
+        queryKey: ['sessions', associationId],
       });
 
       dispatch(
         showToast({
-          title: 'Succès',
-          message: 'Les étudiants ont été assignés à la session avec succès.',
+          title: 'Success',
+          message: 'Students have been successfully assigned to the session.',
           type: 'success',
         })
       );
@@ -29,7 +29,7 @@ const useAssignStudentsToSession = (sessionId: number, associationId: number) =>
     onError: (err) => {
       dispatch(
         showToast({
-          title: 'Erreur',
+          title: 'Error',
           message: err.message,
           type: 'error',
         })

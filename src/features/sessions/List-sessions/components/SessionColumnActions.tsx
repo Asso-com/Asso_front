@@ -151,6 +151,7 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
         <StudentEnrollment
           sessionId={sessionData.id}
           associationId={associationId}
+          onClose={() => toggleModal("enrollment")}
         />
       </GenericModal>
       <GenericModal
@@ -159,7 +160,10 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
         title={`Create Event`}
         size="2xl"
       >
-        <EventCreation sessionData={sessionData} />
+        <EventCreation
+          sessionData={sessionData}
+          onClose={() => toggleModal("createEvent")}
+        />
       </GenericModal>
     </>
   );

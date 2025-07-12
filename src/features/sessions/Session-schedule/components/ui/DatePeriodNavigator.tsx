@@ -20,7 +20,6 @@ const DatePeriodNavigator: React.FC<DatePeriodNavigatorProps> = ({
   onPeriodChange,
   defaultSelectedIndex = 0,
 }) => {
-
   if (weeksOptions.length === 0) {
     return null;
   }
@@ -52,15 +51,21 @@ const DatePeriodNavigator: React.FC<DatePeriodNavigatorProps> = ({
 
   // Initialize with the specified default or first option
   useEffect(() => {
-    if (weeksOptions.length > 0 && selectedPeriod === null) {
+    if (weeksOptions.length > 0) {
       const initialIndex = Math.min(
         defaultSelectedIndex,
         weeksOptions.length - 1
       );
       const initialPeriod = weeksOptions[initialIndex];
-      setSelectedPeriod(initialPeriod);
-      setCurrentIndex(initialIndex);
-      onPeriodChange?.(initialPeriod);
+
+      if (
+        selectedPeriod === null ||
+        selectedPeriod.value !== initialPeriod.value
+      ) {
+        setSelectedPeriod(initialPeriod);
+        setCurrentIndex(initialIndex);
+        onPeriodChange?.(initialPeriod);
+      }
     }
   }, [weeksOptions, selectedPeriod, defaultSelectedIndex, onPeriodChange]);
 

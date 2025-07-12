@@ -1,6 +1,6 @@
 export type AcademicWeek = {
   id: number;
-  startDate: string; // ISO format "YYYY-MM-DD"
+  startDate: string;
   endDate: string;
   weekNumber: number;
 };

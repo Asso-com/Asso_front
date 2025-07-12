@@ -1,9 +1,10 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { switchLoadingModal } from '@components/shared/modal-overlay/ModalLoading';
 import AcademicPeriodWeekServiceApi from '../services/AcademicPeriodWeekServiceApi';
+import type { AcademicWeek } from '../types';
 
 const useFetchAcademicPeriodWeeks = (associationId: number): UseQueryResult<any, Error> => {
-    return useQuery<any, Error>({
+    return useQuery<AcademicWeek[], Error>({
         queryKey: ['academicPeriodsWeeks', associationId],
         queryFn: async () => {
             switchLoadingModal();

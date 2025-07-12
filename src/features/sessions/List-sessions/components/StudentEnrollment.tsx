@@ -1,22 +1,32 @@
 import { useEffect, useRef, useState } from "react";
-import { Box, Button, VStack } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
+import { Box, Flex, VStack } from "@chakra-ui/react";
+// import { useTranslation } from "react-i18next";
 import StudentTable from "@features/sessions/Add-session/components/StudentTable";
 import useFetchSessionEnrollmentStatus from "../hooks/useFetchStudents";
 import useAssignStudentsToSession from "../hooks/useAssignStudents";
+import FooterActions from "@components/shared/FooterActions";
 
 interface StudentEnrollmentProps {
   sessionId: number;
   associationId: number;
+  onClose: () => void;
 }
-const StudentEnrollment = ({ sessionId, associationId }: StudentEnrollmentProps) => {
-  const { t } = useTranslation();
+const StudentEnrollment = ({
+  sessionId,
+  associationId,
+  onClose,
+}: StudentEnrollmentProps) => {
+  // const { t } = useTranslation();
   const gridRef = useRef(null);
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
   const [initialAssignedIds, setInitialAssignedIds] = useState<string[]>([]);
-  const { data: students = [], isLoading } = useFetchSessionEnrollmentStatus(sessionId, associationId);
-  const { mutate: assignStudents, status } = useAssignStudentsToSession(sessionId, associationId);
-  const isAssigning = status === 'pending';
+  const { data: students = [], isLoading } = useFetchSessionEnrollmentStatus(
+    sessionId,
+    associationId
+  );
+  const { mutateAsync: assignStudents, status } =
+    useAssignStudentsToSession(associationId);
+  const isAssigning = status === "pending";
   useEffect(() => {
     if (students.length > 0) {
       const enrolledStudents = students.filter((s) => s.enrolled);
@@ -33,10 +43,14 @@ const StudentEnrollment = ({ sessionId, associationId }: StudentEnrollmentProps)
     );
   };
   const handleAssign = () => {
-    const newlySelected = selectedStudents.filter(id => !initialAssignedIds.includes(id));
-    const deselected = initialAssignedIds.filter(id => !selectedStudents.includes(id));
-        const changedStudents = [...newlySelected, ...deselected];
-        if (changedStudents.length === 0) {
+    const newlySelected = selectedStudents.filter(
+      (id) => !initialAssignedIds.includes(id)
+    );
+    const deselected = initialAssignedIds.filter(
+      (id) => !selectedStudents.includes(id)
+    );
+    const changedStudents = [...newlySelected, ...deselected];
+    if (changedStudents.length === 0) {
       return;
     }
     assignStudents({
@@ -44,14 +58,15 @@ const StudentEnrollment = ({ sessionId, associationId }: StudentEnrollmentProps)
       associationId,
       studentIds: changedStudents,
     });
+    onClose();
   };
-const mappedStudents = students.map((s: any) => ({
-  studentId: s.studentId,
-  studentName: s.studentName,
-  registrationId: s.registrationId,
-  email: s.email ?? "",
-  levelName: s.levelName ?? "",
-}));
+  const mappedStudents = students.map((s: any) => ({
+    studentId: s.studentId,
+    studentName: s.studentName,
+    registrationId: s.registrationId,
+    email: s.email ?? "",
+    levelName: s.levelName ?? "",
+  }));
   return (
     <VStack spacing={4} w="100%" h="100%">
       <Box w="100%" h="500px">
@@ -62,14 +77,16 @@ const mappedStudents = students.map((s: any) => ({
           onStudentToggle={onStudentToggle}
         />
       </Box>
-      <Button
-        colorScheme="blue"
-        isDisabled={isLoading || isAssigning}
-        onClick={handleAssign}
-        isLoading={isAssigning}
-      >
-        {t("Assign Students")}
-      </Button>
+
+      <Flex w="100%" justify="flex-end">
+        <FooterActions
+          onClose={onClose}
+          handleSave={handleAssign}
+          isSaving={isLoading || isAssigning}
+          cancelText="close"
+          saveText="Assign Students"
+        />
+      </Flex>
     </VStack>
   );
 };

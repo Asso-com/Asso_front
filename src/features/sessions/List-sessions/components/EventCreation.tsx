@@ -1,7 +1,5 @@
 // EventCreation.tsx
 import {
-  Button,
-  VStack,
   Grid,
   GridItem,
   Box,
@@ -9,6 +7,7 @@ import {
   Card,
   CardBody,
   Divider,
+  Flex,
 } from "@chakra-ui/react";
 import { Formik, Form, useFormikContext } from "formik";
 import * as Yup from "yup";
@@ -19,10 +18,11 @@ import type { EventRequest } from "@features/Event/eventList/types/event.types";
 import { eventFormFields } from "../constants/EventFormFields";
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import useCreateEvent from "../../../Event/eventList/hooks/useCreateEvent";
+import FooterActions from "@components/shared/FooterActions";
 
 interface EventCreationProps {
   sessionData: Session;
-  onClose?: () => void;
+  onClose: () => void;
 }
 
 const EventCreationInner = ({ sessionData, onClose }: EventCreationProps) => {
@@ -34,25 +34,29 @@ const EventCreationInner = ({ sessionData, onClose }: EventCreationProps) => {
     (state: RootState) => state.authSlice.associationId
   );
 
-  const createEvent = useCreateEvent(associationId);
+  const { mutateAsync: createEvent, isPending } = useCreateEvent(associationId);
 
   const submitEvent = () => {
-    const payload: EventRequest = {
-      sessionId: sessionData.id,
-      associationId,
-      startDate: sessionData.startDate,
-      endDate: sessionData.endDate,
-      eventColor: values.eventColor,
-      eventType: "SESSION",
-      eventFor: values.eventFor,
-      eventPoster: values.eventPoster,
-      dateRangeValid: true,
-      sessionIdValid: true,
-    };
+    try {
+      const payload: EventRequest = {
+        sessionId: sessionData.id,
+        associationId,
+        startDate: sessionData.startDate,
+        endDate: sessionData.endDate,
+        eventColor: values.eventColor,
+        eventType: "SESSION",
+        eventFor: values.eventFor,
+        eventPoster: values.eventPoster,
+        dateRangeValid: true,
+        sessionIdValid: true,
+      };
+      createEvent(payload);
+      onClose();
+    } catch (error) {}
 
-    createEvent.mutate(payload, {
-      onSuccess: () => onClose?.(),
-    });
+    // createEvent.mutateAsync(payload, {
+    //   onSuccess: () => onClose?.(),
+    // });
   };
 
   return (
@@ -81,11 +85,21 @@ const EventCreationInner = ({ sessionData, onClose }: EventCreationProps) => {
             ))}
           </Grid>
 
-          <VStack align="end" mt={6}>
+          <Flex w="100%" justify="flex-end" mt={4}>
+            <FooterActions
+              onClose={onClose}
+              handleSave={submitEvent}
+              isSaving={isPending}
+              cancelText="close"
+              saveText="Create Event"
+            />
+          </Flex>
+
+          {/* <VStack align="end" mt={6}>
             <Button colorScheme="pink" type="submit" onClick={submitEvent}>
               Create Event
             </Button>
-          </VStack>
+          </VStack> */}
         </Form>
       </CardBody>
     </Card>

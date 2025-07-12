@@ -2,7 +2,6 @@ import useFetchAcademicPeriodWeeks from "@features/system-settings/academic-peri
 import type { RootState } from "@store/index";
 import { useSelector } from "react-redux";
 import SessionConsultationPresenter from "./SessionConsultationPresenter";
-import useWeeksOptions from "../Session-schedule/hooks/useWeeksOptions";
 
 const SessionsConsultationContainer = () => {
   const associationId = useSelector(
@@ -11,8 +10,7 @@ const SessionsConsultationContainer = () => {
 
   // Fetch academic weeks
   const { data: weeksData } = useFetchAcademicPeriodWeeks(associationId);
-  const weeksOptions = useWeeksOptions(weeksData);
-  return <SessionConsultationPresenter weeksOptions={weeksOptions} />;
+  return <SessionConsultationPresenter weeksData={weeksData} />;
 };
 
 export default SessionsConsultationContainer;

@@ -43,8 +43,9 @@ export interface SessionSchedulesResponse {
   day: string;
   startTime: string;
   endTime: string;
-  attendanceType: string;
+  attendanceType: 'ONLINE' | 'ONSITE';
   classRoomId: number;
+  classRoomName: string;
 }
 export interface StudentsEnrollmentRequest {
   associationId: number;

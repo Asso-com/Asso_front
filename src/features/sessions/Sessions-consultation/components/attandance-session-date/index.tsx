@@ -3,8 +3,8 @@ import {
   Box,
   VStack,
   useColorModeValue,
-  SimpleGrid,
   Divider,
+  Flex,
 } from "@chakra-ui/react";
 import CustomAgGrid from "@components/shared/ag-grid/CustomAgGrid";
 import type { Attendance } from "../../types";
@@ -66,7 +66,7 @@ const AttendanceSessionDate: React.FC<AttendanceCellProps> = ({
   return (
     <Box h="90vh" p={2}>
       <VStack spacing={4} align="stretch" h="100%">
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={4}>
+        <Flex direction={{ base: "column", md: "row" }} gap={4}>
           <SessionInfoCard sessionData={sessionData} cardBg={cardBg} />
           <SessionStatusCard
             sessionData={sessionData}
@@ -77,7 +77,7 @@ const AttendanceSessionDate: React.FC<AttendanceCellProps> = ({
           />
           <AttendanceStatsCard stats={stats} cardBg={cardBg} />
           <RemarksCard cardBg={cardBg} />
-        </SimpleGrid>
+        </Flex>
 
         <Divider />
 

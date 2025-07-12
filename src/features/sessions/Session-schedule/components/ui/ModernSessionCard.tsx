@@ -26,8 +26,8 @@ import {
 } from "react-icons/fi";
 import React from "react";
 import type { SessionSchuduleDate } from "../../types";
-import { dayNames } from "../../sessionUtils";
 import { useTranslation } from "react-i18next";
+import { dayNames } from "../../utils/sessionUtils";
 
 const getStatusInfo = (session: SessionSchuduleDate, t: any) => {
   if (session.canceled) {

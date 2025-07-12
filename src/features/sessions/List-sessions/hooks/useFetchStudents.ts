@@ -9,7 +9,6 @@ const useFetchSessionEnrollmentStatus = (
   return useQuery<StudentEnrollmentResponse[], Error>({
     queryKey: ["session-enrollment-status", sessionId, associationId],
     queryFn: () => SessionServiceApi.getSessionEnrollmentStatus(sessionId, associationId),
-    staleTime: 5 * 60 * 1000,
     retry: false,
     enabled: sessionId !== 0 && associationId !== 0,
   });

@@ -1,10 +1,23 @@
 import { Box, Flex, Skeleton } from "@chakra-ui/react";
+import type { DatePeriod } from "@features/sessions/Session-schedule/components/ui/DatePeriodNavigator";
 
 import ClearFilter from "@components/shared/ClearFilter";
 import QuickFilter from "@components/shared/QuickFilter";
 import DatePeriodNavigator from "@features/sessions/Session-schedule/components/ui/DatePeriodNavigator";
 
-const HeaderActions = ({ gridRef, weeksOptions, handleWeekChange }: any) => {
+interface HeaderActionsProps {
+  gridRef: any;
+  weeksOptions: DatePeriod[];
+  handleWeekChange: (period: DatePeriod) => void;
+  defaultSelectedIndex: number;
+}
+
+const HeaderActions: React.FC<HeaderActionsProps> = ({ 
+  gridRef, 
+  weeksOptions, 
+  handleWeekChange, 
+  defaultSelectedIndex 
+}) => {
   //const { t } = useTranslation();
   return (
     <Box w="100%" p={4} bg="white" boxShadow="md" borderRadius="md">
@@ -20,6 +33,7 @@ const HeaderActions = ({ gridRef, weeksOptions, handleWeekChange }: any) => {
           <DatePeriodNavigator
             weeksOptions={weeksOptions}
             onPeriodChange={handleWeekChange}
+            defaultSelectedIndex={defaultSelectedIndex}
           />
         )}
         <Flex alignItems="center" gap={2}>

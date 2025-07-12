@@ -13,6 +13,7 @@ import {
 import useFetchSessionSchedules from "../hooks/useFetchSessionSchedules";
 import type { Session } from "../data";
 import type { SessionSchedulesResponse } from "../types/session.types";
+import { useTranslation } from "react-i18next";
 
 interface SessionScheduleDetailsProps {
   sessionData: Session;
@@ -20,7 +21,8 @@ interface SessionScheduleDetailsProps {
 const SessionScheduleDetails: React.FC<SessionScheduleDetailsProps> = ({
   sessionData,
 }) => {
-  const { data, isLoading} = useFetchSessionSchedules(sessionData.id);
+  const { t } = useTranslation();
+  const { data, isLoading } = useFetchSessionSchedules(sessionData.id);
 
   if (isLoading) {
     return (
@@ -41,7 +43,7 @@ const SessionScheduleDetails: React.FC<SessionScheduleDetailsProps> = ({
     return (
       <Card>
         <CardBody>
-          <Text>No schedule available for this session</Text>
+          <Text>{t("No schedule available for this session")}</Text>
         </CardBody>
       </Card>
     );
@@ -60,16 +62,15 @@ const SessionScheduleDetails: React.FC<SessionScheduleDetailsProps> = ({
               borderRadius="md"
             >
               <Flex justify="space-between" align="center" mb={2}>
-<Badge colorScheme="teal">
-  {schedule.day.toLowerCase()}
-</Badge>
+                <Badge colorScheme="teal">{schedule.day.toLowerCase()}</Badge>
 
                 <Text fontWeight="bold">
                   {schedule.startTime} - {schedule.endTime}
                 </Text>
               </Flex>
               <Text>
-Attendance type :                <Badge
+                {t("Attendance type")} :{" "}
+                <Badge
                   colorScheme={
                     schedule.attendanceType === "ONSITE" ? "green" : "orange"
                   }
@@ -77,7 +78,11 @@ Attendance type :                <Badge
                   {schedule.attendanceType.toLowerCase()}
                 </Badge>
               </Text>
-              <Text>Classroom : {schedule.classRoomId}</Text>
+              {schedule.classRoomName && (
+                <Text>
+                  {t("Classroom")} : {schedule.classRoomName}
+                </Text>
+              )}
             </Box>
           ))}
         </VStack>

@@ -49,6 +49,7 @@ interface FilterPanelProps {
   setViewMode: (mode: "grouped" | "cards") => void;
   dayNames: Record<string, string>;
   selectedWeekId: number;
+  defaultSelectedIndex: number;
 }
 
 const FilterPanel: React.FC<FilterPanelProps> = memo(
@@ -72,6 +73,7 @@ const FilterPanel: React.FC<FilterPanelProps> = memo(
     dayNames,
     handleWeekChange,
     selectedWeekId,
+    defaultSelectedIndex
   }) => {
     const { t } = useTranslation();
     const bgColor = useColorModeValue("gray.50", "gray.900");
@@ -133,6 +135,7 @@ const FilterPanel: React.FC<FilterPanelProps> = memo(
                 <DatePeriodNavigator
                   weeksOptions={weeksOptions}
                   onPeriodChange={handleWeekChange}
+                  defaultSelectedIndex={defaultSelectedIndex}
                 />
               )}
 

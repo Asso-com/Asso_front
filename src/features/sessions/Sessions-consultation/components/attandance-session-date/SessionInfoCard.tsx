@@ -19,17 +19,17 @@ import {
 import type { SessionSchuduleDate } from "@features/sessions/Session-schedule/types";
 
 // Session Information Card Component
-const SessionInfoCard: React.FC<{ sessionData: SessionSchuduleDate; cardBg: string }> = ({ 
-  sessionData, 
-  cardBg 
-}) => (
-  <Card bg={cardBg} shadow="md" borderRadius="md" >
+const SessionInfoCard: React.FC<{
+  sessionData: SessionSchuduleDate;
+  cardBg: string;
+}> = ({ sessionData, cardBg }) => (
+  <Card bg={cardBg} shadow="md" borderRadius="md" maxW={"fit-content"} px={4}>
     <CardBody>
       <VStack align="start" spacing={3}>
         <Text fontSize="lg" fontWeight="bold" color="blue.600" mb={2}>
           Session Information
         </Text>
-        
+
         <HStack>
           <Icon as={FaCalendarAlt} color="blue.500" />
           <Text fontSize="md" fontWeight="medium">
@@ -49,10 +49,12 @@ const SessionInfoCard: React.FC<{ sessionData: SessionSchuduleDate; cardBg: stri
           </Text>
         </HStack>
 
-        <HStack>
-          <Icon as={FaMapMarkerAlt} color="red.500" />
-          <Text fontSize="md">{sessionData.classRoom}</Text>
-        </HStack>
+        {sessionData.classRoom && (
+          <HStack>
+            <Icon as={FaMapMarkerAlt} color="red.500" />
+            <Text fontSize="md">{sessionData.classRoom}</Text>
+          </HStack>
+        )}
 
         <HStack>
           <Icon as={FaChalkboardTeacher} color="purple.500" />
@@ -69,9 +71,14 @@ const SessionInfoCard: React.FC<{ sessionData: SessionSchuduleDate; cardBg: stri
         </HStack>
 
         <HStack>
-          <Icon as={sessionData.sessionType === "ONSITE" ? FaHome : FaVideo} color="teal.500" />
+          <Icon
+            as={sessionData.sessionType === "ONSITE" ? FaHome : FaVideo}
+            color="teal.500"
+          />
           <Badge
-            colorScheme={sessionData.sessionType === "ONSITE" ? "green" : "blue"}
+            colorScheme={
+              sessionData.sessionType === "ONSITE" ? "green" : "blue"
+            }
             px={2}
             py={1}
             borderRadius="full"

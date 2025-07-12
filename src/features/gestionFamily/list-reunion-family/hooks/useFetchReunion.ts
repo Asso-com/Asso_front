@@ -20,6 +20,7 @@ const useFetchReunion = (
       }
     },
     enabled: !!associationId,
+    refetchOnWindowFocus: false
   });
 };
 

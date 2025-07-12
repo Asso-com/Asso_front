@@ -17,7 +17,7 @@ const AttendanceStatsCard: React.FC<{
   stats: { total: number; present: number; absent: number; late: number };
   cardBg: string;
 }> = ({ stats, cardBg }) => (
-  <Card bg={cardBg} shadow="md" borderRadius="md">
+  <Card bg={cardBg} shadow="md" borderRadius="md" maxW={"fit-content"}>
     <CardBody>
       <VStack align="start" spacing={3}>
         <Text fontSize="lg" fontWeight="bold" color="blue.600" mb={2}>

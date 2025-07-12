@@ -19,9 +19,9 @@ import {
 } from "@chakra-ui/react";
 import { FiCalendar } from "react-icons/fi";
 import ModernSessionCard from "./ModernSessionCard";
-import { dayNames, daysOfWeek } from "../../sessionUtils";
 import type { SessionSchuduleDate } from "../../types";
 import { useTranslation } from "react-i18next";
+import { dayNames, daysOfWeek } from "../../utils/sessionUtils";
 
 interface DayPresentationProps {
   sessionsByDay: Record<string, SessionSchuduleDate[]>;

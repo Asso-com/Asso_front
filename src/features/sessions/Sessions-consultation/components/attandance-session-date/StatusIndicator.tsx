@@ -16,7 +16,7 @@ const StatusIndicator = ({
       isChecked={isActive}
       onChange={onToggle}
       colorScheme={colorScheme}
-      size="lg"
+      size="md"
     />
     <Text fontSize="sm" fontWeight="medium">
       {label}

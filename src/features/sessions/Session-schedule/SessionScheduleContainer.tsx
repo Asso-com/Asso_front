@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback } from "react";
 import {
   Box,
   SimpleGrid,
@@ -14,18 +14,16 @@ import ModernSessionCard from "./components/ui/ModernSessionCard";
 import DayPresentation from "./components/ui/DayPresentation";
 import FilterPanel from "./components/filters/FilterPanel";
 import { useSessionFilters } from "./hooks/useSessionFilters";
-import { dayNames, groupSessionsByDay } from "./sessionUtils";
 import type { SessionSchuduleDate } from "./types";
 import { useSelector } from "react-redux";
 import type { RootState } from "@store/index";
 import useFetchAcademicPeriodWeeks from "@features/system-settings/academic-period-weeks/hooks/useFetchAcademicPeriodWeeks";
-import type { DatePeriod } from "./components/ui/DatePeriodNavigator";
-import useSessionDates from "./hooks/useSessionDates";
 import useWeeksOptions from "./hooks/useWeeksOptions";
+import useWeekSelection from "./hooks/useWeekSelection";
+import { dayNames, groupSessionsByDay } from "./utils/sessionUtils";
 
 const SessionScheduleContainer = () => {
   const [viewMode, setViewMode] = useState<"grouped" | "cards">("cards");
-  const [selectedWeekId, setSelectedWeekId] = useState<number>(0);
 
   const bgColor = useColorModeValue("gray.50", "gray.900");
 
@@ -39,23 +37,18 @@ const SessionScheduleContainer = () => {
 
   const weeksOptions = useWeeksOptions(weeksData);
 
-  // Auto-select first week when weeks are loaded
-  useEffect(() => {
-    if (weeksOptions.length > 0 && !selectedWeekId) {
-      setSelectedWeekId(weeksOptions[0].value);
-    }
-  }, [weeksOptions, selectedWeekId]);
-
-  // Fetch sessions dates
+  // Use custom hook for week selection logic
   const {
-    data: sessions = [],
-    isFetching: sessionsLoading,
+    selectedWeekId,
+    defaultSelectedIndex,
+    sessionsDates: sessions,
+    handleWeekChange,
+    isLoading: sessionsLoading,
     error: sessionsError,
-  } = useSessionDates(associationId, selectedWeekId);
-
-  const handleWeekChange = useCallback((selectedWeek: DatePeriod) => {
-    setSelectedWeekId(selectedWeek.value);
-  }, []);
+  } = useWeekSelection({
+    weeksData,
+    weeksOptions,
+  });
 
   const handleViewModeChange = useCallback((mode: "grouped" | "cards") => {
     setViewMode(mode);
@@ -154,6 +147,7 @@ const SessionScheduleContainer = () => {
         viewMode={viewMode}
         setViewMode={handleViewModeChange}
         dayNames={dayNames}
+        defaultSelectedIndex={defaultSelectedIndex}
       />
 
       <Box flex={1} overflow="auto" p={2}>

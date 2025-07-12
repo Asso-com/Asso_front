@@ -1,56 +1,35 @@
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import StatsHorizontal from "@components/shared/StatsHorizontal";
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useMemo,
-} from "react";
+import React, { useCallback, useRef, useState, useMemo } from "react";
 import { FaBook, FaCheckCircle, FaClipboardCheck } from "react-icons/fa";
 import HeaderActions from "./components/HeaderActions";
 import SessionDateColdef from "./constants/SessionDateColdef";
 import CustomAgGrid from "@components/shared/ag-grid/CustomAgGrid";
 import type { AgGridReact } from "ag-grid-react";
-import type { DatePeriod } from "../Session-schedule/components/ui/DatePeriodNavigator";
-import { useSelector } from "react-redux";
-import type { RootState } from "@store/index";
-import useSessionDates from "../Session-schedule/hooks/useSessionDates";
 import type { SessionSchuduleDate } from "../Session-schedule/types";
 import ColumnAction from "./components/ColumnAction";
+import useWeeksOptions from "../Session-schedule/hooks/useWeeksOptions";
+import useWeekSelection from "../Session-schedule/hooks/useWeekSelection";
+import type { AcademicWeek } from "@features/system-settings/academic-period-weeks/types";
 
 interface SessionConsultationPresenterProps {
-  weeksOptions: { value: number; label: string }[];
+  weeksData: AcademicWeek[];
 }
 
 const SessionConsultationPresenter: React.FC<
   SessionConsultationPresenterProps
-> = ({ weeksOptions }) => {
-  const associationId = useSelector(
-    (state: RootState) => state.authSlice.associationId
-  );
-
+> = ({ weeksData }) => {
   const gridRef = useRef<AgGridReact>(null);
   const [isGridInitialized, setIsGridInitialized] = useState(false);
-  const [selectedWeekId, setSelectedWeekId] = useState<number>(0);
 
-  // Initialize selected week with the first available option
-  useEffect(() => {
-    if (weeksOptions.length > 0 && selectedWeekId === 0) {
-      setSelectedWeekId(weeksOptions[0].value);
-    }
-  }, [weeksOptions, selectedWeekId]);
+  const weeksOptions = useWeeksOptions(weeksData);
 
-  // Memoized week change handler
-  const handleWeekChange = useCallback((selectedWeek: DatePeriod) => {
-    setSelectedWeekId(selectedWeek.value);
-  }, []);
-
-  // Fetch session dates data
-  const { data: sessionsDates = [] } = useSessionDates(
-    associationId,
-    selectedWeekId
-  );
+  // Use custom hook for week selection logic
+  const { defaultSelectedIndex, sessionsDates, handleWeekChange } =
+    useWeekSelection({
+      weeksData,
+      weeksOptions,
+    });
 
   const statistics = useMemo(() => {
     const totalSessions = sessionsDates.length;
@@ -90,7 +69,6 @@ const SessionConsultationPresenter: React.FC<
 
   return (
     <Box height="100%" display="flex" flexDirection="column" gap={4} p={2}>
-  
       <SimpleGrid columns={{ base: 1, sm: 1, md: 3 }} spacing={3}>
         <StatsHorizontal
           icon={FaBook}
@@ -123,6 +101,7 @@ const SessionConsultationPresenter: React.FC<
           gridRef={gridRef}
           weeksOptions={weeksOptions}
           handleWeekChange={handleWeekChange}
+          defaultSelectedIndex={defaultSelectedIndex}
         />
       )}
 

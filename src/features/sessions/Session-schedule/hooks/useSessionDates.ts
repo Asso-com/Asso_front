@@ -7,7 +7,7 @@ const useSessionDates = (associationId: number, periodWeeksId: number): UseQuery
     return useQuery<SessionSchuduleDate[], Error>({
         queryKey: ['session-dates', associationId, periodWeeksId],
         queryFn: async () => {
-            switchLoadingModal(); 
+            switchLoadingModal();
             try {
                 const response = await SessionScheduleDatesApi.getAllSessionScheduleDates(associationId, periodWeeksId);
                 return response;
@@ -15,12 +15,12 @@ const useSessionDates = (associationId: number, periodWeeksId: number): UseQuery
                 console.error("Error fetching department:", err);
                 throw err;
             } finally {
-                switchLoadingModal(); 
+                switchLoadingModal();
             }
         },
-        gcTime: 1000 * 60 * 10,  // cache garbage collection time
-        staleTime: 1000 * 60 * 5, // data considered fresh for 5 min
-        enabled: !!associationId && !!periodWeeksId, 
+        gcTime: 1000 * 60 * 3,  // cache garbage collection time
+        staleTime: 1000 * 60 * 2, // data considered fresh for 2 min
+        enabled: !!associationId && !!periodWeeksId,
         retry: false
     });
 };
