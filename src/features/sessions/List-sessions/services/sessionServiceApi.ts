@@ -1,6 +1,7 @@
 import { axiosInstance } from "../../../../services/api-services/axiosInstance";
 import handleAxiosError from "@utils/handleAxiosError";
-import type { LessonWithTopicsDto, SessionSchedulesResponse, SessionResponse, StudentEnrollmentResponse, StudentsEnrollmentRequest } from "../types/session.types";
+import type { LessonWithTopicsDto, SessionSchedulesResponse, SessionResponse, StudentEnrollmentResponse, StudentsEnrollmentRequest} from "../types/session.types";
+import type { EventRequest, EventResponse } from "@features/Event/eventList/types/event.types";
 
 const SessionServiceApi = {
   getAllByAssociation: async (associationId: number): Promise<SessionResponse[]> => {
@@ -61,7 +62,25 @@ const SessionServiceApi = {
       handleAxiosError(error);
       throw error;
     }
-  }
+  },
+  create: async (payload: EventRequest): Promise<void> => {
+    try {
+      await axiosInstance.post("/api/v1/events", payload);
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  },
+
+  getAllByAssociationId: async (associationId: number): Promise<EventResponse[]> => {
+    try {
+      const response = await axiosInstance.get<EventResponse[]>(
+        `/api/v1/events/association/${associationId}`
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  },
 };
 
 export default SessionServiceApi;

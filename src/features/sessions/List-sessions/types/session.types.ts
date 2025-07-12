@@ -16,14 +16,14 @@ export type SessionResponse = {
   code: string;
   staff: Staff;
   levelSubject: LevelSubject;
-  periodicity: string; 
-  startDate: string; 
-  endDate: string;   
+  periodicity: string;
+  startDate: string;
+  endDate: string;
   maxStudentsCapacity: number;
   placesAvailable: number;
   fees: number;
-  createdAt: string; 
-  updatedAt: string | null; 
+  createdAt: string;
+  updatedAt: string | null;
 };
 export interface TopicDto {
   topicId: number;
@@ -48,13 +48,13 @@ export interface SessionSchedulesResponse {
 }
 export interface StudentsEnrollmentRequest {
   associationId: number;
-  studentIds: string[]; 
+  studentIds: string[];
   sessionId: number;
 }
 
 export interface StudentEnrollmentResponse {
-  id: string; 
-  studentId: string; 
+  id: string;
+  studentId: string;
   studentName: string;
   levelName: string;
   registrationId: string;
