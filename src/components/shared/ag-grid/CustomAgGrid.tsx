@@ -40,8 +40,6 @@ const CustomAgGrid = forwardRef<AgGridReactType, CustomAgGridProps>(
       };
     }, []);
 
-    console.log(t("Enrollment"));
-
     return (
       <Box
         style={{ width: "100%", height: "100%" }}

@@ -107,17 +107,16 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
         <SessionDetails sessionData={sessionData} />
       </GenericModal>
 
-     <GenericModal
-  isOpen={modalState.viewLessonPlan}
-  onClose={() => toggleModal("viewLessonPlan")}
-  title={`Lesson Plan`}
-  size="4xl"
->
-  <div style={{ height: "80vh", overflowY: "auto" }}>
-    <LessonTopicDetails sessionId={sessionData.id} />
-  </div>
-</GenericModal>
-
+      <GenericModal
+        isOpen={modalState.viewLessonPlan}
+        onClose={() => toggleModal("viewLessonPlan")}
+        title={`Lesson Plan`}
+        size="4xl"
+      >
+        <div style={{ height: "80vh", overflowY: "auto" }}>
+          <LessonTopicDetails sessionId={sessionData.id} />
+        </div>
+      </GenericModal>
 
       <GenericModal
         isOpen={modalState.viewSchedule}
@@ -134,7 +133,10 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
         title={`Add Students`}
         size="4xl"
       >
-        <StudentEnrollment sessionId={sessionData.id} associationId={associationId} />
+        <StudentEnrollment
+          sessionId={sessionData.id}
+          associationId={associationId}
+        />
       </GenericModal>
     </>
   );

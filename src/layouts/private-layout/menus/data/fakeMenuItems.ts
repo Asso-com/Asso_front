@@ -119,12 +119,6 @@ const fakeMenuItems: MenuItem[] = [
                 icon: "FaAngleDoubleRight",
             },
             {
-                menu_id: 63,
-                menu_description: "Add Student Session",
-                navLink: "/Sessions/AddStudentSession",
-                icon: "FaAngleDoubleRight",
-            },
-            {
                 menu_id: 64,
                 menu_description: "List Student Session",
                 navLink: "/Sessions/listStudentSession",

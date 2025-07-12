@@ -8,7 +8,6 @@ import LocationOfStudentContainer from "@features/student-info/location-student/
 import PaymentsContainer from "@features/student-info/payments/PaymentsContainer";
 import AddSessionContainer from "@features/sessions/Add-session/AddSessionContainer";
 import ListStudentSessionContainer from "@features/sessions/list-student-session/ListStudentSessionContainer";
-import AddStudentSessionContainer from "@features/sessions/Add-student-session/AddStudentSessionContainer";
 import SessionsConsultationContainer from "@features/sessions/Sessions-consultation/SessionsConsultationContainer";
 import AttendanceTrackingContainer from "@features/sessions/Attendance-tracking/AttendanceTrackingContainer";
 import SessionScheduleContainer from "@features/sessions/Session-schedule/SessionScheduleContainer";
@@ -61,10 +60,6 @@ const protectedRoutes = [
 
       { path: "/Sessions/listSessions", element: <ListSessionsContainer /> },
       { path: "/Sessions/AddSession", element: <AddSessionContainer /> },
-      {
-        path: "/Sessions/AddStudentSession",
-        element: <AddStudentSessionContainer />,
-      },
       {
         path: "/Sessions/listStudentSession",
         element: <ListStudentSessionContainer />,
