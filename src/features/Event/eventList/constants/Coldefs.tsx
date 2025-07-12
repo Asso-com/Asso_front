@@ -4,21 +4,21 @@ import { type ColDef } from "ag-grid-community";
 
 const EventColumnDefs: ColDef[] = [
   {
-    headerName: "Event",
-    field: "event",
-    sortable: true,
-    filter: "agTextColumnFilter",
-    resizable: true,
-    flex: 0.5,
-    cellStyle: { textAlign: "left" },
-  },
-  {
     headerName: "Description",
     field: "description",
     sortable: true,
     filter: "agTextColumnFilter",
     resizable: true,
     flex: 0.8,
+    cellStyle: { textAlign: "left" },
+  },
+  {
+    headerName: "Created By",
+    field: "createdBy",
+    sortable: true,
+    filter: "agTextColumnFilter",
+    resizable: true,
+    flex: 0.5,
     cellStyle: { textAlign: "left" },
   },
   {
