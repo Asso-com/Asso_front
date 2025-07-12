@@ -28,6 +28,8 @@ import LocationContainer from "@features/Partner/location/LocationContainer";
 import ListOnlyPartenersPage from "@features/Partner/List-only-partners/ListOnlyPartenersPage";
 import BookListContainer from "@features/Library/BookListContainer";
 import EventListContainer from "@features/Event/eventList/EventListContainer";
+import FamilyDetailsContainer from "@features/gestionFamily/family-details/FamilyDetailsContainer";
+import ListReunionContainer from "@features/gestionFamily/list-reunion-family/ListReunionContainer";
 const protectedRoutes = [
   {
     element: <ProtectedLayout />,
@@ -107,6 +109,8 @@ const protectedRoutes = [
 
       { path: "/Library/BookList", element: <BookListContainer /> },
       { path: "/Events/EventList", element: <EventListContainer /> },
+      { path: "/families", element: <FamilyDetailsContainer /> },
+      { path: "/list-reu-families", element: <ListReunionContainer /> },
     ],
   },
 ];

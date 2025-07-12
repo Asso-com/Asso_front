@@ -11,6 +11,7 @@ import MultiTextInput from "../inputs/MultiTextInput";
 import FileInput from "../inputs/FileInput";
 import TimeInput from "../inputs/TimeInput";
 import ColorInput from "../inputs/ColorInput";
+import MultiSelectDropdown from "../inputs/MultiSelectDropdown";
 
 interface RenderFormBuilderProps {
   field: FieldType & {
@@ -51,7 +52,8 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
   return (
     <Field name={fullName}>
       {({ field: formikField, form }: FieldProps) => {
-        const error = get(form.errors, fullName);
+        const rawError = get(form.errors, fullName);
+        const error = typeof rawError === "string" ? rawError : undefined;
         const touched = get(form.touched, fullName);
         const isInvalid = !!error && !!touched;
 
@@ -218,7 +220,19 @@ const RenderFormBuilder: React.FC<RenderFormBuilderProps> = ({
                 {...inputProps}
               />
             );
-
+            
+          case "multiselect":
+            return (
+              <MultiSelectDropdown
+                label={label}
+                value={formikField.value || []}
+                onChange={handleValueChange}
+                options={options || []}
+                placeholder={placeholder}
+                isInvalid={isInvalid}
+                errorMessage={error}
+              />
+            );
           case "time":
             return (
               <TimeInput
