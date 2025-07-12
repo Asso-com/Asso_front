@@ -1,6 +1,7 @@
 import { axiosInstance } from "../../../../services/api-services/axiosInstance";
 import handleAxiosError from "@utils/handleAxiosError";
-import type { LessonWithTopicsDto, SessionSchedulesResponse, SessionResponse, StudentEnrollmentResponse, StudentsEnrollmentRequest,EventRequest, EventResponse } from "../types/session.types";
+import type { LessonWithTopicsDto, SessionSchedulesResponse, SessionResponse, StudentEnrollmentResponse, StudentsEnrollmentRequest} from "../types/session.types";
+import type { EventRequest, EventResponse } from "@features/Event/eventList/types/event.types";
 
 const SessionServiceApi = {
   getAllByAssociation: async (associationId: number): Promise<SessionResponse[]> => {

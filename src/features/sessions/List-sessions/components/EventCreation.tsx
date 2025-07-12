@@ -35,7 +35,6 @@ const EventCreationInner = ({ sessionData, onClose }: EventCreationProps) => {
   );
 
   const createEvent = useCreateEvent(associationId);
-  console.log("sessionData from props", sessionData.id);
 
   const submitEvent = () => {
     const payload: EventRequest = {
@@ -46,6 +45,7 @@ const EventCreationInner = ({ sessionData, onClose }: EventCreationProps) => {
       eventColor: values.eventColor,
       eventType: "SESSION",
       eventFor: values.eventFor,
+      eventPoster: values.eventPoster,
       dateRangeValid: true,
       sessionIdValid: true,
     };
@@ -68,7 +68,7 @@ const EventCreationInner = ({ sessionData, onClose }: EventCreationProps) => {
       <Divider borderColor={borderColor} />
       <CardBody p={4}>
         <Form onSubmit={handleSubmit}>
-          <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={4}>
+          <Grid templateColumns={{ base: "1fr", md: "repeat(, 1fr)" }} gap={4}>
             {eventFormFields.map((field) => (
               <GridItem
                 key={field.name}

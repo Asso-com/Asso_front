@@ -1,7 +1,7 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { switchLoadingModal } from '@components/shared/modal-overlay/ModalLoading';
 import sessionServiceApi from '../services/sessionServiceApi';
-import type { EventResponse } from '../types/session.types';
+import type { EventResponse } from '@features/Event/eventList/types/event.types';
 
 const useFetchEventsByAssociation = (
   associationId?: number
