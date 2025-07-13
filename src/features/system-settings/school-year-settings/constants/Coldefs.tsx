@@ -1,6 +1,6 @@
 import { type ColDef } from "ag-grid-community";
-import { format } from "date-fns";
 import ToggelStatus from "../components/column-actions/ToggelStatus";
+import { formatDateOnly } from "@utils/timeUtils";
 
 const academicYearColumnDefs: ColDef[] = [
   {
@@ -55,8 +55,12 @@ const academicYearColumnDefs: ColDef[] = [
     resizable: true,
     minWidth: 150,
     flex: 1,
-    valueFormatter: ({ value }) =>
-      value ? format(new Date(value), "yyyy-MM-dd") : "",
+    valueFormatter: (params) => {
+      if (!params.value) return "";
+      return formatDateOnly(params.value, {
+        format: "medium",
+      });
+    },
     cellStyle: { textAlign: "center" },
   },
   {
@@ -67,8 +71,12 @@ const academicYearColumnDefs: ColDef[] = [
     resizable: true,
     minWidth: 150,
     flex: 1,
-    valueFormatter: ({ value }) =>
-      value ? format(new Date(value), "yyyy-MM-dd") : "",
+      valueFormatter: (params) => {
+      if (!params.value) return "";
+      return formatDateOnly(params.value, {
+        format: "medium",
+      });
+    },
     cellStyle: { textAlign: "center" },
   },
 ];

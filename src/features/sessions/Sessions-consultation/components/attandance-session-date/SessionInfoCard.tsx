@@ -17,6 +17,7 @@ import {
   FaVideo,
 } from "react-icons/fa";
 import type { SessionSchuduleDate } from "@features/sessions/Session-schedule/types";
+import { formatDateOnly } from "@utils/timeUtils";
 
 // Session Information Card Component
 const SessionInfoCard: React.FC<{
@@ -33,11 +34,8 @@ const SessionInfoCard: React.FC<{
         <HStack>
           <Icon as={FaCalendarAlt} color="blue.500" />
           <Text fontSize="md" fontWeight="medium">
-            {new Date(sessionData.date).toLocaleDateString("fr-FR", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
+            {formatDateOnly(sessionData.date, {
+              format: "full",
             })}
           </Text>
         </HStack>

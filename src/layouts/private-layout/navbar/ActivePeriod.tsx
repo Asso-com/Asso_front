@@ -12,7 +12,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { FiCalendar, FiClock } from "react-icons/fi";
-import { format } from "date-fns";
+import { formatDateOnly } from "@utils/timeUtils";
 
 const ActivePeriod = () => {
   const associationId = useSelector(
@@ -36,8 +36,13 @@ const ActivePeriod = () => {
             {data.description}
           </Text>
           <Text fontSize="sm" color={subtitleColor}>
-            {format(new Date(data.startDate), "MMM d, yyyy")} -{" "}
-            {format(new Date(data.endDate), "MMM d, yyyy")}
+            {formatDateOnly(data.startDate, {
+              format: "medium",
+            })}
+            -{" "}
+            {formatDateOnly(data.endDate, {
+              format: "medium",
+            })}
           </Text>
           <HStack mt={2} spacing={3}>
             <Badge

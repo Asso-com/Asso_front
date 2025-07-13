@@ -1,28 +1,23 @@
+import {
+  convertLocalToUTC,
+  convertUTCToLocalDisplay,
+  formatDateOnly,
+} from "@utils/timeUtils";
 import type { ColDef } from "ag-grid-community";
-
-const formatLocalDate = (dateString: string): string => {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  return date.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-};
 
 const formatLocalTime = (
   date: string,
   time: string,
-  locale: string = "fr-FR"
+  sourceTimezone: string = "Europe/Paris"
 ): string => {
-  if (!date || !time) return "";
-  const utcString = `${date}T${time}:00Z`;
-  const localDate = new Date(utcString);
+  const parisDateTimeISO = convertLocalToUTC(
+    `${date}T${time}`,
+    "iso",
+    sourceTimezone
+  );
 
-  return localDate.toLocaleTimeString(locale, {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
+  return convertUTCToLocalDisplay(parisDateTimeISO, {
+    format: "medium",
   });
 };
 
@@ -38,7 +33,13 @@ const SessionDateColdef: ColDef[] = [
   { field: "sessionType", headerName: "Session Type" },
   {
     headerName: "Date",
-    valueGetter: ({ data }) => formatLocalDate(data?.date),
+    field: "date",
+    valueFormatter: (params) => {
+      if (!params.value) return "";
+      return formatDateOnly(params.value, {
+        format: "medium",
+      });
+    },
   },
   {
     headerName: "Start Time",

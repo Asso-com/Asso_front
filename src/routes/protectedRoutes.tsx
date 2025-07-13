@@ -30,10 +30,13 @@ import BookListContainer from "@features/Library/BookListContainer";
 import EventListContainer from "@features/Event/eventList/EventListContainer";
 import FamilyDetailsContainer from "@features/gestionFamily/family-details/FamilyDetailsContainer";
 import ListReunionContainer from "@features/gestionFamily/list-reunion-family/ListReunionContainer";
+import TestPage from "@features/TestPage";
+
 const protectedRoutes = [
   {
     element: <ProtectedLayout />,
     children: [
+      { path: "/test", element: <TestPage /> },
       { path: "/dashboard", element: <DashboardPage /> },
       {
         path: "/Settings/SessionSetting",

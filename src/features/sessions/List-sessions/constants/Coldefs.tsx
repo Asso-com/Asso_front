@@ -1,3 +1,4 @@
+import { convertUTCToLocalDisplay, formatDateOnly } from "@utils/timeUtils";
 import type { ColDef, ValueGetterParams } from "ag-grid-community";
 
 // Type definitions for better type safety
@@ -48,10 +49,8 @@ const SessionColumnDefs: ColDef<SessionData>[] = [
     resizable: true,
     valueFormatter: (params) => {
       if (!params.value) return "";
-      return new Date(params.value).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
+      return convertUTCToLocalDisplay(params.value, {
+        format: "medium",
       });
     },
     headerTooltip: "Date when session was created",
@@ -115,7 +114,7 @@ const SessionColumnDefs: ColDef<SessionData>[] = [
   {
     field: "startDate",
     headerName: "Start Date",
-    width: 140,
+    width: 180,
     minWidth: 120,
     cellStyle: { textAlign: "center" },
     filter: "agDateColumnFilter",
@@ -123,10 +122,8 @@ const SessionColumnDefs: ColDef<SessionData>[] = [
     resizable: true,
     valueFormatter: (params) => {
       if (!params.value) return "";
-      return new Date(params.value).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
+      return formatDateOnly(params.value, {
+        format: "medium",
       });
     },
     headerTooltip: "Session start date",
@@ -134,7 +131,7 @@ const SessionColumnDefs: ColDef<SessionData>[] = [
   {
     field: "endDate",
     headerName: "End Date",
-    width: 140,
+    width: 180,
     minWidth: 120,
     cellStyle: { textAlign: "center" },
     filter: "agDateColumnFilter",
@@ -142,10 +139,8 @@ const SessionColumnDefs: ColDef<SessionData>[] = [
     resizable: true,
     valueFormatter: (params) => {
       if (!params.value) return "";
-      return new Date(params.value).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
+      return formatDateOnly(params.value, {
+        format: "medium",
       });
     },
     headerTooltip: "Session end date",
@@ -173,11 +168,11 @@ const SessionColumnDefs: ColDef<SessionData>[] = [
       const available = params.value || 0;
       const capacity = params.data?.maxStudentsCapacity || 0;
       const percentage = capacity > 0 ? (available / capacity) * 100 : 0;
-      
+
       let color = "#28a745"; // Green for high availability
       if (percentage < 20) color = "#dc3545"; // Red for low availability
       else if (percentage < 50) color = "#ffc107"; // Yellow for medium availability
-      
+
       return {
         textAlign: "right",
         color: color,
