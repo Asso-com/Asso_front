@@ -7,6 +7,7 @@ export interface SessionFormData {
   sessionType: "ONLINE" | "ONSITE";
   startDate: string;
   endDate: string;
+  timeZone: string;
   maxStudentsCapacity: number;
   fees: number;
   sessionSchedules: SessionSchedule[];
