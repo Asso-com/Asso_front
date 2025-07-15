@@ -8,7 +8,7 @@ import type { ColDef } from "ag-grid-community";
 const formatLocalTime = (
   date: string,
   time: string,
-  sourceTimezone: string = "Europe/Paris"
+  sourceTimezone: string = "Africa/Tunis"
 ): string => {
   const parisDateTimeISO = convertLocalToUTC(
     `${date}T${time}`,
@@ -43,11 +43,13 @@ const SessionDateColdef: ColDef[] = [
   },
   {
     headerName: "Start Time",
-    valueGetter: ({ data }) => formatLocalTime(data?.date, data?.startTime),
+    valueGetter: ({ data }) =>
+      formatLocalTime(data?.date, data?.startTime, data?.timeZone),
   },
   {
     headerName: "End Time",
-    valueGetter: ({ data }) => formatLocalTime(data?.date, data?.endTime),
+    valueGetter: ({ data }) =>
+      formatLocalTime(data?.date, data?.endTime, data?.timeZone),
   },
 
   { field: "day", headerName: "Day" },

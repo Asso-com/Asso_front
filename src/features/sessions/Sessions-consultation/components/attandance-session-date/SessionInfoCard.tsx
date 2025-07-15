@@ -17,7 +17,7 @@ import {
   FaVideo,
 } from "react-icons/fa";
 import type { SessionSchuduleDate } from "@features/sessions/Session-schedule/types";
-import { formatDateOnly } from "@utils/timeUtils";
+import { formatDateOnly, formatTime } from "@utils/timeUtils";
 
 // Session Information Card Component
 const SessionInfoCard: React.FC<{
@@ -43,7 +43,8 @@ const SessionInfoCard: React.FC<{
         <HStack>
           <Icon as={FaClock} color="green.500" />
           <Text fontSize="md">
-            {sessionData.startTime} - {sessionData.endTime}
+            {formatTime(sessionData.startTime, sessionData.timeZone)} -{" "}
+            {formatTime(sessionData.endTime, sessionData.timeZone)}
           </Text>
         </HStack>
 

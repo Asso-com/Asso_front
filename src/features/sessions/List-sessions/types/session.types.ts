@@ -46,6 +46,7 @@ export interface SessionSchedulesResponse {
   attendanceType: 'ONLINE' | 'ONSITE';
   classRoomId: number;
   classRoomName: string;
+  timeZone:string
 }
 export interface StudentsEnrollmentRequest {
   associationId: number;

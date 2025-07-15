@@ -23,6 +23,21 @@ const getLocaleBasedOnLanguage = (): string => {
 };
 
 
+export const formatTime = (time: string, sourceTimeZone: string) => {
+    const [hour, minute, second] = time.split(":").map(Number);
+    const locale = getLocaleBasedOnLanguage(); // dynamically get locale
+
+    const sourceDateTime = DateTime.fromObject(
+        { hour, minute, second },
+        { zone: sourceTimeZone, locale }
+    );
+
+    return sourceDateTime
+        .setZone(DateTime.local().zoneName)
+        .setLocale(locale)
+        .toLocaleString(DateTime.TIME_SIMPLE);
+};
+
 /**
  * Converts a UTC/GMT timestamp from backend to local time for display
  * @param utcTimestamp - UTC timestamp string from backend (ISO format recommended)
