@@ -1,8 +1,9 @@
 export interface SessionSchuduleDate {
   sessionCode: string;
   sessionDateId: number;
-  date: string;
+  sessionDate: string;  
   attendanceMarked: boolean;
+  attendanceRegistrationDateTime: string;
   validated: boolean;
   canceled: boolean;
   startTime: string;
@@ -10,11 +11,12 @@ export interface SessionSchuduleDate {
   day: string;
   classRoom: string;
   firstName: string;
-  timeZone: string;
   lastName: string;
   level: string;
   subject: string;
-  linguisticLevel?: string;
   quizNumber: number;
   sessionType: "ONSITE" | "ONLINE";
+  timeZone: string;
+  administrationSummary: string;
+  teacherSummary: string;
 }

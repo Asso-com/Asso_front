@@ -1,30 +1,16 @@
-import { Flex, HStack, Icon, Text } from "@chakra-ui/react";
+import { Flex, HStack, Icon } from "@chakra-ui/react";
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 
-const EvaluationCell = ({ value }: { value: number | null }) => {
-  if (!value)
-    return (
-      <Flex
-        height="100%"
-        alignItems="center"
-        justifyContent="center"
-        direction="column"
-      >
-        <Text fontSize="sm" color="gray.400">
-          N/A
-        </Text>
-      </Flex>
-    );
+const EvaluationCell = ({ value = 0 }: { value: number }) => {
 
-  const starRating = value / 5;
-  const fullStars = Math.floor(starRating);
-  const hasHalfStar = starRating % 1 >= 0.5;
+  const fullStars = Math.floor(value);
+  const hasHalfStar = value % 1 >= 0.5;
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
   const getColor = (score: number) => {
-    if (score >= 20) return "green";
-    if (score >= 15) return "blue";
-    if (score >= 10) return "orange";
+    if (score >= 4.5) return "green";
+    if (score >= 3.5) return "blue";
+    if (score >= 2.5) return "orange";
     return "red";
   };
 
@@ -81,4 +67,5 @@ const EvaluationCell = ({ value }: { value: number | null }) => {
     </Flex>
   );
 };
+
 export default EvaluationCell;

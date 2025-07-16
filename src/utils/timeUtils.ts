@@ -39,6 +39,31 @@ export const formatTime = (time: string, sourceTimeZone: string) => {
 };
 
 /**
+ * Converts local time in a specific timezone to a human-readable time in the
+ * user's current timezone.
+ * @param date - Local date (string like '2024-01-15')
+ * @param time - Local time (string like '09:00:00')
+ * @param sourceTimezone - The timezone in which the localTime is defined (e.g., 'Europe/Paris')
+ * @returns a human-readable time string (e.g., '3:00 PM')
+ */
+export const localToReadableTime = (
+  date: string,
+  time: string,
+  sourceTimezone: string = "Africa/Tunis"
+): string => {
+  const isoDateTime = convertLocalToUTC(
+    `${date}T${time}`,
+    "iso",
+    sourceTimezone
+  );
+
+  return convertUTCToLocalDisplay(isoDateTime, {
+    format: "medium",
+  });
+};
+
+
+/**
  * Converts a UTC/GMT timestamp from backend to local time for display
  * @param utcTimestamp - UTC timestamp string from backend (ISO format recommended)
  * @param options - Display formatting options
@@ -53,7 +78,6 @@ export const convertUTCToLocalDisplay = (
             format = 'medium',
             dateStyle,
             timeStyle,
-            // timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone,
         } = options;
         const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         const date = new Date(utcTimestamp);

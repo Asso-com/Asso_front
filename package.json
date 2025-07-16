@@ -27,6 +27,7 @@
     "framer-motion": "^12.15.0",
     "i18next": "^25.2.1",
     "i18next-browser-languagedetector": "^8.1.0",
+    "jspdf": "^3.0.1",
     "libphonenumber-js": "^1.12.8",
     "luxon": "^3.7.1",
     "path": "^0.12.7",

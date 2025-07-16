@@ -34,7 +34,7 @@ const SessionInfoCard: React.FC<{
         <HStack>
           <Icon as={FaCalendarAlt} color="blue.500" />
           <Text fontSize="md" fontWeight="medium">
-            {formatDateOnly(sessionData.date, {
+            {formatDateOnly(sessionData.sessionDate, {
               format: "full",
             })}
           </Text>

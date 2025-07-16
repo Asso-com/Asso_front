@@ -2,7 +2,7 @@ export interface Attendance {
     id: number;
     studentId: string;
     firstName: string;
-    attendanceType: "PRESENT" | "ABSENT" | "LATE" | "EXCUSED";
+    attendanceType: "PRESENT" | "ABSENT" | "LATE"
     evaluation: number | null;
     remark: string | null;
     justification: string | null;
