@@ -1,6 +1,6 @@
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import SessionServiceApi from "../services/sessionServiceApi";
-import type { SessionResponse } from "../types/session.types";
+import type { SessionResponse } from "@features/sessions/Add-session/services/SessionServiceApi";
 
 const useFetchSessionsByAssociation = (
   associationId: number
