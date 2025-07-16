@@ -10,6 +10,7 @@ export interface Staff {
 }
 
 export interface LevelSubject {
+    categoryId: number;
     id: number;
     level: string;
     subject: string;

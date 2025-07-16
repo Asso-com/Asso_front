@@ -83,6 +83,7 @@ const StudentSelectionStep: React.FC<StudentSelectionStepProps> = ({
             onStudentToggle={handleStudentToggle}
             maxCapacity={formik.values.maxStudentsCapacity}
             levelName={formik.values.levelName}
+            categoryId={categoryId}
           />
         </Box>
       </CardBody>

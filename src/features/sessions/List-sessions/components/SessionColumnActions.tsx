@@ -154,6 +154,7 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
           onClose={() => toggleModal("enrollment")}
           maxStudentsCapacity={sessionData.maxStudentsCapacity}
           levelName={sessionData.levelSubject.level}
+          categoryId={sessionData.levelSubject.categoryId}
         />
       </GenericModal>
       <GenericModal

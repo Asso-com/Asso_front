@@ -1,5 +1,5 @@
-import { forwardRef, useState, useMemo } from "react";
-import { Box, Text, Icon, Button, ButtonGroup ,useColorModeValue } from "@chakra-ui/react";
+import { forwardRef, useState, useEffect, useMemo } from "react";
+import { Box, Text, Icon, Button, ButtonGroup } from "@chakra-ui/react";
 import CustomAgGrid from "@components/shared/ag-grid/CustomAgGrid";
 import QuickFilter from "@components/shared/QuickFilter";
 import ClearFilter from "@components/shared/ClearFilter";
@@ -9,6 +9,7 @@ import type { Student } from "../types/addsession.types";
 import { WarningIcon, CheckIcon } from "@chakra-ui/icons";
 import type { Ref } from "react";
 import { useTranslation } from "react-i18next";
+import { useColorModeValue } from "@chakra-ui/react";
 
 interface StudentTableProps {
   students: Student[];
@@ -58,8 +59,7 @@ const StudentTable = forwardRef<AgGridReact<any>, StudentTableProps>(
     const selectedCount = selectedStudents.length;
         const [activeFilter, setActiveFilter] = useState<'levelName' | 'all'>('levelName');
     const filteredStudents = useMemo(() => {
-          // If categoryId is 1, allow filtering by levelName using the activeFilter; otherwise, show all students or filter by levelName if provided
-      if (categoryId === 1 || !categoryId) {
+      if (categoryId === 1) {
         if (activeFilter === 'levelName' && levelName) {
           return students.filter(student => student.levelName === levelName);
         }
@@ -119,7 +119,7 @@ const StudentTable = forwardRef<AgGridReact<any>, StudentTableProps>(
             {t("Students List")}
           </Text>
           
-{(categoryId === 1 ) && (
+          {(categoryId === 1) && (
             <ButtonGroup size="sm" isAttached variant="outline">
               <Button
                 colorScheme={activeFilter === 'levelName' ? 'blue' : 'gray'}

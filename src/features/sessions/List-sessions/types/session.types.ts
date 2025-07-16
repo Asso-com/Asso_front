@@ -6,6 +6,7 @@ export type Staff = {
 };
 
 export type LevelSubject = {
+  categoryId: number;
   id: number;
   level: string;
   subject: string;

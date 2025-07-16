@@ -12,6 +12,7 @@ interface StudentEnrollmentProps {
   maxStudentsCapacity: number;
   onClose: () => void;
   levelName?: string;
+  categoryId?: number;
 }
 const StudentEnrollment = ({
   sessionId,
@@ -19,6 +20,7 @@ const StudentEnrollment = ({
   onClose,
   maxStudentsCapacity,
   levelName,
+  categoryId
 }: StudentEnrollmentProps) => {
   // const { t } = useTranslation();
   const gridRef = useRef(null);
@@ -74,14 +76,15 @@ const StudentEnrollment = ({
   return (
     <VStack spacing={4} w="100%" h="100%">
       <Box w="100%" h="500px">
-        <StudentTable
-          ref={gridRef}
-          students={mappedStudents}
-          selectedStudents={selectedStudents}
-          onStudentToggle={onStudentToggle}
-          maxCapacity={maxStudentsCapacity}
-          levelName={levelName}
-        />
+<StudentTable
+  ref={gridRef}
+  students={mappedStudents}
+  selectedStudents={selectedStudents}
+  onStudentToggle={onStudentToggle}
+  maxCapacity={maxStudentsCapacity}
+  levelName={levelName}
+  categoryId={categoryId}
+/>
       </Box>
 
       <Flex w="100%" justify="flex-end">
