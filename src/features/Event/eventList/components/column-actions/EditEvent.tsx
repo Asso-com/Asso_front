@@ -33,7 +33,7 @@ const EditEvent: React.FC<EditEventProps> = ({ details, onClose }) => {
 
   const shouldDisable = (field: Field, values: FormValues): boolean => {
     const shouldDisableField = values.eventType === "SESSION" && 
-      (field.name === "startDate" || field.name === "endDate");
+      (field.name === "startDate" || field.name === "endDate"|| field.name==="eventType");
     return shouldDisableField;
   };
 
