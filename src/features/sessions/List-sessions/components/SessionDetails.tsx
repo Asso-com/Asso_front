@@ -26,7 +26,7 @@ import {
   FiTarget,
   FiRepeat,
 } from "react-icons/fi";
-import type { Session } from "../data";
+import type { Session } from "../types/session.types";
 
 interface SessionDetailsProps {
   sessionData: Session;

@@ -1,23 +1,29 @@
-export type Staff = {
-  id: string;
+
+export type Periodicity = 'DAILY' | 'WEEKLY' | 'MONTHLY';
+export type SessionType = 'LECTURE' | 'LAB' | 'WORKSHOP';
+export type AttendanceType = 'ONLINE' | 'ONSITE';
+
+export interface Staff {
+  id: number;
   firstName: string;
   lastName: string | null;
   email: string;
-};
+}
 
-export type LevelSubject = {
+export interface LevelSubject {
   categoryId: number;
   id: number;
   level: string;
   subject: string;
-};
+}
 
-export type SessionResponse = {
+export interface Session {
   id: number;
   code: string;
   staff: Staff;
   levelSubject: LevelSubject;
-  periodicity: string;
+  periodicity: Periodicity;
+  sessionType: SessionType;
   startDate: string;
   endDate: string;
   maxStudentsCapacity: number;
@@ -44,11 +50,12 @@ export interface SessionSchedulesResponse {
   day: string;
   startTime: string;
   endTime: string;
-  attendanceType: 'ONLINE' | 'ONSITE';
+  attendanceType: AttendanceType;
   classRoomId: number;
   classRoomName: string;
-  timeZone:string
+  timeZone: string;
 }
+
 export interface StudentsEnrollmentRequest {
   associationId: number;
   studentIds: string[];
@@ -62,4 +69,33 @@ export interface StudentEnrollmentResponse {
   levelName: string;
   registrationId: string;
   enrolled: boolean;
+  email?: string; 
+}
+export interface EventRequest {
+  associationId: number;
+  sessionId: number;
+  title: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  eventType: string;
+  eventColor: string;
+  eventFor?: string;
+  eventPoster?: File;
+}
+
+export interface EventResponse {
+  id: number;
+  title: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  eventType: string;
+  eventColor: string;
+  eventFor?: string;
+  eventPoster?: string;
+  associationId: number;
+  sessionId: number;
+  createdAt: string;
+  updatedAt: string;
 }

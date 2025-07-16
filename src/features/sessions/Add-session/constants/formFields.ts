@@ -1,5 +1,5 @@
-import type { Field, SessionFormData } from "../types/addsession.types";
-
+import type{ Field } from './../../../../types/formTypes';
+import type{ SessionFormData } from "../types/addsession.types";
 interface AcademicPeriodWeek {
   id: number;
   code: string;

@@ -11,8 +11,7 @@ import {
 } from "@chakra-ui/react";
 
 import useFetchSessionSchedules from "../hooks/useFetchSessionSchedules";
-import type { Session } from "../data";
-import type { SessionSchedulesResponse } from "../types/session.types";
+import type { Session,SessionSchedulesResponse } from "../types/session.types";
 import { useTranslation } from "react-i18next";
 import { formatTime } from "@utils/timeUtils";
 interface SessionScheduleDetailsProps {

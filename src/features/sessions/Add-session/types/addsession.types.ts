@@ -29,24 +29,6 @@ export interface Student {
   levelName: string;
 }
 
-export interface Field {
-  name: string;
-  label: string;
-  placeholder?: string;
-  type: FieldType;
-  validationRules?: ValidationRules;
-  options?: { label: string; value: any }[];
-}
-
-export type FieldType =
-  | "text"
-  | "number"
-  | "email"
-  | "date"
-  | "select"
-  | "radio"
-  | "time";
-
 export interface ValidationRules {
   required?: boolean;
   min?: number;

@@ -4,7 +4,7 @@ import type { ICellRendererParams } from "ag-grid-community";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
 import { useState } from "react";
 import GenericModal from "@components/ui/GenericModal";
-import type { Session } from "../data";
+import type { Session } from "../types/session.types";
 import SessionDetails from "./SessionDetails";
 import LessonTopicDetails from "./LessonTopicDetails";
 import SessionScheduleDetails from "./SessionSheduleDetails";

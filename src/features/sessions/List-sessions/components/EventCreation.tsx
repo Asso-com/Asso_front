@@ -10,7 +10,7 @@ import { Formik, Form, useFormikContext } from "formik";
 import * as Yup from "yup";
 import { useSelector } from "react-redux";
 import type { RootState } from "@store/index";
-import type { Session } from "../data";
+import type { Session } from "../types/session.types";
 import { eventFormFields } from "../constants/EventFormFields";
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import useCreateEvent from "../../../Event/eventList/hooks/useCreateEvent";

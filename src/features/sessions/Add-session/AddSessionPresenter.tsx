@@ -41,7 +41,7 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
   const [dynamicInitialValues, setDynamicInitialValues] =
     useState<SessionFormData | null>(null);
 
-  const { mutate: createSession } = useCreateSession(associationId);
+  const { mutateAsync: createSession } = useCreateSession(associationId);
   const dispatch = useDispatch();
 
   const { data: categories = [], isLoading: isLoadingCategories } =
