@@ -11,6 +11,7 @@ export type CreateSubjectLevelDto = {
 export type SubjectLevelSelectOption = {
   value: number | string;
   label: string;
+  levelName: string;
 };
 
 const SubjectLevelServiceApi = {

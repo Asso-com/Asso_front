@@ -1,55 +1,84 @@
 import { Button } from "@chakra-ui/react";
-import RigthSidebar from "@components/shared/RigthSidebar";
+import RightSidebar from "@components/shared/RigthSidebar";
 import SidebarButtonsActions from "@components/shared/SidebarButtonsActions";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import FormContent from "./FormContent";
 import type { FormContentRef } from "./FormContent";
+import { createEventFormData } from "../../types/event.types";
+import useCreateEvent from "../../hooks/useCreateEvent";
 
-//import useCreateEvent from "../../hooks/useCreateEvent";
+import { useSelector } from "react-redux";
+import type { RootState } from "@store/index";
 
 const EventSidebar = () => {
   const { t } = useTranslation();
- ;
+  const associationId = useSelector(
+    (state: RootState) => state.authSlice.associationId
+  );
+  console.log("Association ID:", associationId);
 
-
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const handleCloseSidebar = () => setSidebarOpen(false);
   const handleOpenSidebar = () => setSidebarOpen(true);
 
   const formRef = useRef<FormContentRef>(null);
+  const { mutateAsync: createEvent } = useCreateEvent(associationId);
 
   const handleSubmitForm = async () => {
-    //const values = await formRef.current?.submitForm();
-    
+    try {
+      const values = await formRef.current?.submitForm();
+      if (values) {
+        if (values.startDate && values.endDate) {
+          const startDate = new Date(values.startDate);
+          const endDate = new Date(values.endDate);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          if (endDate < today) {
+            throw new Error(t("End date must be today or in the future"));
+          }
+
+          if (startDate > endDate) {
+            throw new Error(t("Start date must be before end date"));
+          }
+        }
+
+        const formData = createEventFormData(values);
+        formData.append("associationId", associationId.toString());
+        await createEvent(formData);
+
+        formRef.current?.resetForm();
+      }
+    } catch (error: any) {
+      console.error("Error creating event:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    formRef.current?.resetForm();
+    handleCloseSidebar();
   };
 
   return (
     <>
-      <Button
-        size="md"
-        fontSize="sm"
-        variant="outline"
-        colorScheme="primary"
-        onClick={handleOpenSidebar}
-      >
+      <Button colorScheme="blue" onClick={handleOpenSidebar} size="sm">
         {t("Add Event")}
       </Button>
 
-      <RigthSidebar
+      <RightSidebar
         isOpen={sidebarOpen}
-        title={t("Add Event")}
         onClose={handleCloseSidebar}
+        title={t("Create New Event")}
         footer={
           <SidebarButtonsActions
             onSubmitForm={handleSubmitForm}
-            onClose={handleCloseSidebar}
+            onClose={handleCancel}
           />
         }
       >
         <FormContent ref={formRef} />
-      </RigthSidebar>
+      </RightSidebar>
     </>
   );
 };

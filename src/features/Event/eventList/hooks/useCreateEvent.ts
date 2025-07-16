@@ -1,37 +1,48 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { showToast } from "@store/toastSlice";
-import sessionServiceApi from "../../../sessions/List-sessions/services/sessionServiceApi";
-import type { EventRequest } from "../types/event.types";
+import eventServiceApi from "../service/eventServiceApi";
+import { useTranslation } from "react-i18next";
 
 const useCreateEvent = (associationId: number) => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
-  return useMutation<void, Error, EventRequest>({
-    mutationFn: (eventPayload) => sessionServiceApi.create(eventPayload),
+  return useMutation({
+    mutationFn: (formData: FormData) => eventServiceApi.create(formData),
 
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: ["events", associationId],
+      });
+            queryClient.invalidateQueries({
+        queryKey: ["events"],
       });
 
       dispatch(
         showToast({
-          title: "Succès",
-          message: "L'événement a été créé avec succès.",
+          title: t("Success"),
+          message: t("The event has been created successfully."),
           type: "success",
         })
       );
+      
+      return data;
     },
+    
+    onError: (error: any) => {
+      let errorMessage = t("An error occurred while creating the event.");
+            if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
 
-    onError: (error) => {
       dispatch(
         showToast({
-          title: "Erreur",
-          message:
-            error.message ||
-            "Une erreur est survenue lors de la création de l'événement.",
+          title: t("Error"),
+          message: errorMessage,
           type: "error",
         })
       );

@@ -15,7 +15,7 @@ export type SessionResponse = {
 const SessionServiceApi = {
   create: async (payload: SessionFormData): Promise<SessionResponse> => {
     try {
-      const { categoryId, sessionSchedules = [], ...rest } = payload;
+      const { categoryId, levelName, sessionSchedules = [], ...rest } = payload;
       const transformedPayload = {
         ...rest,
         sessionSchedules: [...sessionSchedules], 

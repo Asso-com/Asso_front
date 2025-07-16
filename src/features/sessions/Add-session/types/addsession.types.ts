@@ -1,5 +1,6 @@
 export interface SessionFormData {
   categoryId: number;
+  levelName: string;
   levelSubjectId: number;
   staffId: string;
   associationId: number;

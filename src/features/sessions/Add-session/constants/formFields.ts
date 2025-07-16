@@ -155,6 +155,7 @@ export const createInitialValues = (
   return {
     categoryId: defaultCategoryId,
     levelSubjectId: 0,
+    levelName: "",
     staffId: "",
     associationId: 0,
     periodicity: "WEEKLY",

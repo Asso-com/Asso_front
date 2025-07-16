@@ -9,12 +9,16 @@ import FooterActions from "@components/shared/FooterActions";
 interface StudentEnrollmentProps {
   sessionId: number;
   associationId: number;
+  maxStudentsCapacity: number;
   onClose: () => void;
+  levelName?: string;
 }
 const StudentEnrollment = ({
   sessionId,
   associationId,
   onClose,
+  maxStudentsCapacity,
+  levelName,
 }: StudentEnrollmentProps) => {
   // const { t } = useTranslation();
   const gridRef = useRef(null);
@@ -75,6 +79,8 @@ const StudentEnrollment = ({
           students={mappedStudents}
           selectedStudents={selectedStudents}
           onStudentToggle={onStudentToggle}
+          maxCapacity={maxStudentsCapacity}
+          levelName={levelName}
         />
       </Box>
 

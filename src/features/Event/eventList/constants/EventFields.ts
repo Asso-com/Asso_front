@@ -1,6 +1,19 @@
 import type { Field } from "@/types/formTypes";
-
 const EventFormFields: Field[] = [
+  {
+    name: "title",
+    label: "Title",
+    type: "text",
+    placeholder: "Enter event title",
+    validationRules: { required: true, maxLength: 255 },
+  },
+  {
+    name: "description",
+    label: "Description",
+    type: "textarea",
+    placeholder: "Enter event description",
+    validationRules: { required: true, maxLength: 1000 },
+  },
   {
     name: "startDate",
     label: "Start Date",
@@ -28,25 +41,25 @@ const EventFormFields: Field[] = [
     validationRules: { required: true },
   },
   {
-    name: "eventColor",
-    label: "Event Color",
-    type: "color",
-    placeholder: "Pick a color",
-    validationRules: { required: true },
-    inputProps: {
-      format: "hex",
-    },
-  },
-  {
     name: "eventFor",
     label: "Event For",
     type: "select",
     options: [
       { label: "All", value: "ALL" },
-      { label: "Public", value: "PUBLIC" },
       { label: "Students", value: "STUDENTS" },
+      { label: "Teachers", value: "TEACHERS" },
     ],
     validationRules: { required: true },
+  },
+  {
+    name: "eventColor",
+    label: "Event Color",
+    type: "color",
+    placeholder: "Pick a color",
+    validationRules: { required: false },
+    inputProps: {
+      format: "hex",
+    },
   },
   {
     name: "eventPoster",

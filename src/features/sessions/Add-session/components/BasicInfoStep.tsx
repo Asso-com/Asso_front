@@ -52,6 +52,16 @@ const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
     error: staffError,
   } = useFetchStaff(associationId);
 
+  React.useEffect(() => {
+    const selectedOption = subjectLevelOptions.find(
+      (opt) => opt.value === Number(values.levelSubjectId)
+    );
+
+    if (selectedOption && selectedOption.levelName !== values.levelName) {
+      setFieldValue("levelName", selectedOption.levelName);
+    }
+  }, [values.levelSubjectId, subjectLevelOptions]);
+
   const getDateRange = () => {
     if (!academicPeriods.length) return { minISO: "", maxISO: "" };
     const minDate = new Date(
@@ -68,19 +78,19 @@ const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
 
   const { minISO, maxISO } = getDateRange();
 
-  const teacherOptions = staffOptions.map(
-    (staff: { firstName: string; lastName: string; id: number }) => ({
+  const teacherOptions = staffOptions
+    .filter((staff: { isActive: boolean }) => staff.isActive)
+    .map((staff: { firstName: string; lastName: string; id: number }) => ({
       label: `${staff.firstName || ""} ${staff.lastName || ""}`,
       value: staff.id,
-    })
-  );
+    }));
 
-const categoryOptions = categories
-  .filter((cat: { name: string; id: number; active: boolean }) => cat.active)
-  .map((cat: { name: string; id: number }) => ({
-    label: cat.name,
-    value: cat.id,
-  }));
+  const categoryOptions = categories
+    .filter((cat: { name: string; id: number; active: boolean }) => cat.active)
+    .map((cat: { name: string; id: number }) => ({
+      label: cat.name,
+      value: cat.id,
+    }));
 
   const enhancedFields = formFields.basicInfo.map((field) => {
     switch (field.name) {

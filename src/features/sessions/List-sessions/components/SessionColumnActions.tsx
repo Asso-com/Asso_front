@@ -146,12 +146,14 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
         isOpen={modalState.enrollment}
         onClose={() => toggleModal("enrollment")}
         title={`Add Students`}
-        size="4xl"
+        size="5xl"
       >
         <StudentEnrollment
           sessionId={sessionData.id}
           associationId={associationId}
           onClose={() => toggleModal("enrollment")}
+          maxStudentsCapacity={sessionData.maxStudentsCapacity}
+          levelName={sessionData.levelSubject.level}
         />
       </GenericModal>
       <GenericModal

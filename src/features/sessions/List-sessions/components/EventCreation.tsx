@@ -1,20 +1,16 @@
-// EventCreation.tsx
 import {
   Grid,
   GridItem,
-  Box,
-  useColorModeValue,
   Card,
   CardBody,
-  Divider,
   Flex,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Formik, Form, useFormikContext } from "formik";
 import * as Yup from "yup";
 import { useSelector } from "react-redux";
 import type { RootState } from "@store/index";
 import type { Session } from "../data";
-import type { EventRequest } from "@features/Event/eventList/types/event.types";
 import { eventFormFields } from "../constants/EventFormFields";
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import useCreateEvent from "../../../Event/eventList/hooks/useCreateEvent";
@@ -36,27 +32,25 @@ const EventCreationInner = ({ sessionData, onClose }: EventCreationProps) => {
 
   const { mutateAsync: createEvent, isPending } = useCreateEvent(associationId);
 
-  const submitEvent = () => {
+  const submitEvent = async () => {
     try {
-      const payload: EventRequest = {
-        sessionId: sessionData.id,
-        associationId,
-        startDate: sessionData.startDate,
-        endDate: sessionData.endDate,
-        eventColor: values.eventColor,
-        eventType: "SESSION",
-        eventFor: values.eventFor,
-        eventPoster: values.eventPoster,
-        dateRangeValid: true,
-        sessionIdValid: true,
-      };
-      createEvent(payload);
-      onClose();
-    } catch (error) {}
+      const formData = new FormData();
+      formData.append("associationId", associationId.toString());
+      formData.append("sessionId", sessionData.id.toString());
+      formData.append("title", values.title);
+      formData.append("description", values.description);
+      formData.append("startDate", sessionData.startDate);
+      formData.append("endDate", sessionData.endDate);
+      formData.append("eventType", "SESSION");
+      formData.append("eventColor", values.eventColor);
+      if (values.eventFor) formData.append("eventFor", values.eventFor);
+      if (values.eventPoster) formData.append("eventPoster", values.eventPoster);
 
-    // createEvent.mutateAsync(payload, {
-    //   onSuccess: () => onClose?.(),
-    // });
+      await createEvent(formData);
+      onClose();
+    } catch (error) {
+      console.error("Error creating event:", error);
+    }
   };
 
   return (
@@ -69,18 +63,15 @@ const EventCreationInner = ({ sessionData, onClose }: EventCreationProps) => {
       overflow="hidden"
       h="100%"
     >
-      <Divider borderColor={borderColor} />
       <CardBody p={4}>
         <Form onSubmit={handleSubmit}>
-          <Grid templateColumns={{ base: "1fr", md: "repeat(, 1fr)" }} gap={4}>
+          <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={4}>
             {eventFormFields.map((field) => (
               <GridItem
                 key={field.name}
-                colSpan={field.type === "color" ? 2 : 1}
+                colSpan={["color", "textarea", "file"].includes(field.type) ? 2 : 1}
               >
-                <Box>
-                  <RenderFormBuilder field={field} />
-                </Box>
+                <RenderFormBuilder field={field} />
               </GridItem>
             ))}
           </Grid>
@@ -90,16 +81,10 @@ const EventCreationInner = ({ sessionData, onClose }: EventCreationProps) => {
               onClose={onClose}
               handleSave={submitEvent}
               isSaving={isPending}
-              cancelText="close"
+              cancelText="Close"
               saveText="Create Event"
             />
           </Flex>
-
-          {/* <VStack align="end" mt={6}>
-            <Button colorScheme="pink" type="submit" onClick={submitEvent}>
-              Create Event
-            </Button>
-          </VStack> */}
         </Form>
       </CardBody>
     </Card>
@@ -108,20 +93,30 @@ const EventCreationInner = ({ sessionData, onClose }: EventCreationProps) => {
 
 const EventCreation = ({ sessionData, onClose }: EventCreationProps) => {
   const initialValues = {
+    title: "",
+    description: "",
     eventColor: "#3182ce",
     eventFor: "",
+    eventPoster: null as File | null,
   };
 
   const validationSchema = Yup.object({
+    title: Yup.string()
+      .required("Event title is required")
+      .max(255, "Title must be less than 255 characters"),
+    description: Yup.string()
+      .required("Event description is required")
+      .max(1000, "Description must be less than 1000 characters"),
     eventColor: Yup.string().required("Event color is required"),
     eventFor: Yup.string().required("Target audience is required"),
+    eventPoster: Yup.mixed().nullable(),
   });
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={() => {}}
+      onSubmit={() => {}} 
     >
       <EventCreationInner sessionData={sessionData} onClose={onClose} />
     </Formik>

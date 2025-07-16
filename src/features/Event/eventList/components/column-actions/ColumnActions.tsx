@@ -7,14 +7,31 @@ import type { ICellRendererParams } from "ag-grid-community";
 import GenericModal from "@components/ui/GenericModal";
 import EditEvent from "./EditEvent";
 import PosterDetails from "./PosterDetails";
+import { useDeleteEvent } from "../../hooks/useDeleteEvent";
+import { confirmAlert } from "@components/shared/confirmAlert";
+import { useTranslation } from "react-i18next";
 
-const ColumnAction: React.FC<ICellRendererParams> = (params) => {
+const ColumnAction: React.FC<ICellRendererParams> = ({ data }) => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [viewModalOpen, setViewModalOpen] = useState(false);
+  const { t } = useTranslation();
+
+  const isStandard = data?.standard;
+  const { mutateAsync: deleteEvent } = useDeleteEvent(data?.id);
 
   const toggleEditModal = () => setEditModalOpen((prev) => !prev);
   const toggleViewModal = () => setViewModalOpen((prev) => !prev);
 
+  const handleDelete = async () => {
+    const isConfirmed = await confirmAlert({
+      title: t("Delete Confirmation"),
+      text: t("You won't be able to revert this!"),
+    });
+
+    if (!isConfirmed) return;
+    await deleteEvent(data.id);
+
+  };
   return (
     <Flex align="center" justify="center" gap={2} height="100%">
       <GenericIconButtonWithTooltip
@@ -25,27 +42,28 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
         colorScheme="green"
         size="sm"
         onClick={toggleEditModal}
-        disabled={params.data.standard}
+        disabled={isStandard}
       />
       <GenericModal
         isOpen={editModalOpen}
         onClose={toggleEditModal}
         title="Edit Event"
-        size="md"
+        size="2xl"
       >
-        <EditEvent details={params.data} onClose={toggleEditModal} />
+        <EditEvent details={data} onClose={toggleEditModal} />
       </GenericModal>
-
       <GenericIconButtonWithTooltip
         icon={<MdDelete size={22} />}
+        onClick={handleDelete}
         label="Delete"
         ariaLabel="delete_btn"
         variant="ghost"
         colorScheme="red"
         size="sm"
-        disabled={params.data.standard}
+        disabled={isStandard}
       />
 
+      {/* View Button */}
       <GenericIconButtonWithTooltip
         icon={<FiEye size={22} />}
         label="View"
@@ -54,15 +72,18 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
         colorScheme="blue"
         size="sm"
         onClick={toggleViewModal}
-        disabled={params.data.standard}
+        disabled={isStandard}
       />
       <GenericModal
         isOpen={viewModalOpen}
         onClose={toggleViewModal}
         title="View Poster"
-        size="md"
+        size="2xl"
+        modalContentProps={{
+          height: "500px",
+        }}
       >
-        <PosterDetails details={params.data} onClose={toggleViewModal} />
+        <PosterDetails details={data} />
       </GenericModal>
     </Flex>
   );

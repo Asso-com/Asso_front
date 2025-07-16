@@ -211,7 +211,10 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
             <Formik<SessionFormData>
               initialValues={dynamicInitialValues}
               validationSchema={createFullInfoSchema(normalizedData)}
-              onSubmit={(values) => handleSubmit(values, associationId)}
+              onSubmit={(values) => {
+                    console.log("Données envoyées :", values);
+                    handleSubmit(values, associationId);
+              }}
               enableReinitialize={true}
             >
               {(formik) => (
