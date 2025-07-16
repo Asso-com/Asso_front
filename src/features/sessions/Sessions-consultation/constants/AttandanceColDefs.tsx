@@ -7,7 +7,7 @@ const AttandanceColDefs: ColDef[] = [
     field: "registrationId",
     width: 200,
     pinned: "left",
-    cellStyle: { textAlign: "center" },
+    cellStyle: { textAlign: "left" },
   },
   {
     headerName: "FirstName",

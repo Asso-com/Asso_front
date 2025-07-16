@@ -164,6 +164,7 @@ export const createInitialValues = (
     endDate: getActivePeriodEndDate(academicPeriods),
     maxStudentsCapacity: 1,
     fees: 0,
+    timeZone:"", 
     sessionSchedules: [
      /* {
         classRoomId: 0,

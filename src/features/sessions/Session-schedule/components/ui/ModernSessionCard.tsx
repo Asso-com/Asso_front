@@ -28,6 +28,7 @@ import React from "react";
 import type { SessionSchuduleDate } from "../../types";
 import { useTranslation } from "react-i18next";
 import { dayNames } from "../../utils/sessionUtils";
+import { formatDateOnly, formatTime } from "@utils/timeUtils";
 
 const getStatusInfo = (session: SessionSchuduleDate, t: any) => {
   if (session.canceled) {
@@ -74,13 +75,10 @@ const getStatusInfo = (session: SessionSchuduleDate, t: any) => {
   };
 };
 
-const formatTime = (time: string): string => time.slice(0, 5);
-
 const ModernSessionCard: React.FC<{
   session: SessionSchuduleDate;
   subjectColors: Record<string, string>;
 }> = ({ session, subjectColors }) => {
-
   const { t } = useTranslation();
   const cardBgColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.600");
@@ -134,17 +132,6 @@ const ModernSessionCard: React.FC<{
                 >
                   {session.subject}
                 </Badge>
-                {session.linguisticLevel && (
-                  <Badge
-                    variant="outline"
-                    borderRadius="full"
-                    px={3}
-                    py={1}
-                    fontSize="xs"
-                  >
-                    {session.linguisticLevel}
-                  </Badge>
-                )}
               </HStack>
             </VStack>
             <VStack align="end" spacing={2}>
@@ -164,7 +151,9 @@ const ModernSessionCard: React.FC<{
                     {dayNames[session.day]}
                   </Text>
                   <Text fontSize="xs" color="gray.500">
-                    {session.date}
+                    {formatDateOnly(session.sessionDate, {
+                      format: "full",
+                    })}
                   </Text>
                 </VStack>
               </HStack>
@@ -173,8 +162,8 @@ const ModernSessionCard: React.FC<{
                 <Icon as={FiClock} />
                 <VStack align="start" spacing={0}>
                   <Text fontSize="sm" fontWeight="medium">
-                    {formatTime(session.startTime)} -{" "}
-                    {formatTime(session.endTime)}
+                    {formatTime(session.startTime, session.timeZone)} -{" "}
+                    {formatTime(session.endTime, session.timeZone)}
                   </Text>
                 </VStack>
               </HStack>

@@ -1,27 +1,12 @@
+import type { SessionSchuduleDate } from "@features/sessions/Session-schedule/types";
 import {
-  convertLocalToUTC,
   convertUTCToLocalDisplay,
   formatDateOnly,
+  localToReadableTime,
 } from "@utils/timeUtils";
 import type { ColDef } from "ag-grid-community";
 
-const formatLocalTime = (
-  date: string,
-  time: string,
-  sourceTimezone: string = "Europe/Paris"
-): string => {
-  const parisDateTimeISO = convertLocalToUTC(
-    `${date}T${time}`,
-    "iso",
-    sourceTimezone
-  );
-
-  return convertUTCToLocalDisplay(parisDateTimeISO, {
-    format: "medium",
-  });
-};
-
-const SessionDateColdef: ColDef[] = [
+const SessionDateColdef: ColDef<SessionSchuduleDate>[] = [
   {
     field: "sessionCode",
     headerName: "Session Code",
@@ -33,25 +18,37 @@ const SessionDateColdef: ColDef[] = [
   { field: "sessionType", headerName: "Session Type" },
   {
     headerName: "Date",
-    field: "date",
+    field: "sessionDate",
+    valueFormatter: ({ value }) =>
+      value ? formatDateOnly(value, { format: "medium" }) : "",
+  },
+  {
+    headerName: "Start Time",
+    field: "startTime",
+    valueGetter: ({ data }) =>
+      data?.sessionDate && data?.startTime
+        ? localToReadableTime(data.sessionDate, data.startTime, data.timeZone)
+        : "",
+  },
+  {
+    headerName: "End Time",
+    field: "endTime",
+    valueGetter: ({ data }) =>
+      data?.sessionDate && data?.endTime
+        ? localToReadableTime(data.sessionDate, data.endTime, data.timeZone)
+        : "",
+  },
+  {
+    headerName: "Registration Date",
+    field: "attendanceRegistrationDateTime",
     valueFormatter: (params) => {
       if (!params.value) return "";
-      return formatDateOnly(params.value, {
+      return convertUTCToLocalDisplay(params.value, {
         format: "medium",
       });
     },
   },
-  {
-    headerName: "Start Time",
-    valueGetter: ({ data }) => formatLocalTime(data?.date, data?.startTime),
-  },
-  {
-    headerName: "End Time",
-    valueGetter: ({ data }) => formatLocalTime(data?.date, data?.endTime),
-  },
-
   { field: "day", headerName: "Day" },
-
   {
     field: "classRoom",
     headerName: "Classroom",
@@ -61,11 +58,8 @@ const SessionDateColdef: ColDef[] = [
   },
   {
     headerName: "Full Name",
-    valueGetter: ({ data }) => {
-      const firstName = data?.firstName || "";
-      const lastName = data?.lastName || "";
-      return `${firstName} ${lastName}`.trim();
-    },
+    valueGetter: ({ data }) =>
+      `${data?.firstName || ""} ${data?.lastName || ""}`.trim(),
     filter: "agTextColumnFilter",
     cellStyle: { textAlign: "left" },
   },
@@ -81,8 +75,12 @@ const SessionDateColdef: ColDef[] = [
     filter: "agTextColumnFilter",
     cellStyle: { textAlign: "left" },
   },
-  { field: "quizNumber", headerName: "Quiz Number", type: "numericColumn" },
-
+  {
+    field: "quizNumber",
+    headerName: "Quiz Number",
+    type: "numericColumn",
+    cellStyle: { textAlign: "center" },
+  },
   {
     field: "attendanceMarked",
     headerName: "Attendance Marked",

@@ -14,7 +14,7 @@ import useFetchSessionSchedules from "../hooks/useFetchSessionSchedules";
 import type { Session } from "../data";
 import type { SessionSchedulesResponse } from "../types/session.types";
 import { useTranslation } from "react-i18next";
-
+import { formatTime } from "@utils/timeUtils";
 interface SessionScheduleDetailsProps {
   sessionData: Session;
 }
@@ -48,6 +48,7 @@ const SessionScheduleDetails: React.FC<SessionScheduleDetailsProps> = ({
       </Card>
     );
   }
+ 
 
   return (
     <Card maxHeight="500px" overflowY="auto">
@@ -65,7 +66,8 @@ const SessionScheduleDetails: React.FC<SessionScheduleDetailsProps> = ({
                 <Badge colorScheme="teal">{schedule.day.toLowerCase()}</Badge>
 
                 <Text fontWeight="bold">
-                  {schedule.startTime} - {schedule.endTime}
+                  {formatTime(schedule.startTime, schedule.timeZone)} -{" "}
+                  {formatTime(schedule.endTime, schedule.timeZone)}
                 </Text>
               </Flex>
               <Text>

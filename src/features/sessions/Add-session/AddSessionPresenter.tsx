@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { showToast } from "@store/toastSlice";
 import useCreateSession from "./hooks/useCreateSession";
 import useFetchCategories from "@features/Academics/Categories-levels/hooks/useFetchCategories";
+import { getUserTimezone } from "@utils/timeUtils";
 
 interface AcademicPeriodWeek {
   id: number;
@@ -154,6 +155,7 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
   const handleSubmit = (values: SessionFormData, associationId: number) => {
     createSession({
       ...values,
+      timeZone:getUserTimezone(),
       associationId,
     });
   };
