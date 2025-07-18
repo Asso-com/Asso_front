@@ -24,11 +24,13 @@ import { useTranslation } from "react-i18next";
 interface ScheduleStepProps {
   formik: FormikProps<SessionFormData>;
   associationId: number;
+  showRemoveButton?: boolean;
 }
 
 const ScheduleStep: React.FC<ScheduleStepProps> = ({
   formik,
   associationId,
+  showRemoveButton = true,
 }) => {
   const { t } = useTranslation();
   const cardBg = useColorModeValue("white", "gray.800");
@@ -84,7 +86,7 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
                       {t("Session")} {index + 1}
                     </Badge>
                   </HStack>
-                  {formik.values.sessionSchedules.length > 1 && (
+                  { showRemoveButton && formik.values.sessionSchedules.length > 1 && (
                     <Button
                       size="sm"
                       colorScheme="red"

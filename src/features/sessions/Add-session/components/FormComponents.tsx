@@ -7,6 +7,12 @@ interface NavigationButtonsProps {
   onPrevious: () => void;
   onSubmit: () => void;
   currentStep: number;
+  isLoading?: boolean;
+  isDisabled?: boolean;
+  submitLabel?: string;
+  nextLabel?: string;
+  previousLabel?: string;
+  showPrevious?: boolean;
 }
 
 export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
@@ -15,6 +21,12 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
   onPrevious,
   onSubmit,
   isLastStep,
+  isLoading = false,
+  isDisabled = false,
+  submitLabel = "Create Session",
+  nextLabel = "Next",
+  previousLabel = "Previous",
+  showPrevious = true,
 }) => {
   return (
     <Flex
@@ -23,7 +35,7 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
       mt={1}
       flex={1}
     >
-      {currentStep > 0 && (
+      {showPrevious && currentStep > 0 && (
         <Button
           variant="outline"
           borderColor="gray.300"
@@ -32,9 +44,10 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
           borderRadius="full"
           px={8}
           onClick={onPrevious}
-          type="button" // Explicitly set to button
+          type="button"
+          isDisabled={isDisabled}
         >
-          Previous
+          {previousLabel}
         </Button>
       )}
       <Button
@@ -47,10 +60,12 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
           transform: "translateY(-1px)",
           boxShadow: "lg",
         }}
-        type="button" 
+        type="button"
         onClick={isLastStep ? onSubmit : onNext}
+        isLoading={isLoading}
+        isDisabled={isDisabled}
       >
-        {isLastStep ? "Create Session" : "Next"}
+        {isLastStep ? submitLabel : nextLabel}
       </Button>
     </Flex>
   );

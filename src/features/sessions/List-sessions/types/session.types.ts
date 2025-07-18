@@ -1,10 +1,9 @@
-
-export type Periodicity = 'DAILY' | 'WEEKLY' | 'MONTHLY';
-export type SessionType = 'LECTURE' | 'LAB' | 'WORKSHOP';
-export type AttendanceType = 'ONLINE' | 'ONSITE';
+export type Periodicity = "DAILY" | "WEEKLY" | "MONTHLY";
+export type SessionType = "LECTURE" | "LAB" | "WORKSHOP";
+export type AttendanceType = "ONLINE" | "ONSITE";
 
 export interface Staff {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string | null;
   email: string;
@@ -23,7 +22,7 @@ export interface Session {
   staff: Staff;
   levelSubject: LevelSubject;
   periodicity: Periodicity;
-  sessionType: SessionType;
+  sessionType: AttendanceType;
   startDate: string;
   endDate: string;
   maxStudentsCapacity: number;
@@ -31,7 +30,16 @@ export interface Session {
   fees: number;
   createdAt: string;
   updatedAt: string | null;
-};
+  timeZone: string;
+  sessionSchedules: SessionSchudule[];
+}
+export interface SessionSchudule {
+  classRoomId: number;
+  day: string;
+  startTime: string;
+  endTime: string;
+  sessionType: AttendanceType;
+}
 export interface TopicDto {
   topicId: number;
   description: string;
@@ -69,7 +77,7 @@ export interface StudentEnrollmentResponse {
   levelName: string;
   registrationId: string;
   enrolled: boolean;
-  email?: string; 
+  email?: string;
 }
 export interface EventRequest {
   associationId: number;
