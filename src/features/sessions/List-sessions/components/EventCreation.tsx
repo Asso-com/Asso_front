@@ -6,8 +6,7 @@ import {
   Flex,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { Formik, Form, useFormikContext } from "formik";
-import * as Yup from "yup";
+import { Formik, Form } from "formik";
 import { useSelector } from "react-redux";
 import type { RootState } from "@store/index";
 import type { Session } from "../types/session.types";
@@ -15,16 +14,21 @@ import { eventFormFields } from "../constants/EventFormFields";
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import useCreateEvent from "../../../Event/eventList/hooks/useCreateEvent";
 import FooterActions from "@components/shared/FooterActions";
+import EventFieldValidations from "@utils/createValidationSchema";
 
 interface EventCreationProps {
   sessionData: Session;
   onClose: () => void;
 }
 
-const EventCreationInner = ({ sessionData, onClose }: EventCreationProps) => {
-  const { values, handleSubmit } = useFormikContext<any>();
-  const cardBg = useColorModeValue("white", "gray.800");
-  const borderColor = useColorModeValue("blue.100", "blue.700");
+const EventCreation = ({ sessionData, onClose }: EventCreationProps) => {
+  const initialValues = {
+    title: "",
+    description: "",
+    eventColor: "#3182ce",
+    eventFor: "",
+    eventPoster: null as File | null,
+  };
 
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
@@ -32,7 +36,10 @@ const EventCreationInner = ({ sessionData, onClose }: EventCreationProps) => {
 
   const { mutateAsync: createEvent, isPending } = useCreateEvent(associationId);
 
-  const submitEvent = async () => {
+  const cardBg = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("blue.100", "blue.700");
+
+  const handleSubmit = async (values: typeof initialValues) => {
     try {
       const formData = new FormData();
       formData.append("associationId", associationId.toString());
@@ -52,73 +59,56 @@ const EventCreationInner = ({ sessionData, onClose }: EventCreationProps) => {
       console.error("Error creating event:", error);
     }
   };
-
-  return (
-    <Card
-      bg={cardBg}
-      borderRadius="2xl"
-      border="2px solid"
-      borderColor={borderColor}
-      boxShadow="xl"
-      overflow="hidden"
-      h="100%"
-    >
-      <CardBody p={4}>
-        <Form onSubmit={handleSubmit}>
-          <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={4}>
-            {eventFormFields.map((field) => (
-              <GridItem
-                key={field.name}
-                colSpan={["color", "textarea", "file"].includes(field.type) ? 2 : 1}
-              >
-                <RenderFormBuilder field={field} />
-              </GridItem>
-            ))}
-          </Grid>
-
-          <Flex w="100%" justify="flex-end" mt={4}>
-            <FooterActions
-              onClose={onClose}
-              handleSave={submitEvent}
-              isSaving={isPending}
-              cancelText="Close"
-              saveText="Create Event"
-            />
-          </Flex>
-        </Form>
-      </CardBody>
-    </Card>
-  );
-};
-
-const EventCreation = ({ sessionData, onClose }: EventCreationProps) => {
-  const initialValues = {
-    title: "",
-    description: "",
-    eventColor: "#3182ce",
-    eventFor: "",
-    eventPoster: null as File | null,
-  };
-
-  const validationSchema = Yup.object({
-    title: Yup.string()
-      .required("Event title is required")
-      .max(255, "Title must be less than 255 characters"),
-    description: Yup.string()
-      .required("Event description is required")
-      .max(1000, "Description must be less than 1000 characters"),
-    eventColor: Yup.string().required("Event color is required"),
-    eventFor: Yup.string().required("Target audience is required"),
-    eventPoster: Yup.mixed().nullable(),
-  });
+const validationSchema = EventFieldValidations(eventFormFields);
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={() => {}} 
+      onSubmit={handleSubmit}
     >
-      <EventCreationInner sessionData={sessionData} onClose={onClose} />
+      {() => (
+        <Form>
+          <Card
+            bg={cardBg}
+            borderRadius="2xl"
+            border="2px solid"
+            borderColor={borderColor}
+            boxShadow="xl"
+            overflow="hidden"
+            h="100%"
+          >
+            <CardBody p={4}>
+              <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={4}>
+                {eventFormFields.map((field) => (
+                  <GridItem
+                    key={field.name}
+                    colSpan={
+                      ["color", "textarea", "file"].includes(field.type) ? 2 : 1
+                    }
+                  >
+                    <RenderFormBuilder field={field} />
+                  </GridItem>
+                ))}
+              </Grid>
+
+              <Flex w="100%" justify="flex-end" mt={4}>
+                <FooterActions
+                  onClose={onClose}
+                  handleSave={() => {
+                    document.querySelector<HTMLFormElement>('form')?.dispatchEvent(
+                      new Event("submit", { cancelable: true, bubbles: true })
+                    );
+                  }}
+                  isSaving={isPending}
+                  cancelText="Close"
+                  saveText="Create Event"
+                />
+              </Flex>
+            </CardBody>
+          </Card>
+        </Form>
+      )}
     </Formik>
   );
 };
