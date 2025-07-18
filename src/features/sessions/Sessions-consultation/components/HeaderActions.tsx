@@ -1,6 +1,5 @@
 import { Box, Flex, Skeleton } from "@chakra-ui/react";
 import type { DatePeriod } from "@features/sessions/Session-schedule/components/ui/DatePeriodNavigator";
-
 import ClearFilter from "@components/shared/ClearFilter";
 import QuickFilter from "@components/shared/QuickFilter";
 import DatePeriodNavigator from "@features/sessions/Session-schedule/components/ui/DatePeriodNavigator";

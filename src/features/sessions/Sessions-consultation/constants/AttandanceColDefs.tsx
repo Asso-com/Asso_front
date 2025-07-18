@@ -21,13 +21,17 @@ const AttandanceColDefs: ColDef[] = [
     width: 200,
     cellStyle: { textAlign: "left" },
   },
-  {
-    headerName: "Evaluation",
-    field: "evaluation",
-    width: 160,
-    cellRenderer: EvaluationCell,
-    sortable: true,
-    filter: "agNumberColumnFilter",
+{
+  headerName: "Evaluation",
+  field: "evaluation",
+  width: 160,
+  cellRenderer: EvaluationCell,
+  sortable: true,
+  filter: "agNumberColumnFilter",
+  cellStyle: {
+    display: "flex",
+    justifyContent: "center",
+  },
   },
   {
     headerName: "Email",

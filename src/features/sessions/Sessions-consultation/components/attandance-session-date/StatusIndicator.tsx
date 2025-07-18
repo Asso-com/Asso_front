@@ -5,16 +5,19 @@ const StatusIndicator = ({
   label,
   colorScheme,
   onToggle,
+  isDisabled = false,
 }: {
   isActive: boolean;
   label: string;
   colorScheme: string;
-  onToggle: () => void;
+    onToggle: () => void;
+  isDisabled?: boolean;
 }) => (
   <Flex align="center" gap={3}>
     <Switch
       isChecked={isActive}
       onChange={onToggle}
+      isDisabled={isDisabled}
       colorScheme={colorScheme}
       size="md"
     />
