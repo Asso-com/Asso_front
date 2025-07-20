@@ -27,6 +27,7 @@ import CoefficientSettingsContainer from "@features/system-settings/coefficients
 import LessonContainer from "@features/Lesson-plan/Lesson/LessonContainer.tsx";
 import TopicContainer from "@features/Lesson-plan/Topic/TopicContainer.tsx";
 import LocationContainer from "@features/Partner/location/LocationContainer";
+import AnnonceContainer from "@features/Annonces/AnnonceContainer";
 const protectedRoutes = [
   {
     element: <ProtectedLayout />,
@@ -107,6 +108,9 @@ const protectedRoutes = [
       },
 
       { path: "/HumanResource/listStaff", element: <StaffContainer /> },
+
+            { path: "/Communicate/Annonce", element: <AnnonceContainer /> },
+
     ],
   },
 ];
