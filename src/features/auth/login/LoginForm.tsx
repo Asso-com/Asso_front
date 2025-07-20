@@ -1,7 +1,6 @@
 import {
   Alert,
   AlertIcon,
-  Button,
   Collapse,
   Stack,
   Text,
@@ -19,6 +18,7 @@ import { useAuth } from "@hooks/useAuth";
 
 import type { Field as FieldType } from "@/types/formTypes";
 import type { LoginRequest } from "@/types/authTypes";
+import AuthButton from "../Button";
 
 type FormValues = Record<string, string>;
 
@@ -78,7 +78,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
           </Stack>
 
           <VStack>
-            <Button
+            <AuthButton
               mt={4}
               mb={2}
               type="submit"
@@ -88,18 +88,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
               rightIcon={<FiLogIn />}
               bg="brand.500"
               color="white"
-              _hover={{
-                bg: "brand.600",
-                transform: "translateY(-2px)",
-                boxShadow: "lg",
-              }}
-              _active={{
-                bg: "brand.700",
-                transform: "translateY(0px)",
-              }}
-            >
-              {t("Sign In")}
-            </Button>
+              title="Sign In"
+            />
 
             <Collapse in={!!error} animateOpacity>
               <Alert status="error" borderRadius={"lg"} fontSize={"sm"}>

@@ -8,7 +8,6 @@ import {
   Flex,
   useColorModeValue,
 } from "@chakra-ui/react";
-
 import { motion, AnimatePresence } from "framer-motion";
 import { GraduationCap } from "lucide-react";
 import AnimatedBackground from "./AnimatedBackground";
@@ -16,6 +15,7 @@ import LoginForm from "./login/LoginForm";
 import ForgotPasswordForm from "./forgot-password/ForgotPasswordForm";
 
 const MotionBox = motion(Box);
+
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
 
@@ -46,9 +46,6 @@ const AuthPage = () => {
               flex="1"
               textAlign={{ base: "center", lg: "left" }}
               color={textColor}
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
               display={{ base: "none", lg: "flex" }}
             >
               <VStack
@@ -105,14 +102,7 @@ const AuthPage = () => {
               </VStack>
             </MotionBox>
 
-            <MotionBox
-              flex="1"
-              maxW="450px"
-              width="100%"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
+            <MotionBox flex="1" maxW="450px" width="100%">
               <Box
                 bg={formBg}
                 backdropFilter="blur(20px)"
@@ -125,12 +115,12 @@ const AuthPage = () => {
               >
                 <VStack spacing={4} mb={4}>
                   <VStack spacing={2} textAlign="center">
-                    <AnimatePresence>
+                    <AnimatePresence mode="wait">
                       <MotionBox
-                        key={isLogin ? "login" : "forgot"}
-                        initial={{ opacity: 0, y: 20 }}
+                        key={isLogin ? "login-heading" : "forgot-heading"}
+                        initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
+                        exit={{ opacity: 0, y: 10 }}
                         transition={{ duration: 0.3 }}
                       >
                         <Heading size="lg" color={formTextColor}>
@@ -147,13 +137,13 @@ const AuthPage = () => {
                 </VStack>
 
                 <Box width="100%">
-                  <AnimatePresence>
+                  <AnimatePresence mode="wait">
                     {isLogin ? (
                       <MotionBox
                         key="login-form"
-                        initial={{ opacity: 0, x: -20 }}
+                        initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 20 }}
+                        exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.4 }}
                         width="100%"
                       >
@@ -162,9 +152,9 @@ const AuthPage = () => {
                     ) : (
                       <MotionBox
                         key="forgot-form"
-                        initial={{ opacity: 0, x: 20 }}
+                        initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
+                        exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.4 }}
                         width="100%"
                       >

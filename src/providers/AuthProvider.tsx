@@ -19,21 +19,19 @@ interface AuthContextType {
   accessToken: string | null;
   loginProvider: (data: LoginRequest) => Promise<void>;
   logout: () => Promise<void>;
-  error: string | null;
 }
 
 export const AuthContext = createContext<AuthContextType>({
   accessToken: null,
   loginProvider: async () => {},
   logout: async () => {},
-  error: null,
 });
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
-  const [error, setError] = useState<string | null>(null);
+
 
   const isUserLoggedIn = useSelector(
     (state: RootState) => state.authSlice.isUserLoggedIn
@@ -118,7 +116,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (err: any) {
       const errors = err?.response?.data?.message || "Login failed";
       throw new Error(errors);
-      //setError(errors);
     }
   };
 
@@ -142,7 +139,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       accessToken,
       loginProvider,
       logout,
-      error,
     }),
     [accessToken]
   );
