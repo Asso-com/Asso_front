@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { FiHome } from "react-icons/fi";
+
 import { motion } from "framer-motion";
 
 const MotionBox = motion(Box);
@@ -30,42 +31,42 @@ const NotFoundPage: React.FC = () => {
   const headingColor = useColorModeValue("gray.800", "white");
   const accentColor = useColorModeValue("purple.500", "purple.300");
 
-  const floatVariants = {
-    animate: {
-      y: [0, -10, 0],
-      transition: {
-        duration: 3,
-        repeat: Infinity,
-        ease: "easeInOut",
-      },
-    },
-  };
+  // const floatVariants = {
+  //   animate: {
+  //     y: [0, -10, 0],
+  //     transition: {
+  //       duration: 3,
+  //       repeat: Infinity,
+  //       ease: "easeInOut",
+  //     },
+  //   },
+  // };
 
-  const bounceVariants = {
-    animate: {
-      y: [0, -30, 0],
-      transition: {
-        duration: 2,
-        repeat: Infinity,
-        ease: "easeInOut",
-      },
-    },
-  };
+  // const bounceVariants = {
+  //   animate: {
+  //     y: [0, -30, 0],
+  //     transition: {
+  //       duration: 2,
+  //       repeat: Infinity,
+  //       ease: "easeInOut",
+  //     },
+  //   },
+  // };
 
-  const fadeInUpVariants = {
-    hidden: {
-      opacity: 0,
-      y: 30,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut",
-      },
-    },
-  };
+  // const fadeInUpVariants = {
+  //   hidden: {
+  //     opacity: 0,
+  //     y: 30,
+  //   },
+  //   visible: {
+  //     opacity: 1,
+  //     y: 0,
+  //     transition: {
+  //       duration: 0.8,
+  //       ease: "easeOut",
+  //     },
+  //   },
+  // };
 
   const staggerChildren = {
     hidden: { opacity: 0 },
@@ -93,7 +94,7 @@ const NotFoundPage: React.FC = () => {
           animate="visible"
         >
           <MotionBox
-            variants={floatVariants}
+            //variants={floatVariants}
             animate="animate"
             position="relative"
           >
@@ -124,7 +125,7 @@ const NotFoundPage: React.FC = () => {
                 borderRadius="full"
                 top={`${20 + i * 15}%`}
                 left={`${10 + i * 15}%`}
-                variants={bounceVariants}
+              //  variants={bounceVariants}
                 animate="animate"
                 style={{
                   animationDelay: `${i * 0.3}s`,
@@ -147,7 +148,7 @@ const NotFoundPage: React.FC = () => {
             backdropFilter="blur(10px)"
             border="1px solid"
             borderColor={useColorModeValue("gray.200", "gray.700")}
-            variants={fadeInUpVariants}
+        //    variants={fadeInUpVariants}
             maxW="lg"
             w="full"
             whileHover={{

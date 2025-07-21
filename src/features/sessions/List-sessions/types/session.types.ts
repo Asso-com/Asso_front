@@ -79,31 +79,3 @@ export interface StudentEnrollmentResponse {
   enrolled: boolean;
   email?: string;
 }
-export interface EventRequest {
-  associationId: number;
-  sessionId: number;
-  title: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  eventType: string;
-  eventColor: string;
-  eventFor?: string;
-  eventPoster?: File;
-}
-
-export interface EventResponse {
-  id: number;
-  title: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  eventType: string;
-  eventColor: string;
-  eventFor?: string;
-  eventPoster?: string;
-  associationId: number;
-  sessionId: number;
-  createdAt: string;
-  updatedAt: string;
-}
