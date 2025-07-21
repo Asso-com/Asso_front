@@ -7,6 +7,7 @@ import Stepper, {
   EDIT_SESSION_STEPS,
 } from "@features/sessions/Add-session/components/Stepper";
 import { NavigationButtons } from "@features/sessions/Add-session/components/FormComponents";
+import useFetchSessionSchedules from "../hooks/useFetchSessionSchedules";
 
 import type {
   SessionFormData,
@@ -35,7 +36,10 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
   const toast = useToast();
   const bgColor = useColorModeValue("gray.50", "gray.900");
 
-  //const { data: categories = [] } = useFetchCategories(associationId);
+  const { data: sessionSchedules } = useFetchSessionSchedules(sessionData.id);
+
+  // Mémoriser le nombre initial de sessions pour déterminer lesquelles peuvent être supprimées
+  const initialSessionsCount = sessionSchedules?.length || 0;
 
   const convertSessionToFormValues = (session: Session): SessionFormData => ({
     categoryId: session.levelSubject.categoryId,
@@ -50,7 +54,14 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
     maxStudentsCapacity: session.maxStudentsCapacity,
     fees: session.fees,
     timeZone: session.timeZone || "",
-    sessionSchedules: session.sessionSchedules || [],
+    sessionSchedules:
+      sessionSchedules?.map((s) => ({
+        classRoomId: s.classRoomId,
+        day: s.day,
+        sessionType: s.attendanceType,
+        startTime: s.startTime,
+        endTime: s.endTime,
+      })) || [],
     studentIds: [],
   });
 
@@ -116,7 +127,8 @@ const EditSessionModal: React.FC<EditSessionModalProps> = ({
           <ScheduleStep
             formik={formik}
             associationId={associationId}
-            showRemoveButton={false}
+            showRemoveButton={true}
+            initialSessionsCount={initialSessionsCount}
           />
         );
       default:

@@ -25,12 +25,14 @@ interface ScheduleStepProps {
   formik: FormikProps<SessionFormData>;
   associationId: number;
   showRemoveButton?: boolean;
+  initialSessionsCount?: number; 
 }
 
 const ScheduleStep: React.FC<ScheduleStepProps> = ({
   formik,
   associationId,
   showRemoveButton = true,
+  initialSessionsCount = 0, 
 }) => {
   const { t } = useTranslation();
   const cardBg = useColorModeValue("white", "gray.800");
@@ -64,66 +66,71 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({
       <CardBody p={2} h="100%">
         <Box h="100%" overflowY="auto">
           <VStack spacing={4} align="stretch" px={2}>
-            {formik.values.sessionSchedules.map((_, index: number) => (
-              <Box
-                key={`session-${index}`}
-                p={6}
-                bg={sessionCardBg}
-                border="2px solid"
-                borderColor={sessionBorderColor}
-                borderRadius="xl"
-                transition="all 0.2s ease-in-out"
-              >
-                <Flex justify="space-between" align="center" mb={6}>
-                  <HStack spacing={3}>
-                    <Badge
-                      colorScheme="blue"
-                      fontSize="sm"
-                      px={3}
-                      py={1}
-                      borderRadius="full"
-                    >
-                      {t("Session")} {index + 1}
-                    </Badge>
-                  </HStack>
-                  { showRemoveButton && formik.values.sessionSchedules.length > 1 && (
-                    <Button
-                      size="sm"
-                      colorScheme="red"
-                      variant="ghost"
-                      leftIcon={<DeleteIcon />}
-                      onClick={() => {
-                        const newSessions = formik.values.sessionSchedules.filter(
-                          (_: SessionSchedule, i: number) => i !== index
-                        );
-                        formik.setFieldValue("sessionSchedules", newSessions);
-                      }}
-                      _hover={{
-                        bg: removeButtonHoverBg,
-                      }}
-                    >
-                      {t("Remove")}
-                    </Button>
-                  )}
-                </Flex>
-                <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full">
-                  {formFields.schedule.map((field) => (
-                    <GridItem
-                      key={`${field.name}-${index}`}
-                      colSpan={field.name === "sessionType" ? 2 : 1}
-                    >
-                      <RenderFormBuilder
-                        field={{
-                          ...field,
-                          name: `sessionSchedules.${index}.${field.name}`,
-                          ...(field.name === "classRoomId" && { options: roomOptions }),
+            {formik.values.sessionSchedules.map((_, index: number) => {
+              const isNewSession = index >= initialSessionsCount;
+              
+              return (
+                <Box
+                  key={`session-${index}`}
+                  p={6}
+                  bg={sessionCardBg}
+                  border="2px solid"
+                  borderColor={sessionBorderColor}
+                  borderRadius="xl"
+                  transition="all 0.2s ease-in-out"
+                >
+                  <Flex justify="space-between" align="center" mb={6}>
+                    <HStack spacing={3}>
+                      <Badge
+                        colorScheme="blue"
+                        fontSize="sm"
+                        px={3}
+                        py={1}
+                        borderRadius="full"
+                      >
+                        {t("Session")} {index + 1}
+                      </Badge>
+                     
+                    </HStack>
+                    {showRemoveButton && isNewSession && (
+                      <Button
+                        size="sm"
+                        colorScheme="red"
+                        variant="ghost"
+                        leftIcon={<DeleteIcon />}
+                        onClick={() => {
+                          const newSessions = formik.values.sessionSchedules.filter(
+                            (_: SessionSchedule, i: number) => i !== index
+                          );
+                          formik.setFieldValue("sessionSchedules", newSessions);
                         }}
-                      />
-                    </GridItem>
-                  ))}
-                </Grid>
-              </Box>
-            ))}
+                        _hover={{
+                          bg: removeButtonHoverBg,
+                        }}
+                      >
+                        {t("Remove")}
+                      </Button>
+                    )}
+                  </Flex>
+                  <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full">
+                    {formFields.schedule.map((field) => (
+                      <GridItem
+                        key={`${field.name}-${index}`}
+                        colSpan={field.name === "sessionType" ? 2 : 1}
+                      >
+                        <RenderFormBuilder
+                          field={{
+                            ...field,
+                            name: `sessionSchedules.${index}.${field.name}`,
+                            ...(field.name === "classRoomId" && { options: roomOptions }),
+                          }}
+                        />
+                      </GridItem>
+                    ))}
+                  </Grid>
+                </Box>
+              );
+            })}
             <Box textAlign="center">
               <Button
                 size="medium"
