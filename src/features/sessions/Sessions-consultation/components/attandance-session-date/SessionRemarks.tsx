@@ -26,12 +26,11 @@ const SummaryCard: React.FC<{
 
   return (
     <Card 
-      bg={cardBg || defaultBg} 
-      shadow="md" 
-      borderRadius="md" 
+      bg={cardBg || defaultBg}
+      shadow="md"
+      borderRadius="md"
       borderColor={useColorModeValue("gray.100", "gray.700")}
-      maxW="400px"
-      w="full"
+      flex={1}
     >
       <CardBody p={6}>
         <VStack align="stretch" spacing={5}>

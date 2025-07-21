@@ -94,6 +94,8 @@ const AttendanceSessionDate: React.FC<AttendanceCellProps> = ({
         sessionData,
         attendance,
         stats,
+        teacherSummary: sessionData.teacherSummary || "",
+        administrationSummary: sessionData.administrationSummary || "",
       });
     } finally {
       setIsExporting(false);
