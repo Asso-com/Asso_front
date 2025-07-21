@@ -2,29 +2,27 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import PartnersColdefs from "./constants/PartnersColdefs";
 import StatsHorizontal from "@components/shared/StatsHorizontal";
 import { Box, SimpleGrid } from "@chakra-ui/react";
-import { FaBuilding, FaHandshake } from "react-icons/fa";
+import { FaHandshake } from "react-icons/fa";
 import CustomAgGrid from "@components/shared/ag-grid/CustomAgGrid";
 import HeaderActions from "./components/HeaderActions";
 import { AgGridReact } from "ag-grid-react";
 import type { Partner } from "./types";
+import ColumnAction from "./components/ColumnAction";
 
 interface ListOnlyPartnersPresenterProps {
-  total?: number;
-  activePartners?: number;
+  activePartners: number;
   partners?: Partner[];
 }
 
 const ListOnlyPartenersPresenter: React.FC<ListOnlyPartnersPresenterProps> = ({
-  total = 0,
   partners = [],
   activePartners = 0,
 }) => {
   const columnDefs = useMemo(() => {
-    return [
-      ...PartnersColdefs,
-    ];
+    return [...PartnersColdefs];
   }, []);
 
+  const total = partners.length;
   const gridRef = useRef<AgGridReact | null>(null);
   const [isGridInitialized, setIsGridInitialized] = useState(false);
 
@@ -44,8 +42,8 @@ const ListOnlyPartenersPresenter: React.FC<ListOnlyPartnersPresenterProps> = ({
           statTitle="Total Partners"
         />
         <StatsHorizontal
-          icon={FaBuilding}
-          color="green.500"
+          icon={FaHandshake}
+          color="blue.500"
           stats={activePartners.toString()}
           statTitle="Active Associations"
         />
@@ -56,7 +54,18 @@ const ListOnlyPartenersPresenter: React.FC<ListOnlyPartnersPresenterProps> = ({
       <CustomAgGrid
         ref={gridRef}
         rowData={partners}
-        colDefs={columnDefs}
+        colDefs={[
+          ...columnDefs,
+          {
+            headerName: "Actions",
+            field: "actions",
+            cellRenderer: ColumnAction,
+            filter: false,
+            sortable: false,
+            width: 120,
+            pinned: "right",
+          },
+        ]}
         onGridReady={() => setIsGridInitialized(true)}
         pagination={true}
         paginationPageSize={50}

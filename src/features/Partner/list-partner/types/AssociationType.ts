@@ -1,4 +1,4 @@
-export interface Association {
+export interface ExternalPartners {
   id: number;
   name: string;
   associationIdentifier: string;
@@ -23,9 +23,16 @@ export interface Association {
   region?: string;
 }
 
+export interface ActiveAssociation {
+  id: number;
+  name: string;
+  associationIdentifier: string;
+  logoUrl: string;
+  joinedDate: string;
+}
 
 export interface ExternalPartnersResponse {
-  data: Association[];
+  data: ExternalPartners[];
   total: number;
   page: number;
   totalPages: number;
@@ -41,4 +48,8 @@ export interface PaternRequestDto {
   address: string;
   currency: string;
   currencySymbol: string;
+  participationCoefficient: number;
+  assiduityCoefficient: number;
+  quizCoefficient: number;
+  delayBeforeAttendance: number;
 }

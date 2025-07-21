@@ -2,16 +2,25 @@ import { Button, Flex } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import type { ICellRendererParams } from "ag-grid-community";
 import useCreatePartner from "../hooks/useCreatePartner";
-import type { Association, PaternRequestDto } from "../types/AssociationType";
+import type {
+  ExternalPartners,
+  PaternRequestDto,
+} from "../types/AssociationType";
 
-const ColumnAction: React.FC<ICellRendererParams<Association>> = (params) => {
+const ColumnAction: React.FC<ICellRendererParams<ExternalPartners>> = (
+  params
+) => {
   const { t } = useTranslation();
   const { mutateAsync: createAssociation, isPending } = useCreatePartner();
 
-  const handleAddAssociation = async () => {
-    const data = params.data;
-    if (!data) return;
+  const data = params.data;
 
+  if (!data) return null;
+
+  const isNotAvailable = data.status !== "Active";
+  const isAlreadyAdded = data.isPartner === true;
+
+  const handleAddAssociation = async () => {
     const requestDto: PaternRequestDto = {
       associationIdentifier: data.associationIdentifier,
       name: data.shortTitle,
@@ -20,6 +29,10 @@ const ColumnAction: React.FC<ICellRendererParams<Association>> = (params) => {
       address: data.address || "N/A",
       currency: "EUR",
       currencySymbol: "€",
+      participationCoefficient: 1.0,
+      assiduityCoefficient: 1.0,
+      quizCoefficient: 1.0,
+      delayBeforeAttendance: 5,
     };
 
     try {
@@ -29,21 +42,35 @@ const ColumnAction: React.FC<ICellRendererParams<Association>> = (params) => {
     }
   };
 
-  const isAdded = params.data?.isPartner;
+  let buttonLabel = `+ ${t("Add")}`;
+  let isDisabled = false;
+  let bgColor = "green.500";
+  let hoverColor = "green.600";
+  let activeColor = "green.700";
+
+  if (isNotAvailable) {
+    buttonLabel = t("Not Available");
+    isDisabled = true;
+    bgColor = "gray.300";
+  } else if (isAlreadyAdded) {
+    buttonLabel = t("Added");
+    isDisabled = true;
+    bgColor = "gray.300";
+  }
 
   return (
     <Flex align="center" justify="center" gap={2} height="100%">
       <Button
         size="sm"
-        colorScheme={isAdded ? undefined : "green"}
-        variant={isAdded ? "outline" : "solid"}
+        colorScheme={!isDisabled ? "green" : undefined}
+        variant={!isDisabled ? "solid" : "outline"}
         onClick={handleAddAssociation}
-        isDisabled={isAdded}
+        isDisabled={isDisabled}
         isLoading={isPending}
         loadingText={t("Adding...")}
-        bg={isAdded ? "gray.300" : "green.500"}
-        _hover={isAdded ? { bg: "gray.300" } : { bg: "green.600" }}
-        _active={isAdded ? { bg: "gray.400" } : { bg: "green.700" }}
+        bg={bgColor}
+        _hover={{ bg: isDisabled ? "gray.300" : hoverColor }}
+        _active={{ bg: isDisabled ? "gray.400" : activeColor }}
         _disabled={{
           bg: "gray.300",
           color: "gray.600",
@@ -51,7 +78,7 @@ const ColumnAction: React.FC<ICellRendererParams<Association>> = (params) => {
           borderColor: "gray.400",
         }}
       >
-        {isAdded ? t("Added") : `+ ${t("Add")}`}
+        {buttonLabel}
       </Button>
     </Flex>
   );

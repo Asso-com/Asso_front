@@ -3,12 +3,15 @@ import ListOnlyPartenersPresenter from "./ListOnlyPartenersPresenter";
 import type { Partner } from "./types";
 
 const ListOnlyPartenersPage = () => {
+  const { data: foundPartners = [] } = useFetchAssociations();
 
-  const { data: foundPartners = [] } = useFetchAssociations()
+  const activePartners = foundPartners.filter(
+    (partner) => partner.active
+  ).length;
 
   return (
     <ListOnlyPartenersPresenter
-      activePartners={foundPartners.length}
+      activePartners={activePartners}
       partners={foundPartners as Partner[]}
     />
   );

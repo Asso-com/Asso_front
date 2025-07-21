@@ -5,13 +5,13 @@ import ExternalPartnerColumns from "./constants/ExternalPartnerColumns";
 import StatsHorizontal from "@components/shared/StatsHorizontal";
 import { FaHandshake, FaBuilding, FaMapMarkerAlt } from "react-icons/fa";
 import HeaderActions from "./components/HeaderActions";
-import type { Association } from "./types/AssociationType";
+import type { ExternalPartners } from "./types/AssociationType";
 import ColumnAction from "./components/ColumnAction";
 
 type AgGridReactType = any;
 
 interface ExternalPartnerPresenterProps {
-  partners: Association[];
+  partners: ExternalPartners[];
   total: number;
   stats: number;
 }
@@ -31,7 +31,7 @@ const ExternalPartnerPresenter: React.FC<ExternalPartnerPresenterProps> = ({
         cellRenderer: ColumnAction,
         filter: false,
         sortable: false,
-        width: 120,
+        width: 150,
         pinned: "right",
       },
     ];

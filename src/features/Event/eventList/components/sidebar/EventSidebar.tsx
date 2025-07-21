@@ -16,7 +16,6 @@ const EventSidebar = () => {
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
-  console.log("Association ID:", associationId);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const handleCloseSidebar = () => setSidebarOpen(false);

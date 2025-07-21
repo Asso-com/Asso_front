@@ -17,9 +17,9 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { setAssociationId } from "@store/authSlice";
-import useFetchAssociations from "@features/Partner/list-partner/hooks/useFetchAssociations";
 import type { RootState } from "@store/index";
-import type { Association } from "@features/Partner/list-partner/types/AssociationType";
+import type { ActiveAssociation } from "@features/Partner/list-partner/types/AssociationType";
+import useFetchActivePartners from "@features/Partner/list-partner/hooks/useFetchActivePartners";
 
 const AssociationList: React.FC = () => {
   const { t } = useTranslation();
@@ -28,11 +28,11 @@ const AssociationList: React.FC = () => {
   const associationId = useSelector(
     (state: RootState) => state.authSlice.associationId
   );
-  const { data: associations = [], isLoading } = useFetchAssociations();
+  const { data: associations = [], isLoading } = useFetchActivePartners();
 
   // Find the currently selected association from the list
   const selectedAssociation = associations.find(
-    (a: Association) => a.id === associationId
+    (a: ActiveAssociation) => a.id === associationId
   );
 
   // Colors based on color mode
@@ -42,7 +42,7 @@ const AssociationList: React.FC = () => {
   const borderColor = useColorModeValue("gray.200", "gray.600");
 
   // Dispatch the selected association id to Redux
-  const handleSelect = (association: Association) => {
+  const handleSelect = (association: ActiveAssociation) => {
     dispatch(setAssociationId(association.id));
   };
 
@@ -116,7 +116,7 @@ const AssociationList: React.FC = () => {
                   {t("Available Associations")}
                 </Text>
                 <Divider mb={1} />
-                {associations.map((association: Association) => (
+                {associations.map((association: ActiveAssociation) => (
                   <MenuItem
                     key={association.id}
                     onClick={() => handleSelect(association)}
@@ -135,7 +135,7 @@ const AssociationList: React.FC = () => {
                       <Avatar
                         size="sm"
                         icon={<Icon as={FaUsers} />}
-                        bg={association.isPartner ? "teal.500" : "gray.400"}
+                        bg={"teal.500"}
                         color="white"
                         mr={3}
                       />

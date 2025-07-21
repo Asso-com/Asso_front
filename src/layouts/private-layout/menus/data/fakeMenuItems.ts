@@ -382,12 +382,12 @@ const fakeMenuItems: MenuItem[] = [
     navLink: "",
     module_code: "SETTINGS",
     children: [
-      {
-        menu_id: 151,
-        menu_description: "Coefficient Setting",
-        navLink: "/Settings/CoefficientSetting",
-        icon: "FaAngleDoubleRight",
-      },
+      // {
+      //   menu_id: 151,
+      //   menu_description: "Coefficient Setting",
+      //   navLink: "/Settings/CoefficientSetting",
+      //   icon: "FaAngleDoubleRight",
+      // },
       {
         menu_id: 152,
         menu_description: "School Year Setting",

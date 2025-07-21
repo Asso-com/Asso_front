@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Association, ExternalPartnersResponse } from '../types/AssociationType';
+import type { ExternalPartners, ExternalPartnersResponse } from '../types/AssociationType';
 
 const externalApiInstance = axios.create({
   headers: {
@@ -20,9 +20,9 @@ const API_CONFIG = {
   MAX_CONCURRENT_REQUESTS: 3,
 };
 
-const processAssociationData = (item: any, index: number, offset: number = 0): Association => ({
+const processAssociationData = (item: any, index: number, offset: number = 0): ExternalPartners => ({
   id: offset + index + 1,
-  name: item.title || item.short_title || `Association ${item.id || offset + index + 1}`,
+  name: item.title || item.short_title || `ExternalPartners ${item.id || offset + index + 1}`,
   associationIdentifier: item.id,
   joinedDate: item.creation_date,
   shortTitle: item.short_title || item.title,
@@ -46,7 +46,7 @@ const processAssociationData = (item: any, index: number, offset: number = 0): A
 });
 
 // ✅ FONCTION POUR FETCH EN BATCH OPTIMISÉ
-const fetchBatch = async (offset: number): Promise<{ data: Association[], hasMore: boolean, totalCount?: number }> => {
+const fetchBatch = async (offset: number): Promise<{ data: ExternalPartners[], hasMore: boolean, totalCount?: number }> => {
 
   const url = `${API_CONFIG.BASE_URL}?limit=${API_CONFIG.BATCH_SIZE}&offset=${offset}&${API_CONFIG.FILTER}`;
 
@@ -75,7 +75,7 @@ const ExternalPartnerApi = {
   getPartners: async (): Promise<ExternalPartnersResponse> => {
 
     try {
-      let allPartners: Association[] = [];
+      let allPartners: ExternalPartners[] = [];
       let offset = 0;
       let totalCount = 0;
       let batchCount = 0;

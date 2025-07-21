@@ -21,7 +21,6 @@ import DepartmentContainer from "@features/Academics/department/DepartmentContai
 import CategoriesLevelsContainer from "@features/Academics/Categories-levels/CategoriesLevelsContainer";
 import StaffContainer from "@features/human-resource/staff/StaffContainer";
 import ClassRoomContainer from "@features/Academics/Class-room/ClassRoomContainer";
-import CoefficientSettingsContainer from "@features/system-settings/coefficients/CoefficientSettingsContainer.tsx";
 import LessonContainer from "@features/Lesson-plan/Lesson/LessonContainer.tsx";
 import TopicContainer from "@features/Lesson-plan/Topic/TopicContainer.tsx";
 import LocationContainer from "@features/Partner/location/LocationContainer";
@@ -102,11 +101,6 @@ const protectedRoutes = [
         element: <CategoriesLevelsContainer />,
       },
       { path: "/Academics/Department", element: <DepartmentContainer /> },
-
-      {
-        path: "/Settings/CoefficientSetting",
-        element: <CoefficientSettingsContainer />,
-      },
 
       { path: "/HumanResource/listStaff", element: <StaffContainer /> },
 

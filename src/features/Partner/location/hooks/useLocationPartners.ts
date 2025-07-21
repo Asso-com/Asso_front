@@ -73,7 +73,7 @@ const transformResults = (results: any[]): PartnerWithLocation[] => {
     .filter(item => item.geo_point_2d?.lat != null && item.geo_point_2d?.lon != null)
     .map((item, index) => ({
       id: index + 1,
-      name: item.title || item.short_title || `Association ${index + 1}`,
+      name: item.title || item.short_title || `ExternalPartners ${index + 1}`,
       shortTitle: item.short_title || '',
       address: [item.street_number_asso, item.street_type_asso, item.street_name_asso]
         .filter(Boolean)

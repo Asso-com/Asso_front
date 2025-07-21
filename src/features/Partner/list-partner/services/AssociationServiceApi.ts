@@ -11,7 +11,14 @@ const AssociationServiceApi = {
             handleAxiosError(error);
         }
     },
-
+    getOnlyActives: async (): Promise<any> => {
+        try {
+            const response = await axiosInstance.get<any>('/api/v1/associations/active');
+            return response.data;
+        } catch (error) {
+            handleAxiosError(error);
+        }
+    },
     createAssociation: async (associationData: PaternRequestDto): Promise<any> => {
         try {
             const response = await axiosInstance.post<any>('/api/v1/associations', associationData);

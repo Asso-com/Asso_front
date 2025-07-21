@@ -38,7 +38,7 @@ export const associationFormFields: Field[] = [
   {
     name: "associationIdentifier",
     type: "text",
-    label: "Association ID",
+    label: "Unique Identifier",
     placeholder: "Unique identifier",
     validationRules: {
       required: true,
@@ -81,31 +81,6 @@ export const associationFormFields: Field[] = [
     },
   },
   {
-    name: "currency",
-    type: "select",
-    label: "Currency",
-    placeholder: "Select currency",
-    options: [
-      { value: "USD", label: "US Dollar (USD)" },
-      { value: "EUR", label: "Euro (EUR)" },
-      { value: "GBP", label: "British Pound (GBP)" },
-      { value: "JPY", label: "Japanese Yen (JPY)" },
-    ],
-    validationRules: {
-      required: true,
-    },
-  },
-  {
-    name: "currencySymbol",
-    type: "text",
-    label: "Currency Symbol",
-    placeholder: "$, €, £, etc.",
-    validationRules: {
-      required: true,
-      maxLength: 3,
-    },
-  },
-  {
     name: "logoUrl",
     type: "file",
     label: "Logo",
@@ -118,7 +93,7 @@ export const associationFormFields: Field[] = [
 
 const AssociationProfile = () => {
   const [associationInfo] = useState<AssociationInfo>({
-    name: "Tech Innovators Association",
+    name: "Tech Innovators ",
     address: "123 Innovation St",
     email: "info@techinnovators.org",
     phone: "+1 (555) 987-6543",
@@ -206,7 +181,7 @@ const AssociationProfile = () => {
                 saveButtonProps={{
                   leftIcon: <FiSave />,
                 }}
-                saveText="Save Association"
+                saveText="Save changes"
               />
             </Flex>
           </Form>

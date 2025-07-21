@@ -12,8 +12,8 @@ const useCreatePartner = () => {
         mutationFn: (payload) => AssociationServiceApi.createAssociation(payload),
 
         onSuccess: () => {
-    
-            ['external-partners-villeneuve-all', 'associations'].forEach((key) => {
+
+            ['external-partners-villeneuve-all', 'associations', 'associations-actives'].forEach((key) => {
                 queryClient.invalidateQueries({ queryKey: [key] });
             });
 
