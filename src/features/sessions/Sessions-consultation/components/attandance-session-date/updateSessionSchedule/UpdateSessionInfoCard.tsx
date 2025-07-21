@@ -10,6 +10,7 @@ import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder
 import type { SessionSchuduleDate } from "@features/sessions/Session-schedule/types";
 import type { Field } from "@/types/formTypes";
 import useFetchClassRoom from "@features/Academics/Class-room/hooks/useFetchClassRoom";
+import useFetchStaff from "@features/human-resource/staff/hooks/useFetchStaff";
 import type { RootState } from "@store/index";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -30,24 +31,55 @@ const UpdateSessionInfoCard: React.FC<UpdateSessionInfoCardProps> = ({
 }) => {
   const associationId = useSelector((state: RootState) => state.authSlice.associationId);
   
-  const { data: classRoomsData, isLoading: isLoadingClassRooms} = useFetchClassRoom(associationId);
-
+  const { data: classRoomsData, isLoading: isLoadingClassRooms } = useFetchClassRoom(associationId);
+  const { data: staffData, isLoading: isLoadingStaff } = useFetchStaff(associationId);
   const classRoomOptions = classRoomsData?.map((classRoom: any) => ({
     label: classRoom.name,
     value: classRoom.id?.toString(),
   })) || [];
 
+  const teacherOptions = staffOptions.length > 0 ? staffOptions : 
+    (staffData?.filter((staff: any) => staff.isActive)
+      .map((staff: any) => ({
+        label: `${staff.firstName || ""} ${staff.lastName || ""}`.trim(),
+        value: staff.id?.toString(),
+      })) || []);
+
   useEffect(() => {
-    if (classRoomsData && sessionData.classRoomId && !formik.values.classRoom) {
+    if (classRoomsData && sessionData.classRoom && !formik.values.classRoom) {
+      
       const matchingClassRoom = classRoomsData.find((room: any) => 
-        room.id === sessionData.classRoomId
+        room.name === sessionData.classRoom
       );
       
       if (matchingClassRoom) {
         formik.setFieldValue('classRoom', matchingClassRoom.id?.toString());
+      } else {
       }
     }
-  }, [classRoomsData, sessionData.classRoomId, formik]);
+  }, [classRoomsData, sessionData.classRoom, formik.values.classRoom]);
+
+  useEffect(() => {
+    if (teacherOptions.length > 0 && sessionData.staffId && !formik.values.staffId) {
+      const matchingTeacher = teacherOptions.find((teacher: any) => 
+        teacher.value === sessionData.staffId?.toString() ||
+        teacher.value === sessionData.staffId
+      );
+      
+      if (matchingTeacher) {
+        formik.setFieldValue('staffId', matchingTeacher.value);
+      } else {
+        const staffMember = staffData?.find((staff: any) => 
+          staff.id === sessionData.staffId || 
+          staff.id?.toString() === sessionData.staffId?.toString()
+        );
+        
+        if (staffMember) {
+          formik.setFieldValue('staffId', staffMember.id?.toString());
+        }
+      }
+    }
+  }, [teacherOptions, sessionData.staffId, formik.values.staffId, staffData]);
 
   const sessionInfoFields: Field[] = [
     {
@@ -76,9 +108,9 @@ const UpdateSessionInfoCard: React.FC<UpdateSessionInfoCardProps> = ({
       name: "staffId",
       label: "Teacher",
       type: "select",
-      options: staffOptions,
+      options: teacherOptions,
       validationRules: { required: true },
-      placeholder: "Select teacher",
+      placeholder: isLoadingStaff ? "Loading teachers..." : "Select teacher",
     },
   ];
 

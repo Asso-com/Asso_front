@@ -1,10 +1,11 @@
 import { VStack, HStack, Button, useColorModeValue } from "@chakra-ui/react";
-import { useFormik,FormikProvider } from "formik";
+import { useFormik, FormikProvider } from "formik";
 import UpdateSessionInfoCard from "./UpdateSessionInfoCard";
 import RemarksCard from "./RemarksCard";
 import useUpdateSessionSchedule from "../../../hooks/useUpdateSessionSchedule";
 import type { SessionSchuduleDate } from "@features/sessions/Session-schedule/types";
 import { getUserTimezone } from "@utils/timeUtils";
+import { useMemo } from "react";
 
 interface UpdateSessionScheduleDateProps {
   sessionData: SessionSchuduleDate;
@@ -20,7 +21,6 @@ export interface UpdateSessionFormData {
   adminRemark: string;
   profRemark: string;
   timeZone: string;
-
 }
 
 const UpdateSessionScheduleDate: React.FC<UpdateSessionScheduleDateProps> = ({
@@ -29,27 +29,31 @@ const UpdateSessionScheduleDate: React.FC<UpdateSessionScheduleDateProps> = ({
   staffOptions = [],
 }) => {
   const cardBg = useColorModeValue("white", "gray.800");
-  const { mutate: updateSession, isPending } = useUpdateSessionSchedule( );
+  const { mutate: updateSession, isPending } = useUpdateSessionSchedule();
+
+  const initialValues = useMemo<UpdateSessionFormData>(() => ({
+    startTime: sessionData.startTime || "",
+    endTime: sessionData.endTime || "",
+    classRoom: "", 
+    staffId: sessionData.staffId ? sessionData.staffId.toString() : "", 
+    adminRemark: sessionData.administrationSummary || "",
+    profRemark: sessionData.teacherSummary || "",
+    timeZone: getUserTimezone(),
+  }), [sessionData]);
 
   const formik = useFormik<UpdateSessionFormData>({
-    initialValues: {
-      startTime: sessionData.startTime || "",
-      endTime: sessionData.endTime || "",
-      classRoom: sessionData.classRoom || "", 
-      staffId: sessionData.staffId?.toString() || "", 
-      adminRemark: sessionData.administrationSummary || "",
-      profRemark: sessionData.teacherSummary || "",
-      timeZone: getUserTimezone(),
-    },
+    initialValues,
+    enableReinitialize: true,
     onSubmit: (values) => {
       const updateRequest = {
         staffId: values.staffId, 
-        classRoomId: values.classRoom,
+        classRoomId: values.classRoom, 
         timeStart: values.startTime, 
         timeClose: values.endTime, 
         teacherSummary: values.profRemark,
         administrationSummary: values.adminRemark,
         timeZone: getUserTimezone(), 
+
       };
 
       updateSession(
