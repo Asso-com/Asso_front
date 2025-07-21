@@ -17,9 +17,6 @@ export function useUpdateEvent(associationId: number) {
 
   return useMutation<EventResponse, Error, UpdateEventPayload>({
     mutationFn: ({ id, formData }) => {
-      // Debug log to see what's being sent
-      console.log('Updating event with ID:', id);
-      console.log('FormData entries:');
       for (let pair of formData.entries()) {
         console.log(pair[0], pair[1]);
       }
@@ -29,7 +26,6 @@ export function useUpdateEvent(associationId: number) {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["events", associationId] });
       queryClient.invalidateQueries({ queryKey: ["events"] });
-      // Also invalidate the specific event query
       queryClient.invalidateQueries({ queryKey: ["event", data.id] });
       
       dispatch(
