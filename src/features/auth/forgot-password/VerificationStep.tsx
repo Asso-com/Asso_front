@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Box,
   Button,
@@ -18,6 +18,9 @@ interface VerificationStepProps {
   isLoading: boolean;
   handlePinSubmit: (e: React.FormEvent) => void;
   maskedPhone: string;
+  timeLeft: number;
+  resetTimer: () => void;
+  handleResendOtp: () => void;
 }
 
 const VerificationStep: React.FC<VerificationStepProps> = ({
@@ -26,46 +29,43 @@ const VerificationStep: React.FC<VerificationStepProps> = ({
   isLoading,
   handlePinSubmit,
   maskedPhone,
+  timeLeft,
+  resetTimer,
+  handleResendOtp,
 }) => {
   const { t } = useTranslation();
-  const [timeLeft, setTimeLeft] = useState(120); // 2 minutes = 120 seconds
-    useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }
-  }, [timeLeft]);
 
   const formatTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
-  
+
+  const onResend = () => {
+    handleResendOtp();
+    resetTimer();
+  };
+
   return (
     <Box as="form" onSubmit={handlePinSubmit} width="100%">
       <VStack spacing={6}>
         <VStack spacing={3} textAlign="center">
           <Text fontSize="sm" color="gray.600">
-            {t("We've sent a verification code to your phone number ending in")}{" "}
+            {t("We've sent a verification code to your phone number ending in")} {" "}
             <Text as="span" fontWeight="600" color="gray.800">
               {maskedPhone}
             </Text>
           </Text>
-<HStack spacing={2}>
-  <Text fontSize="xs" color="gray.500">
-    {t("Enter the 6-digit code below")}
-  </Text>
-  {timeLeft > 0 && (
-    <Text fontSize="xs" color="gray.500" fontWeight="500">
-      ({formatTime(timeLeft)})
-    </Text>
-  )}
-</HStack>
-
+          <HStack spacing={2}>
+            <Text fontSize="xs" color="gray.500">
+              {t("Enter the 6-digit code below")}
+            </Text>
+            {timeLeft > 0 && (
+              <Text fontSize="xs" color="gray.500" fontWeight="500">
+                ({formatTime(timeLeft)})
+              </Text>
+            )}
+          </HStack>
         </VStack>
         <FormControl>
           <HStack justify="center">
@@ -89,10 +89,10 @@ const VerificationStep: React.FC<VerificationStepProps> = ({
             color="white"
             title="Verify Code"
           />
-          
+
           <Text fontSize="xs" color="gray.500" textAlign="center">
-            {t("Didn't receive the code?")}{" "}
-            <Button variant="link" size="sm" color="brand.500">
+            {t("Didn't receive the code?")} {" "}
+            <Button variant="link" size="sm" color="brand.500" onClick={onResend} isDisabled={timeLeft > 0}>
               {t("Resend Code")}
             </Button>
           </Text>

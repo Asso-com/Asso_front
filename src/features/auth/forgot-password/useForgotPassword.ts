@@ -1,5 +1,5 @@
 import { useSendOtp } from './../hooks/useSendOtp';
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useVerifyOtp } from '../hooks/useVerifyOtp';
 import { useResetPassword } from '../hooks/useResetPassword';
 
@@ -16,6 +16,44 @@ export const useForgotPassword = (onBackToLogin: () => void) => {
   const verifyOtpMutation = useVerifyOtp();
   const resetPasswordMutation = useResetPassword();
 
+  const [timeLeft, setTimeLeft] = useState(120);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (currentStep === "verification") {
+      setTimeLeft(120);
+      if (timerRef.current) clearInterval(timerRef.current);
+      timerRef.current = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            if (timerRef.current) clearInterval(timerRef.current);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      if (timerRef.current) clearInterval(timerRef.current);
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [currentStep]);
+
+  const resetTimer = () => {
+    setTimeLeft(120);
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          if (timerRef.current) clearInterval(timerRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
   const maskPhone = (phoneNumber: string): string => {
     const cleanPhone = phoneNumber.replace(/\D/g, '');
     if (cleanPhone.length >= 4) {
@@ -26,67 +64,68 @@ export const useForgotPassword = (onBackToLogin: () => void) => {
     return phoneNumber;
   };
 
-const handleEmailSubmit = async (
-  values: { email: string }, 
-  formikHelpers: any
-) => {
-  try {
-    setError("");
-    setSuccessMessage("");
-    setSubmittedEmail(values.email);
-    const response = await sendOtpMutation.mutateAsync({ email: values.email });
-    setMaskedPhone(maskPhone(response.data));
-    setSuccessMessage(response.data);
-    setCurrentStep("verification");
-  } catch (err: any) {
-    setError(err?.message || "Failed to send verification code. Please try again.");
-    setTimeout(() => setError(""), 7000); 
-  } finally {
-    formikHelpers.setSubmitting(false);
-  }
-};
+  const handleEmailSubmit = async (
+    values: { email: string },
+    formikHelpers: any
+  ) => {
+    try {
+      setError("");
+      setSuccessMessage("");
+      setSubmittedEmail(values.email);
+      const response = await sendOtpMutation.mutateAsync({ email: values.email });
+      setMaskedPhone(maskPhone(response.data));
+      setSuccessMessage(response.data);
+      setCurrentStep("verification");
+    } catch (err: any) {
+      setError(err?.message || "Failed to send verification code. Please try again.");
+      setTimeout(() => setError(""), 7000);
+    } finally {
+      formikHelpers.setSubmitting(false);
+    }
+  };
 
-const handlePinSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (pin.length !== 6) {
-    setError("Please enter the complete 6-digit verification code");
-    setTimeout(() => setError(""), 7000); 
-    return;
-  }
-  
-  setError("");
-  
-  try {
-    await verifyOtpMutation.mutateAsync({ 
-      email: submittedEmail, 
-      otpCode: pin 
-    });
-    setCurrentStep('reset');
-  } catch (err: any) {
-    setError(err?.message || "Invalid verification code. Please try again.");
-    setTimeout(() => setError(""), 7000);
-  }
-};
+  const handlePinSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (pin.length !== 6) {
+      setError("Please enter the complete 6-digit verification code");
+      setTimeout(() => setError(""), 7000);
+      return;
+    }
 
-const handleResendOtp = async () => {
-  if (!submittedEmail) return;
-  
-  try {
     setError("");
-    const response = await sendOtpMutation.mutateAsync({ email: submittedEmail });
-    setSuccessMessage(response.data);
-  } catch (err: any) {
-    setError(err?.message || "Failed to resend code. Please try again.");
-    setTimeout(() => setError(""), 7000); 
-  }
-};
+
+    try {
+      await verifyOtpMutation.mutateAsync({
+        email: submittedEmail,
+        otpCode: pin
+      });
+      setCurrentStep('reset');
+    } catch (err: any) {
+      setError(err?.message || "Invalid verification code. Please try again.");
+      setTimeout(() => setError(""), 7000);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (!submittedEmail) return;
+
+    try {
+      setError("");
+      const response = await sendOtpMutation.mutateAsync({ email: submittedEmail });
+      setSuccessMessage(response.data);
+      resetTimer();
+    } catch (err: any) {
+      setError(err?.message || "Failed to resend code. Please try again.");
+      setTimeout(() => setError(""), 7000);
+    }
+  };
 
   const handlePasswordReset = async (
     values: { newPassword: string; confirmPassword: string },
     helpers: any
   ) => {
     setError("");
-    
+
     try {
       await resetPasswordMutation.mutateAsync({
         email: submittedEmail,
@@ -118,9 +157,9 @@ const handleResendOtp = async () => {
     }
   };
 
-  const isLoading = sendOtpMutation.isPending || 
-                   verifyOtpMutation.isPending || 
-                   resetPasswordMutation.isPending;
+  const isLoading = sendOtpMutation.isPending ||
+    verifyOtpMutation.isPending ||
+    resetPasswordMutation.isPending;
 
   return {
     currentStep,
@@ -144,6 +183,8 @@ const handleResendOtp = async () => {
       sendOtp: sendOtpMutation,
       verifyOtp: verifyOtpMutation,
       resetPassword: resetPasswordMutation,
-    }
+    },
+    timeLeft,
+    resetTimer,
   };
 };

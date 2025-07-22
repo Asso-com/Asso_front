@@ -36,6 +36,9 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
     handlePasswordReset,
     getStepProgress,
     getStepTitle,
+    timeLeft,
+    resetTimer,
+    handleResendOtp,
   } = useForgotPassword(onBackToLogin);
 
   return (
@@ -92,6 +95,9 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             isLoading={isLoading}
             handlePinSubmit={handlePinSubmit}
             maskedPhone={maskedPhone}
+            timeLeft={timeLeft}
+            resetTimer={resetTimer}
+            handleResendOtp={handleResendOtp}
           />
         )}
         
