@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import useExternalPartners from "./hooks/useExternalPartners";
-import useFetchAssociations from "./hooks/useFetchAssociations";
+import useExternalPartners from "../hooks/useExternalPartners";
+import useFetchAssociations from "../hooks/useFetchAssociations";
 import ExternalPartnerPresenter from "./ExternalPartnerPresenter";
 
 /**

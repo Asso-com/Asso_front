@@ -1,6 +1,6 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import ExternalPartnerApi from '../services/ExternalPartnerApi';
-import type { ExternalPartnersResponse } from '../types/AssociationType';
+import type { ExternalPartnersResponse } from '../list-partner/types/AssociationType';
 import { switchLoadingModal } from '@components/shared/modal-overlay/ModalLoading';
 
 const useExternalPartners = (): UseQueryResult<ExternalPartnersResponse, Error> => {

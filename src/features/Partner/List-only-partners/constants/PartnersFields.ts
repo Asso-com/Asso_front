@@ -1,6 +1,5 @@
 import type { Field } from "@/types/formTypes"
 
-
 const PartnersFields: Field[] = [
     {
         name: "assiduityCoefficient",
@@ -13,7 +12,7 @@ const PartnersFields: Field[] = [
         },
     },
     {
-        name: "assiduityCoefficient",
+        name: "participationCoefficient",
         label: "Participation Coefficient",
         type: "number",
         placeholder: "Enter participation coefficient",

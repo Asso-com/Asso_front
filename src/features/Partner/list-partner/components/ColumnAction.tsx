@@ -1,7 +1,7 @@
 import { Button, Flex } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import type { ICellRendererParams } from "ag-grid-community";
-import useCreatePartner from "../hooks/useCreatePartner";
+import useCreatePartner from "../../hooks/useCreatePartner";
 import type {
   ExternalPartners,
   PaternRequestDto,

@@ -1,36 +1,40 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { showToast } from '@store/toastSlice';
-import type { PaternRequestDto } from '../types/AssociationType';
 import AssociationServiceApi from '../services/AssociationServiceApi';
 
-const useCreatePartner = () => {
+interface UpdatePatnerParams {
+    associationId: number;
+    data: any;
+}
+
+const useUpdatePatner = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    return useMutation<void, Error, PaternRequestDto>({
-        mutationFn: (payload) => AssociationServiceApi.createAssociation(payload),
+    return useMutation<void, Error, UpdatePatnerParams>({
+        mutationFn: ({ associationId, data }) =>
+            AssociationServiceApi.updateAssocationSettings(associationId, data),
 
         onSuccess: () => {
-
-            ['external-partners-villeneuve-all', 'associations', 'associations-actives'].forEach((key) => {
-                queryClient.invalidateQueries({ queryKey: [key] });
+            queryClient.invalidateQueries({
+                queryKey: ['associations'],
             });
 
             dispatch(
                 showToast({
                     title: 'Success',
-                    message: 'Partner created successfully.',
+                    message: 'Partner updated successfully.',
                     type: 'success',
                 })
             );
         },
 
-        onError: (err) => {
+        onError: (error) => {
             dispatch(
                 showToast({
                     title: 'Error',
-                    message: err.message || 'An unexpected error occurred.',
+                    message: error.message || 'Failed to update department.',
                     type: 'error',
                 })
             );
@@ -38,4 +42,4 @@ const useCreatePartner = () => {
     });
 };
 
-export default useCreatePartner;
+export default useUpdatePatner;

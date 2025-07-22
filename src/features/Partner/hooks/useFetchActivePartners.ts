@@ -2,7 +2,7 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { switchLoadingModal } from '@components/shared/modal-overlay/ModalLoading';
 import AssociationServiceApi from '../services/AssociationServiceApi';
-import type { ActiveAssociation } from '../types/AssociationType';
+import type { ActiveAssociation } from '../list-partner/types/AssociationType';
 
 const useFetchActivePartners = (): UseQueryResult<ActiveAssociation[], Error> => {
 

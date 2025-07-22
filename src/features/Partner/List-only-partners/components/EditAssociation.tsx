@@ -7,6 +7,7 @@ import createValidationSchema from "@utils/createValidationSchema";
 import type { Field } from "@/types/formTypes";
 import FooterActions from "@components/shared/FooterActions";
 import PartnersFields from "../constants/PartnersFields";
+import useUpdatePatner from "@features/Partner/hooks/useUpdatePatner";
 
 interface EditAssociationProps {
   details?: Record<string, any>;
@@ -21,6 +22,8 @@ const EditAssociation: React.FC<EditAssociationProps> = ({
   details,
   onClose,
 }) => {
+  const { mutateAsync: updatePatner, isPending } = useUpdatePatner();
+
   const initialValues: FormValues = useMemo(() => {
     const values = PartnersFields.reduce((acc: FormValues, field: Field) => {
       acc[field.name] = details?.[field.name] ?? "";
@@ -40,6 +43,7 @@ const EditAssociation: React.FC<EditAssociationProps> = ({
   ) => {
     try {
       console.log(values);
+      updatePatner({ associationId: details?.id, data: values });
       onClose();
     } catch (error) {
     } finally {
@@ -68,7 +72,7 @@ const EditAssociation: React.FC<EditAssociationProps> = ({
             <FooterActions
               onClose={onClose}
               handleSave={handleSubmit}
-              isDisabled={!dirty || isSubmitting}
+              isDisabled={!dirty || isSubmitting || isPending}
               isSaving={isSubmitting}
               cancelText="Cancel"
               saveText="Edit Association"

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { ExternalPartners, ExternalPartnersResponse } from '../types/AssociationType';
+import type { ExternalPartners, ExternalPartnersResponse } from '../list-partner/types/AssociationType';
 
 const externalApiInstance = axios.create({
   headers: {

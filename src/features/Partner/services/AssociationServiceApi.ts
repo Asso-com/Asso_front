@@ -1,5 +1,5 @@
 import { axiosInstance } from "@services/api-services/axiosInstance";
-import type { PaternRequestDto } from "../types/AssociationType";
+import type { PaternRequestDto } from "../list-partner/types/AssociationType";
 import handleAxiosError from "@utils/handleAxiosError";
 
 const AssociationServiceApi = {
@@ -14,6 +14,22 @@ const AssociationServiceApi = {
     getOnlyActives: async (): Promise<any> => {
         try {
             const response = await axiosInstance.get<any>('/api/v1/associations/active');
+            return response.data;
+        } catch (error) {
+            handleAxiosError(error);
+        }
+    },
+    toggelAssociation: async (associationId: number): Promise<any> => {
+        try {
+            const response = await axiosInstance.patch<any>(`/api/v1/associations/${associationId}/toggle-active`);
+            return response.data;
+        } catch (error) {
+            handleAxiosError(error);
+        }
+    },
+    updateAssocationSettings: async (associationId: number, data: any): Promise<any> => {
+        try {
+            const response = await axiosInstance.put<any>(`/api/v1/associations/${associationId}/settings`, data);
             return response.data;
         } catch (error) {
             handleAxiosError(error);

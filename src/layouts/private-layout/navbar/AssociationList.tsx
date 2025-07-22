@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setAssociationId } from "@store/authSlice";
 import type { RootState } from "@store/index";
 import type { ActiveAssociation } from "@features/Partner/list-partner/types/AssociationType";
-import useFetchActivePartners from "@features/Partner/list-partner/hooks/useFetchActivePartners";
+import useFetchActivePartners from "@features/Partner/hooks/useFetchActivePartners";
 
 const AssociationList: React.FC = () => {
   const { t } = useTranslation();

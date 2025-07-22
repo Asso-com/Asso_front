@@ -1,4 +1,4 @@
-import useFetchAssociations from "../list-partner/hooks/useFetchAssociations";
+import useFetchAssociations from "../hooks/useFetchAssociations";
 import ListOnlyPartenersPresenter from "./ListOnlyPartenersPresenter";
 import type { Partner } from "./types";
 
