@@ -4,7 +4,7 @@ import handleAxiosError from "@utils/handleAxiosError";
 const UserServiceApi = {
     getCurrentUserProfile: async <T = any>(): Promise<T> => {
         try {
-            const response = await axiosInstance.get<T>("/api/users/profile");
+            const response = await axiosInstance.get<T>("/api/v1/users/profile");
             return response.data;
         } catch (error) {
             handleAxiosError(error);
@@ -14,7 +14,7 @@ const UserServiceApi = {
 
   updateCurrentUserProfile: async (formData: FormData) => {
     try {
-      const response = await axiosInstance.put("/api/users/update-profile", formData);
+      const response = await axiosInstance.put("/api/v1/users/update-profile", formData);
       return response.data;
     } catch (error) {
       handleAxiosError(error);

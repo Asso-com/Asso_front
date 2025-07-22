@@ -1,11 +1,9 @@
-import { useState } from "react";
 import { VStack, Flex, Box, SimpleGrid } from "@chakra-ui/react";
 import type { Field } from "@/types/formTypes";
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import createValidationSchema from "@utils/createValidationSchema";
 import { Form, Formik } from "formik";
 import FooterActions from "@components/shared/FooterActions";
-import { FaUser } from "react-icons/fa";
 import useFetchUserProfile from "./hooks/useFetchUserProfile";
 import { useUpdateUserProfile } from "./hooks/useUpdateUserProfile";
 
@@ -16,7 +14,7 @@ interface UserInfo {
   phone: string;
   dateOfBirth: string;
   comment: string;
-  user_image: string | File;
+  image: File | string |null;
   mobileNumber?: string;
   address?: string;
   city?: string;
@@ -74,12 +72,13 @@ export const userFormFields: Field[] = [
     },
   },
   {
-    name: "imageUrl",
+    name: "image",
     type: "file",
     label: "Image",
     placeholder: "Upload Image",
     validationRules: {
-      // optional
+      maxSize: 2 * 1024 * 1024,
+      allowedExtensions: ["jpg", "jpeg", "png", "webp"],
     },
   },
   {
@@ -131,7 +130,8 @@ export const userFormFields: Field[] = [
 
 const UserProfile = () => {
   const { data: userInfo, isLoading } = useFetchUserProfile();
-  const { mutate: updateProfile, isPending: isUpdating } = useUpdateUserProfile();
+  const { mutate: updateProfile, isPending: isUpdating } =
+    useUpdateUserProfile();
 
   const initialValues = {
     firstName: userInfo?.firstName ?? "",
@@ -140,8 +140,7 @@ const UserProfile = () => {
     phone: userInfo?.mobileNumber ?? "",
     mobileNumber: userInfo?.mobileNumber ?? "",
     comment: userInfo?.comment ?? "",
-    user_image: userInfo?.imageUrl ?? "",
-    imageUrl: userInfo?.imageUrl ?? "",
+    image: userInfo?.imageUrl ?? null,
     address: userInfo?.address ?? "",
     city: userInfo?.city ?? "",
     zipCode: userInfo?.zipCode ?? "",
@@ -154,12 +153,10 @@ const UserProfile = () => {
   const createFormData = (values: Partial<UserInfo>): FormData => {
     const formData = new FormData();
     Object.entries(values).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        if (key === 'imageUrl' || key === 'user_image') {
+      if (value !== undefined && value !== null && value !== "") {
+        if (key === "image") {
           if (value instanceof File) {
-            formData.append(key, value);
-          } else if (typeof value === 'string' && value) {
-            formData.append(key, value);
+            formData.append("image", value);
           }
         } else {
           formData.append(key, String(value));
@@ -171,10 +168,7 @@ const UserProfile = () => {
   };
 
   const onSubmit = (values: Partial<UserInfo>) => {
-    console.log('Submitting values:', values);
-    
     const formData = createFormData(values);
-    
     updateProfile({ formData });
   };
 
@@ -194,7 +188,7 @@ const UserProfile = () => {
         validateOnBlur={false}
         onSubmit={onSubmit}
       >
-        {({ isSubmitting, dirty }) => (
+        {({ dirty }) => (
           <Form
             style={{
               flex: 1,
@@ -241,14 +235,16 @@ const UserProfile = () => {
             </Flex>
 
             <Flex justifyContent="flex-end">
+              <Flex justifyContent="flex-end">
               <FooterActions
                 onClose={() => {}}
                 handleSave={() => {}}
-                isDisabled={!dirty || isUpdating}
-                isSaving={isSubmitting || isUpdating}
+                isDisabled={!dirty}
+                isSaving={isUpdating}
                 cancelText="Cancel"
                 saveText="Save Changes"
               />
+            </Flex>
             </Flex>
           </Form>
         )}
