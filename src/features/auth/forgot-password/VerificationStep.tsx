@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -28,6 +28,23 @@ const VerificationStep: React.FC<VerificationStepProps> = ({
   maskedPhone,
 }) => {
   const { t } = useTranslation();
+  const [timeLeft, setTimeLeft] = useState(120); // 2 minutes = 120 seconds
+    useEffect(() => {
+    if (timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [timeLeft]);
+
+  const formatTime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+  
   return (
     <Box as="form" onSubmit={handlePinSubmit} width="100%">
       <VStack spacing={6}>
@@ -38,9 +55,17 @@ const VerificationStep: React.FC<VerificationStepProps> = ({
               {maskedPhone}
             </Text>
           </Text>
-          <Text fontSize="xs" color="gray.500">
-            {t("Enter the 6-digit code below")}
-          </Text>
+<HStack spacing={2}>
+  <Text fontSize="xs" color="gray.500">
+    {t("Enter the 6-digit code below")}
+  </Text>
+  {timeLeft > 0 && (
+    <Text fontSize="xs" color="gray.500" fontWeight="500">
+      ({formatTime(timeLeft)})
+    </Text>
+  )}
+</HStack>
+
         </VStack>
         <FormControl>
           <HStack justify="center">
@@ -64,7 +89,7 @@ const VerificationStep: React.FC<VerificationStepProps> = ({
             color="white"
             title="Verify Code"
           />
-
+          
           <Text fontSize="xs" color="gray.500" textAlign="center">
             {t("Didn't receive the code?")}{" "}
             <Button variant="link" size="sm" color="brand.500">

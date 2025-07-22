@@ -81,7 +81,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
           <EmailStep
             isLoading={isLoading}
             handleEmailSubmit={handleEmailSubmit}
-            successMessage={successMessage} // Pass successMessage
+            successMessage={successMessage}
           />
         )}
         
