@@ -31,6 +31,7 @@ import FamilyDetailsContainer from "@features/gestionFamily/family-details/Famil
 import ListReunionContainer from "@features/gestionFamily/list-reunion-family/ListReunionContainer";
 import TestPage from "@features/TestPage";
 
+import AnnonceContainer from "@features/Annonces/AnnonceContainer";
 const protectedRoutes = [
   {
     element: <ProtectedLayout />,
@@ -108,6 +109,7 @@ const protectedRoutes = [
       { path: "/Events/EventList", element: <EventListContainer /> },
       { path: "/families", element: <FamilyDetailsContainer /> },
       { path: "/list-reu-families", element: <ListReunionContainer /> },
+      { path: "/Communicate/Annonce", element: <AnnonceContainer /> },
     ],
   },
 ];

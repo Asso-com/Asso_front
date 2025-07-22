@@ -35,7 +35,7 @@ const CustomAgGrid = forwardRef<AgGridReactType, CustomAgGridProps>(
         sortable: true,
         suppressMovable: false,
         cellStyle: {
-          textAlign: "center",
+          textAlign: "left",
         },
       };
     }, []);
