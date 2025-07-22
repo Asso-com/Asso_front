@@ -1,16 +1,22 @@
 import { Flex } from "@chakra-ui/react";
-import { ViewIcon, CalendarIcon, InfoIcon, BellIcon } from "@chakra-ui/icons";
+import {
+  ViewIcon,
+  InfoIcon,
+  BellIcon,
+  EditIcon,
+} from "@chakra-ui/icons";
 import type { ICellRendererParams } from "ag-grid-community";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
 import { useState } from "react";
 import GenericModal from "@components/ui/GenericModal";
 import type { Session } from "../types/session.types";
-import SessionDetails from "./SessionDetails";
+import UnifiedSessionModal from "./SessionModal";
 import LessonTopicDetails from "./LessonTopicDetails";
-import SessionScheduleDetails from "./SessionSheduleDetails";
 import StudentEnrollment from "./StudentEnrollment";
 import EventCreation from "./EventCreation";
+import EditSessionModal from "./EditSessionModal";
 import { FaUsers } from "react-icons/fa";
+
 interface SessionCellRendererParams extends ICellRendererParams {
   associationId: number;
 }
@@ -22,9 +28,9 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
   const [modalState, setModalState] = useState({
     viewSession: false,
     enrollment: false,
-    viewSchedule: false,
     viewLessonPlan: false,
     createEvent: false,
+    editSession: false,
   });
 
   const toggleModal = (modalName: keyof typeof modalState) => {
@@ -35,27 +41,23 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
   };
 
   const handleViewDetails = () => {
-    //console.log("View session details:", sessionData.id);
     toggleModal("viewSession");
   };
 
   const handleViewLessonPlan = () => {
-    //console.log("View lesson plan for session:", sessionData.id);
     toggleModal("viewLessonPlan");
   };
 
-  const handleViewSchedule = () => {
-    //console.log("View session schedule:", sessionData.id);
-    toggleModal("viewSchedule");
-  };
-
   const handleAddStudents = () => {
-    //console.log("Add students to session:", sessionData.id);
     toggleModal("enrollment");
   };
+
   const handleCreateEvent = () => {
-    //console.log("Create event for session:", sessionData.id);
     toggleModal("createEvent");
+  };
+
+  const handleEditSession = () => {
+    toggleModal("editSession");
   };
 
   const isSessionFull = sessionData.placesAvailable === 0;
@@ -64,13 +66,23 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
     <>
       <Flex align="center" justify="center" gap={1} height="100%">
         <GenericIconButtonWithTooltip
-          label="View Session Details"
-          aria-label="View session details"
+          label="View Session Details & Schedule"
+          aria-label="View session details and schedule"
           icon={<InfoIcon />}
           size={{ base: "sm", md: "md" }}
           variant="ghost"
           colorScheme="blue"
           onClick={handleViewDetails}
+        />
+
+        <GenericIconButtonWithTooltip
+          label="Edit Session"
+          aria-label="Edit session"
+          icon={<EditIcon />}
+          size={{ base: "sm", md: "md" }}
+          variant="ghost"
+          colorScheme="orange"
+          onClick={handleEditSession}
         />
 
         <GenericIconButtonWithTooltip
@@ -84,16 +96,6 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
         />
 
         <GenericIconButtonWithTooltip
-          aria-label="View session schedule"
-          icon={<CalendarIcon />}
-          label="View Schedule"
-          size={{ base: "sm", md: "md" }}
-          variant="ghost"
-          colorScheme="purple"
-          onClick={handleViewSchedule}
-        />
-
-        <GenericIconButtonWithTooltip
           aria-label="Add students to session"
           icon={<FaUsers size={22} />}
           size={{ base: "sm", md: "md" }}
@@ -102,6 +104,7 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
           colorScheme={isSessionFull ? "red" : "blue"}
           onClick={handleAddStudents}
         />
+
         <GenericIconButtonWithTooltip
           aria-label="Create Event"
           icon={<BellIcon />}
@@ -113,13 +116,33 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
         />
       </Flex>
 
+      {/* Unified Modal for Session Details and Schedule */}
       <GenericModal
         isOpen={modalState.viewSession}
         onClose={() => toggleModal("viewSession")}
-        title={`Session Details`}
-        size="2xl"
+        title={`Session Information - ${sessionData.code}`}
+        size="4xl"
+                modalContentProps={{
+          height: "700px",
+        }}
       >
-        <SessionDetails sessionData={sessionData} />
+        <UnifiedSessionModal sessionData={sessionData} />
+      </GenericModal>
+
+      <GenericModal
+        isOpen={modalState.editSession}
+        onClose={() => toggleModal("editSession")}
+        title={`Edit Session`}
+        size="6xl"
+                        modalContentProps={{
+          height: "700px",
+        }}
+      >
+        <EditSessionModal
+          sessionData={sessionData}
+          associationId={associationId}
+          onClose={() => toggleModal("editSession")}
+        />
       </GenericModal>
 
       <GenericModal
@@ -131,15 +154,6 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
         <div style={{ height: "80vh", overflowY: "auto" }}>
           <LessonTopicDetails sessionId={sessionData.id} />
         </div>
-      </GenericModal>
-
-      <GenericModal
-        isOpen={modalState.viewSchedule}
-        onClose={() => toggleModal("viewSchedule")}
-        title={`Schedule`}
-        size="4xl"
-      >
-        <SessionScheduleDetails sessionData={sessionData} />
       </GenericModal>
 
       <GenericModal
@@ -157,6 +171,7 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
           categoryId={sessionData.levelSubject.categoryId}
         />
       </GenericModal>
+
       <GenericModal
         isOpen={modalState.createEvent}
         onClose={() => toggleModal("createEvent")}

@@ -9,7 +9,7 @@ import BasicInfoStep from "./components/BasicInfoStep";
 import ScheduleStep from "./components/ScheduleStep";
 import StudentSelectionStep from "./components/StudentSelectionStep";
 import { NavigationButtons } from "./components/FormComponents";
-import { createFullInfoSchema } from "./validation/schemas";
+import { AddSessionValidationSchema } from "@utils/createValidationSchema";
 import { useDispatch } from "react-redux";
 import { showToast } from "@store/toastSlice";
 import useCreateSession from "./hooks/useCreateSession";
@@ -212,7 +212,7 @@ const AddSessionPresenter: React.FC<AddSessionPresenterProps> = ({
           >
             <Formik<SessionFormData>
               initialValues={dynamicInitialValues}
-              validationSchema={createFullInfoSchema(normalizedData)}
+              validationSchema={AddSessionValidationSchema(normalizedData)}
               onSubmit={(values) => {
                     console.log("Données envoyées :", values);
                     handleSubmit(values, associationId);

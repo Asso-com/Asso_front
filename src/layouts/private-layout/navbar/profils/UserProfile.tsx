@@ -1,11 +1,11 @@
-import { useState } from "react";
 import { VStack, Flex, Box, SimpleGrid } from "@chakra-ui/react";
 import type { Field } from "@/types/formTypes";
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import createValidationSchema from "@utils/createValidationSchema";
 import { Form, Formik } from "formik";
 import FooterActions from "@components/shared/FooterActions";
-import { FaUser } from "react-icons/fa";
+import useFetchUserProfile from "./hooks/useFetchUserProfile";
+import { useUpdateUserProfile } from "./hooks/useUpdateUserProfile";
 
 interface UserInfo {
   firstName: string;
@@ -13,8 +13,8 @@ interface UserInfo {
   email: string;
   phone: string;
   dateOfBirth: string;
-  bio: string;
-  user_image: string | File;
+  comment: string;
+  image: File | string |null;
   mobileNumber?: string;
   address?: string;
   city?: string;
@@ -72,12 +72,13 @@ export const userFormFields: Field[] = [
     },
   },
   {
-    name: "imageUrl",
+    name: "image",
     type: "file",
     label: "Image",
     placeholder: "Upload Image",
     validationRules: {
-      // optional
+      maxSize: 2 * 1024 * 1024,
+      allowedExtensions: ["jpg", "jpeg", "png", "webp"],
     },
   },
   {
@@ -116,7 +117,7 @@ export const userFormFields: Field[] = [
     },
   },
   {
-    name: "bio",
+    name: "comment",
     type: "textarea",
     label: "Bio",
     placeholder: "Tell us about yourself...",
@@ -128,36 +129,47 @@ export const userFormFields: Field[] = [
 ];
 
 const UserProfile = () => {
-  const [userInfo] = useState<UserInfo>({
-    firstName: "Dali",
-    lastName: "Doe",
-    email: "john.doe@example.com",
-    phone: "+1 (555) 123-4567",
-    dateOfBirth: "1990-01-15",
-    bio: "Software developer with passion for creating innovative solutions.",
-    user_image: "https://i.pravatar.cc/150?img=4",
-  });
+  const { data: userInfo, isLoading } = useFetchUserProfile();
+  const { mutate: updateProfile, isPending: isUpdating } =
+    useUpdateUserProfile();
 
   const initialValues = {
-    firstName: userInfo.firstName,
-    lastName: userInfo.lastName,
-    email: userInfo.email,
-    phone: userInfo.phone,
-    mobileNumber: userInfo.phone,
-    dateOfBirth: userInfo.dateOfBirth,
-    bio: userInfo.bio,
-    user_image: userInfo.user_image,
-    imageUrl: userInfo.user_image,
-    address: "",
-    city: "",
-    zipCode: "",
-    state: "",
+    firstName: userInfo?.firstName ?? "",
+    lastName: userInfo?.lastName ?? "",
+    email: userInfo?.email ?? "",
+    phone: userInfo?.mobileNumber ?? "",
+    mobileNumber: userInfo?.mobileNumber ?? "",
+    comment: userInfo?.comment ?? "",
+    image: userInfo?.imageUrl ?? null,
+    address: userInfo?.address ?? "",
+    city: userInfo?.city ?? "",
+    zipCode: userInfo?.zipCode ?? "",
   };
+
+  if (isLoading) return <p>Chargement du profil...</p>;
 
   const validationSchema = createValidationSchema(userFormFields);
 
+  const createFormData = (values: Partial<UserInfo>): FormData => {
+    const formData = new FormData();
+    Object.entries(values).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        if (key === "image") {
+          if (value instanceof File) {
+            formData.append("image", value);
+          }
+        } else {
+          formData.append(key, String(value));
+        }
+      }
+    });
+
+    return formData;
+  };
+
   const onSubmit = (values: Partial<UserInfo>) => {
-    console.log(values);
+    const formData = createFormData(values);
+    updateProfile({ formData });
   };
 
   return (
@@ -176,7 +188,7 @@ const UserProfile = () => {
         validateOnBlur={false}
         onSubmit={onSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ dirty }) => (
           <Form
             style={{
               flex: 1,
@@ -206,7 +218,7 @@ const UserProfile = () => {
               <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} mb={2}>
                 {userFormFields
                   .filter(
-                    (field) => field.type !== "file" && field.name !== "bio"
+                    (field) => field.type !== "file" && field.name !== "comment"
                   )
                   .map((field) => (
                     <RenderFormBuilder key={field.name} field={field} />
@@ -215,7 +227,7 @@ const UserProfile = () => {
 
               <SimpleGrid columns={1} spacing={2}>
                 {userFormFields
-                  .filter((field) => field.name === "bio")
+                  .filter((field) => field.name === "comment")
                   .map((field) => (
                     <RenderFormBuilder key={field.name} field={field} />
                   ))}
@@ -223,17 +235,16 @@ const UserProfile = () => {
             </Flex>
 
             <Flex justifyContent="flex-end">
+              <Flex justifyContent="flex-end">
               <FooterActions
                 onClose={() => {}}
                 handleSave={() => {}}
-                //isDisabled={!dirty}
-                isSaving={isSubmitting}
+                isDisabled={!dirty}
+                isSaving={isUpdating}
                 cancelText="Cancel"
-                saveButtonProps={{
-                  leftIcon: <FaUser />,
-                }}
-                saveText="save changes"
+                saveText="Save Changes"
               />
+            </Flex>
             </Flex>
           </Form>
         )}

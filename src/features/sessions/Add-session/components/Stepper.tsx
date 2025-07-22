@@ -11,8 +11,11 @@ import {
 } from "@chakra-ui/react";
 import { InfoIcon, CheckIcon } from "@chakra-ui/icons";
 import { FaCalendar } from "react-icons/fa";
+
 interface StepperProps {
   currentStep: number;
+  steps?: SessionStep[];
+  maxSteps?: number;
 }
 
 interface SessionStep {
@@ -21,14 +24,31 @@ interface SessionStep {
   icon: React.ElementType;
 }
 
-const SESSION_STEPS: SessionStep[] = [
+const DEFAULT_SESSION_STEPS: SessionStep[] = [
   { title: "Basic Info", description: "Complete session details", icon: InfoIcon },
   { title: "Schedule", description: "Set up schedule", icon: FaCalendar },
   { title: "Select Students", description: "Select students", icon: CheckIcon },
 ];
 
-const Stepper: React.FC<StepperProps> = ({ currentStep }) => {
+const EDIT_SESSION_STEPS: SessionStep[] = [
+  { title: "Basic Info", description: "Update session details", icon: InfoIcon },
+  { title: "Schedule", description: "Modify schedule", icon: FaCalendar },
+];
+
+const Stepper: React.FC<StepperProps> = ({ 
+  currentStep, 
+  steps,
+  maxSteps 
+}) => {
   const cardBg = useColorModeValue("white", "gray.800");
+  
+  // Determine which steps to use
+  let stepsToShow = steps || DEFAULT_SESSION_STEPS;
+  
+  // If maxSteps is provided, limit the steps
+  if (maxSteps) {
+    stepsToShow = stepsToShow.slice(0, maxSteps);
+  }
 
   return (
     <Card
@@ -44,7 +64,7 @@ const Stepper: React.FC<StepperProps> = ({ currentStep }) => {
     >
       <CardBody p={4} flex="1" display="flex" justifyContent="center">
         <VStack pt={8}>
-          {SESSION_STEPS.map((step, index) => {
+          {stepsToShow.map((step, index) => {
             const StepIcon = step.icon;
             const isActive = index <= currentStep;
 
@@ -72,7 +92,7 @@ const Stepper: React.FC<StepperProps> = ({ currentStep }) => {
                     {step.description}
                   </Text>
                 </VStack>
-                {index < SESSION_STEPS.length - 1 && (
+                {index < stepsToShow.length - 1 && (
                   <Box
                     width="2px"
                     height="40px"
@@ -88,4 +108,5 @@ const Stepper: React.FC<StepperProps> = ({ currentStep }) => {
   );
 };
 
+export { EDIT_SESSION_STEPS };
 export default Stepper;

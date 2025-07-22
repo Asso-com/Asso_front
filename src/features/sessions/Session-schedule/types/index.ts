@@ -19,4 +19,6 @@ export interface SessionSchuduleDate {
   timeZone: string;
   administrationSummary: string;
   teacherSummary: string;
+  staffId: number;
+  classRoomId: number; 
 }

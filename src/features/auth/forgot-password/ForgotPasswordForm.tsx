@@ -29,6 +29,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
     setPin,
     isLoading,
     error,
+    successMessage, 
     maskedPhone,
     handleEmailSubmit,
     handlePinSubmit,
@@ -80,8 +81,10 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
           <EmailStep
             isLoading={isLoading}
             handleEmailSubmit={handleEmailSubmit}
+            successMessage={successMessage}
           />
         )}
+        
         {currentStep === "verification" && (
           <VerificationStep
             pin={pin}
@@ -91,12 +94,14 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             maskedPhone={maskedPhone}
           />
         )}
+        
         {currentStep === "reset" && (
           <PasswordResetStep
             isLoading={isLoading}
             handlePasswordReset={handlePasswordReset}
           />
         )}
+        
         <Button
           leftIcon={<ArrowLeft size={18} />}
           variant="outline"

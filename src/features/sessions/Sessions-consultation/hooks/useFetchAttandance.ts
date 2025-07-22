@@ -1,6 +1,6 @@
 // useFetchAttandance.ts
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
-import AttandanceServiceApi from "../services/AttandanceServiceApi";
+import AttendanceServiceApi from "../services/AttandanceServiceApi";
 import type { Attendance } from "../types";
 
 export interface FetchAttandanceParams {
@@ -14,7 +14,7 @@ const useFetchAttandance = (
     return useQuery<FetchAttandanceParams, Error>({
         queryKey: ["attandance-session-date", sessionScheduleDateId],
         queryFn: () =>
-            AttandanceServiceApi.getAttandanceBySessionScheduleDate<FetchAttandanceParams>(
+            AttendanceServiceApi.getAttendanceBySessionScheduleDate<FetchAttandanceParams>(
                 sessionScheduleDateId
             ),
         staleTime: 5 * 60 * 1000,

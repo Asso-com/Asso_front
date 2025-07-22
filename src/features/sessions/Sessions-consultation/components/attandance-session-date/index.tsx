@@ -7,7 +7,6 @@ import {
   Flex,
   Button,
   Icon,
-  useToast,
   Spinner,
   Text,
   HStack,
@@ -22,8 +21,12 @@ import AttandanceColDefs from "../../constants/AttandanceColDefs";
 import SessionInfoCard from "./SessionInfoCard";
 import SessionStatusCard from "./SessionStatusCard";
 import AttendanceStatsCard from "./AttendanceStatsCard";
-import RemarksCard from "./RemarksCard";
 import { generatePdf } from "./utility/pdfGenerator";
+import useRegisterAttendance from "../../hooks/useRegisterAttendance";
+import useValidateSession from "../../hooks/useValidateSession";
+import useCancelSession from "../../hooks/useCancelSession";
+import SessionRemarks from "./SessionRemarks";
+
 interface AttendanceCellProps {
   attandanceDate: SessionSchuduleDate;
 }
@@ -31,6 +34,10 @@ interface AttendanceCellProps {
 const AttendanceSessionDate: React.FC<AttendanceCellProps> = ({
   attandanceDate,
 }) => {
+  const registerAttendance = useRegisterAttendance();
+  const validateSession = useValidateSession();
+  const cancelSession = useCancelSession();
+
   const [sessionData, setSessionData] = useState(attandanceDate);
   const [isExporting, setIsExporting] = useState(false);
 
@@ -38,30 +45,34 @@ const AttendanceSessionDate: React.FC<AttendanceCellProps> = ({
   const attendance: Attendance[] = response?.attendances || [];
 
   const cardBg = useColorModeValue("white", "gray.800");
-  const toast = useToast();
-
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const toggleAttendanceMarked = useCallback(() => {
-    setSessionData((prev) => ({
-      ...prev,
-      attendanceMarked: !prev.attendanceMarked,
-    }));
-  }, []);
+  const handleRegisterAttendance = useCallback(async () => {
+    try {
+      await registerAttendance.mutateAsync({
+        sessionDateId: sessionData.sessionDateId,
+      });
+      setSessionData((prev) => ({ ...prev, attendanceMarked: true }));
+    } catch {}
+  }, [sessionData.sessionDateId, registerAttendance]);
 
-  const toggleValidated = useCallback(() => {
-    setSessionData((prev) => ({
-      ...prev,
-      validated: !prev.validated,
-    }));
-  }, []);
+  const handleValidateSession = useCallback(async () => {
+    try {
+      await validateSession.mutateAsync({
+        sessionDateId: sessionData.sessionDateId,
+      });
+      setSessionData((prev) => ({ ...prev, validated: true }));
+    } catch {}
+  }, [sessionData.sessionDateId, validateSession]);
 
-  const toggleCanceled = useCallback(() => {
-    setSessionData((prev) => ({
-      ...prev,
-      canceled: !prev.canceled,
-    }));
-  }, []);
+  const handleCancelSession = useCallback(async () => {
+    try {
+      await cancelSession.mutateAsync({
+        sessionDateId: sessionData.sessionDateId,
+      });
+      setSessionData((prev) => ({ ...prev, canceled: true }));
+    } catch {}
+  }, [sessionData.sessionDateId, cancelSession]);
 
   const stats = useMemo(() => {
     const total = attendance.length;
@@ -83,11 +94,13 @@ const AttendanceSessionDate: React.FC<AttendanceCellProps> = ({
         sessionData,
         attendance,
         stats,
+        teacherSummary: sessionData.teacherSummary || "",
+        administrationSummary: sessionData.administrationSummary || "",
       });
     } finally {
       setIsExporting(false);
     }
-  }, [sessionData, attendance, stats, toast]);
+  }, [sessionData, attendance, stats]);
 
   return (
     <Box h="85vh" p={{ base: 2, md: 4 }} maxW="100%">
@@ -97,12 +110,12 @@ const AttendanceSessionDate: React.FC<AttendanceCellProps> = ({
           <SessionStatusCard
             sessionData={sessionData}
             cardBg={cardBg}
-            onToggleAttendanceMarked={toggleAttendanceMarked}
-            onToggleValidated={toggleValidated}
-            onToggleCanceled={toggleCanceled}
+            onToggleAttendanceMarked={handleRegisterAttendance}
+            onToggleValidated={handleValidateSession}
+            onToggleCanceled={handleCancelSession}
           />
           <AttendanceStatsCard stats={stats} cardBg={cardBg} />
-          <RemarksCard cardBg={cardBg} />
+          <SessionRemarks sessionData={sessionData} cardBg={cardBg} />
         </Flex>
 
         <Divider />

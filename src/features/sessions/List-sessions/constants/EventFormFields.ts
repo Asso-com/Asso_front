@@ -6,7 +6,10 @@ export const eventFormFields: Field[] = [
     name: "title",
     label: "Event Title",
     type: "text",
-    validationRules: { required: true },
+    validationRules: {
+      required: true, 
+      maxLength: 255,
+    },
     placeholder: "Enter event title",
   },
   {

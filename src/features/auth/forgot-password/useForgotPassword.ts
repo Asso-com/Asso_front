@@ -1,80 +1,102 @@
-
+import { useSendOtp } from './../hooks/useSendOtp';
 import { useState } from "react";
-import { type FormikHelpers } from "formik";
+import { useVerifyOtp } from '../hooks/useVerifyOtp';
+import { useResetPassword } from '../hooks/useResetPassword';
+
 export type Step = 'email' | 'verification' | 'reset';
-type FormValues = Record<string, string>;
+
 export const useForgotPassword = (onBackToLogin: () => void) => {
   const [currentStep, setCurrentStep] = useState<Step>('email');
-
   const [pin, setPin] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [maskedPhone, setMaskedPhone] = useState("*******7772");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [maskedPhone, setMaskedPhone] = useState("");
+  const [submittedEmail, setSubmittedEmail] = useState("");
+  const sendOtpMutation = useSendOtp();
+  const verifyOtpMutation = useVerifyOtp();
+  const resetPasswordMutation = useResetPassword();
 
-  const handleEmailSubmit = async (
-    values: FormValues,
-    { setSubmitting }: FormikHelpers<FormValues>
-  ) => {
-    const email = values.email;
-    if (!email) {
-      setError("Please enter your email address");
-      setSubmitting(false);
-      return;
+  const maskPhone = (phoneNumber: string): string => {
+    const cleanPhone = phoneNumber.replace(/\D/g, '');
+    if (cleanPhone.length >= 4) {
+      const lastFourDigits = cleanPhone.slice(-4);
+      const maskedPart = '*'.repeat(Math.max(0, cleanPhone.length - 4));
+      return maskedPart + lastFourDigits;
     }
-
-    setIsLoading(true);
-    setError("");
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      setMaskedPhone("*******7772");
-      setCurrentStep("verification");
-    } catch (err) {
-      setError("Failed to send verification code. Please try again.");
-    } finally {
-      setIsLoading(false);
-      setSubmitting(false);
-    }
+    return phoneNumber;
   };
 
-  const handlePinSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (pin.length !== 6) {
-      setError("Please enter the complete 6-digit verification code");
-      return;
-    }
-    setIsLoading(true);
+const handleEmailSubmit = async (
+  values: { email: string }, 
+  formikHelpers: any
+) => {
+  try {
     setError("");
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      if (pin === "123456") {
-        setCurrentStep('reset');
-      } else {
-        setError("Invalid verification code. Please try again.");
-      }
-    } catch (err) {
-      setError("Failed to verify code. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    setSuccessMessage("");
+    setSubmittedEmail(values.email);
+    const response = await sendOtpMutation.mutateAsync({ email: values.email });
+    setMaskedPhone(maskPhone(response.data));
+    setSuccessMessage(response.data);
+    setCurrentStep("verification");
+  } catch (err: any) {
+    setError(err?.message || "Failed to send verification code. Please try again.");
+    setTimeout(() => setError(""), 7000); 
+  } finally {
+    formikHelpers.setSubmitting(false);
+  }
+};
+
+const handlePinSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (pin.length !== 6) {
+    setError("Please enter the complete 6-digit verification code");
+    setTimeout(() => setError(""), 7000); 
+    return;
+  }
+  
+  setError("");
+  
+  try {
+    await verifyOtpMutation.mutateAsync({ 
+      email: submittedEmail, 
+      otpCode: pin 
+    });
+    setCurrentStep('reset');
+  } catch (err: any) {
+    setError(err?.message || "Invalid verification code. Please try again.");
+    setTimeout(() => setError(""), 7000);
+  }
+};
+
+const handleResendOtp = async () => {
+  if (!submittedEmail) return;
+  
+  try {
+    setError("");
+    const response = await sendOtpMutation.mutateAsync({ email: submittedEmail });
+    setSuccessMessage(response.data);
+  } catch (err: any) {
+    setError(err?.message || "Failed to resend code. Please try again.");
+    setTimeout(() => setError(""), 7000); 
+  }
+};
 
   const handlePasswordReset = async (
     values: { newPassword: string; confirmPassword: string },
     helpers: any
   ) => {
-    console.log(values);
-    //const { newPassword, confirmPassword } = values;
-
-    setIsLoading(true);
     setError("");
+    
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await resetPasswordMutation.mutateAsync({
+        email: submittedEmail,
+        newPassword: values.newPassword,
+        confirmPassword: values.confirmPassword
+      });
       onBackToLogin();
-    } catch (err) {
-      setError("Failed to reset password. Please try again.");
+    } catch (err: any) {
+      setError(err?.message || "Failed to reset password. Please try again.");
     } finally {
-      setIsLoading(false);
       helpers.setSubmitting(false);
     }
   };
@@ -96,6 +118,10 @@ export const useForgotPassword = (onBackToLogin: () => void) => {
     }
   };
 
+  const isLoading = sendOtpMutation.isPending || 
+                   verifyOtpMutation.isPending || 
+                   resetPasswordMutation.isPending;
+
   return {
     currentStep,
     setCurrentStep,
@@ -104,11 +130,20 @@ export const useForgotPassword = (onBackToLogin: () => void) => {
     isLoading,
     error,
     setError,
+    successMessage,
     maskedPhone,
+    setMaskedPhone,
+    submittedEmail,
     handleEmailSubmit,
     handlePinSubmit,
     handlePasswordReset,
+    handleResendOtp,
     getStepProgress,
     getStepTitle,
+    mutations: {
+      sendOtp: sendOtpMutation,
+      verifyOtp: verifyOtpMutation,
+      resetPassword: resetPasswordMutation,
+    }
   };
-}; 
+};
