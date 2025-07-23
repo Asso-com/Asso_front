@@ -29,6 +29,7 @@ import BookListContainer from "@features/Library/BookListContainer";
 import EventListContainer from "@features/Event/eventList/EventListContainer";
 import FamilyDetailsContainer from "@features/gestionFamily/family-details/FamilyDetailsContainer";
 import ListReunionContainer from "@features/gestionFamily/list-reunion-family/ListReunionContainer";
+import VerificationCodeContainer from "@features/system-settings/Verification-Codes/VerificationCodeContainer";
 import TestPage from "@features/TestPage";
 
 import AnnonceContainer from "@features/Annonces/AnnonceContainer";
@@ -45,6 +46,10 @@ const protectedRoutes = [
       {
         path: "/Settings/AcademicPeriodWeeks",
         element: <AcademicPeriodWeeksContainer />,
+      },
+      {
+        path: "/Settings/VerificationCodes",
+        element: <VerificationCodeContainer />,
       },
       {
         path: "/Student/StudentInformation",

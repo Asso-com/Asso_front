@@ -406,6 +406,12 @@ const fakeMenuItems: MenuItem[] = [
         navLink: "/Settings/EmailSettings",
         icon: "FaAngleDoubleRight",
       },
+            {
+        menu_id: 155,
+        menu_description: "Verification Codes",
+        navLink: "/Settings/VerificationCodes",
+        icon: "FaAngleDoubleRight",
+      },
 
     ],
   },
