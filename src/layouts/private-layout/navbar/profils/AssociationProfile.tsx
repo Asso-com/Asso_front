@@ -1,17 +1,24 @@
-import { useState } from "react";
+import { useSelector } from "react-redux";
 import {
   VStack,
   Flex,
   Box,
   SimpleGrid,
+  Spinner,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
 } from "@chakra-ui/react";
+import type { RootState } from "@store/index";
 import type { Field } from "@/types/formTypes";
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import createValidationSchema from "@utils/createValidationSchema";
 import { Form, Formik } from "formik";
 import FooterActions from "@components/shared/FooterActions";
-import {FiSave } from "react-icons/fi";
-
+import { FiSave } from "react-icons/fi";
+import useFetchAssociationProfile from "./hooks/useFetchAssociationProfile";
+import { useUpdateAssociationProfile } from "./hooks/useUpdateAssociationProfile";
 
 interface AssociationInfo {
   name: string;
@@ -44,6 +51,9 @@ export const associationFormFields: Field[] = [
       required: true,
       maxLength: 50,
     },
+    inputProps:{
+    isDisabled: true,
+    }
   },
   {
     name: "address",
@@ -86,39 +96,66 @@ export const associationFormFields: Field[] = [
     label: "Logo",
     placeholder: "Upload logo",
     validationRules: {
-      required: false,
+      required:false,
+      maxSize: 2 * 1024 * 1024,
+      allowedExtensions: ["jpg", "jpeg", "png", "webp"],
     },
   },
 ];
 
 const AssociationProfile = () => {
-  const [associationInfo] = useState<AssociationInfo>({
-    name: "Tech Innovators ",
-    address: "123 Innovation St",
-    email: "info@techinnovators.org",
-    phone: "+1 (555) 987-6543",
-    associationIdentifier: "ASSN12345",
-    logoUrl: "https://i.pravatar.cc/150?img=1",
-    currency: "USD",
-    currencySymbol: "$",
-  });
-
+  const associationId = useSelector(
+    (state: RootState) => state.authSlice.associationId
+  );
+  const { data: associationData, isLoading} = useFetchAssociationProfile(associationId);
+  const updateAssociationProfile = useUpdateAssociationProfile();
   const initialValues = {
-    name: associationInfo.name,
-    address: associationInfo.address,
-    email: associationInfo.email,
-    phone: associationInfo.phone,
-    associationIdentifier: associationInfo.associationIdentifier,
-    logoUrl: associationInfo.logoUrl,
-    currency: associationInfo.currency,
-    currencySymbol: associationInfo.currencySymbol,
+    name: associationData?.name || "",
+    address: associationData?.address || "",
+    email: associationData?.email || "",
+    phone: associationData?.phone || "",
+    associationIdentifier: associationData?.associationIdentifier || "",
+    logoUrl: associationData?.logoUrl || "", 
   };
-
   const validationSchema = createValidationSchema(associationFormFields);
+  const onSubmit = async (values: Partial<AssociationInfo>) => {
+    try {
+      const formData = new FormData();
+            Object.entries(values).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          if (key === 'logoUrl' && value instanceof File) {
+            formData.append('image', value);
+          } else if (key !== 'logoUrl') {
+            formData.append(key, String(value));
+          }
+        }
+      });
 
-  const onSubmit = (values: Partial<AssociationInfo>) => {
-    console.log(values);
+      await updateAssociationProfile.mutateAsync({
+        id: associationId,
+        formData
+      });
+    } catch (error) {
+      console.error('Error updating association profile:', error);
+    }
   };
+  if (isLoading) {
+    return (
+      <Box
+        height="100%"
+        display="flex"
+        flexDirection="column"
+        bg="white"
+        borderRadius="md"
+        shadow="md"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Spinner size="xl" color="blue.500" />
+      </Box>
+    );
+  }
+  
 
   return (
     <Box
@@ -136,7 +173,7 @@ const AssociationProfile = () => {
         validateOnBlur={false}
         onSubmit={onSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, submitForm }) => (
           <Form
             style={{
               flex: 1,
@@ -175,8 +212,8 @@ const AssociationProfile = () => {
             <Flex justifyContent="flex-end">
               <FooterActions
                 onClose={() => {}}
-                handleSave={() => {}}
-                isSaving={isSubmitting}
+                handleSave={submitForm}
+                isSaving={isSubmitting || updateAssociationProfile.isPending}
                 cancelText="Cancel"
                 saveButtonProps={{
                   leftIcon: <FiSave />,

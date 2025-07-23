@@ -140,7 +140,7 @@ const UserProfile = () => {
     phone: userInfo?.mobileNumber ?? "",
     mobileNumber: userInfo?.mobileNumber ?? "",
     comment: userInfo?.comment ?? "",
-    image: userInfo?.imageUrl ?? null,
+    image: userInfo?.imageUrl ?? "",
     address: userInfo?.address ?? "",
     city: userInfo?.city ?? "",
     zipCode: userInfo?.zipCode ?? "",
