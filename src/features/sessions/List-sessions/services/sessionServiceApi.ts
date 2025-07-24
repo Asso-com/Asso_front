@@ -82,6 +82,14 @@ const SessionServiceApi = {
       handleAxiosError(error);
     }
   },
+   delete: async (id: number): Promise<void> => {
+    try {
+      await axiosInstance.delete(`/api/v1/sessions/${id}`);
+    } catch (error) {
+      handleAxiosError(error);
+      throw error;
+    }
+  },
 };
 
 export default SessionServiceApi;
