@@ -15,16 +15,18 @@ import {
   TagLabel,
   TagLeftIcon,
 } from "@chakra-ui/react";
-import { FiUser, FiMail, FiBook, FiGlobe} from "react-icons/fi";
+import { FiUser, FiMail, FiBook, FiGlobe } from "react-icons/fi";
 import { MdEdit } from "react-icons/md";
 import { useState } from "react";
-import type { EnrolledSubject, StudentEnrollmentDetails } from "../../not-academic-enrollments/types";
+import type {
+  EnrolledSubject,
+  StudentEnrollmentDetails,
+} from "../../not-academic-enrollments/types";
 import { useTranslation } from "react-i18next";
 import type { FC } from "react";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
 import EditStudentEnrollment from "./sidebar/editStudentEnrollement";
 import GenericModal from "@components/ui/GenericModal";
-
 
 const getLevelColor = (levelCode: string) => {
   const colors: Record<string, string> = {
@@ -34,7 +36,7 @@ const getLevelColor = (levelCode: string) => {
     B2: "purple",
     C1: "red",
     C2: "pink",
-    "PRE-A1":"yellow",
+    "PRE-A1": "yellow",
   };
   return colors[levelCode] || "gray";
 };
@@ -46,7 +48,8 @@ interface StudentCardProps {
 const StudentCard: FC<StudentCardProps> = ({ studentData }) => {
   const { t } = useTranslation();
   const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
-  const [isSubjectsModalOpen, setIsSubjectsModalOpen] = useState<boolean>(false);
+  const [isSubjectsModalOpen, setIsSubjectsModalOpen] =
+    useState<boolean>(false);
 
   const cardBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.600");
@@ -119,19 +122,23 @@ const StudentCard: FC<StudentCardProps> = ({ studentData }) => {
               fontSize="xs"
               px={2}
               py={1}
+              mr={1}
               borderRadius="full"
             >
               {studentData.levelSubjects.length} {t("subjects")}
             </Badge>
-            <GenericIconButtonWithTooltip
-              icon={<MdEdit size={22} />}
-              label={t("Edit Enrollment")}
-              ariaLabel="edit_enrollment_btn"
-              variant="ghost"
-              colorScheme="green"
-              size="sm"
-              onClick={openEditModal}
-            />
+            <Box
+            >
+              <GenericIconButtonWithTooltip
+                icon={<MdEdit size={19} />}
+                label={t("Edit Enrollment")}
+                ariaLabel="edit_enrollment_btn"
+                variant="ghost"
+                color="white"
+                size="xs"
+                onClick={openEditModal}
+              />
+            </Box>
           </Flex>
         </Box>
 
@@ -256,9 +263,9 @@ const StudentCard: FC<StudentCardProps> = ({ studentData }) => {
             </Box>
           </VStack>
         </CardBody>
-        
-        <EditStudentEnrollment 
-          studentDetails={studentData} 
+
+        <EditStudentEnrollment
+          studentDetails={studentData}
           isOpen={isEditOpen}
           onClose={closeEditModal}
         />
