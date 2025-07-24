@@ -49,7 +49,7 @@ const ListSessionsPresenter = ({
             cellRendererParams: { associationId },
             filter: false,
             sortable: false,
-            width: 300,
+            width: 330,
             pinned: "right",
           },
         ]}
