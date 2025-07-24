@@ -45,7 +45,6 @@ const FormContent = forwardRef<FormContentRef, FormContentProps>(
     const {
       data: levels,
       isLoading: loadingLevels,
-      isError: errorLevels,
     } = useFetchLevelsByCategory(associationId, selectedCategoryId);
 
     const {

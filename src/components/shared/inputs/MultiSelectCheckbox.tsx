@@ -12,6 +12,9 @@ import TextLabel from "@components/ui/TextLabel";
 export type Option = {
   label: string;
   value: string | number;
+  inputProps?: {
+    isDisabled?: boolean;
+  };
 };
 
 interface MultiSelectCheckboxProps {
@@ -35,6 +38,7 @@ const MultiSelectCheckbox: React.FC<MultiSelectCheckboxProps> = ({
   label,
   isRequired = false,
   isInvalid = false,
+  isDisabled = false,
   errorMessage,
   emptyMessage = "No options available",
   checkboxProps,
@@ -78,20 +82,23 @@ const MultiSelectCheckbox: React.FC<MultiSelectCheckboxProps> = ({
         </Box>
       ) : (
         <Flex gap={4} wrap="wrap">
-          {options.map((option) => (
-            <Checkbox
-              key={option.value}
-              value={String(option.value)}
-              isChecked={selectedValues.includes(option.value)}
-              onChange={() => handleCheckboxChange(option.value)}
-              isDisabled={restProps.isDisabled}
-              isReadOnly={restProps.isReadOnly}
-              {...checkboxProps}
-              {...restProps}
-            >
-              <TextLabel label={option.label} fontSize="sm" />
-            </Checkbox>
-          ))}
+          {options.map((option) => {
+            const isOptionDisabled = isDisabled || option.inputProps?.isDisabled || false;
+            return (
+              <Checkbox
+                key={option.value}
+                value={String(option.value)}
+                isChecked={selectedValues.includes(option.value)}
+                onChange={() => handleCheckboxChange(option.value)}
+                isDisabled={isOptionDisabled}
+                isReadOnly={restProps.isReadOnly}
+                {...checkboxProps}
+                {...restProps}
+              >
+                <TextLabel label={option.label} fontSize="sm" />
+              </Checkbox>
+            );
+          })}
         </Flex>
       )}
 

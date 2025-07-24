@@ -19,7 +19,6 @@ interface VerificationStepProps {
   handlePinSubmit: (e: React.FormEvent) => void;
   maskedPhone: string;
   timeLeft: number;
-  resetTimer: () => void;
   handleResendOtp: () => void;
 }
 

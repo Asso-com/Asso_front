@@ -41,6 +41,7 @@ export interface Student {
 }
 
 export interface StudentEnrollmentDetails {
+  id: string;
   student: Student;
   academicPeriod: AcademicPeriod;
   levelSubjects: EnrolledSubject[];
