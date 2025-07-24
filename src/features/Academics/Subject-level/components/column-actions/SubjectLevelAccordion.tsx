@@ -1,4 +1,3 @@
-// Fixed SubjectLevelAccordion.tsx
 import {
   Accordion,
   AccordionItem,
@@ -11,6 +10,8 @@ import {
   useColorModeValue,
   Flex,
   VStack,
+  Tooltip,
+  Badge,
 } from '@chakra-ui/react'
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import { MdEdit } from 'react-icons/md'
@@ -32,7 +33,9 @@ export const SubjectLevelAccordion = ({ levels, associationId }: Props) => {
   const bgExpanded = useColorModeValue('blue.50', 'blue.900')
   const bgHover = useColorModeValue('gray.50', 'gray.700')
   const borderColor = useColorModeValue('gray.200', 'gray.600')
-  
+  const hoverBorderColor = useColorModeValue('blue.300', 'blue.500')
+  const iconColor = useColorModeValue('blue.600', 'blue.300')
+
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [selectedLevel, setSelectedLevel] = useState<{
     levelId: number
@@ -47,7 +50,7 @@ export const SubjectLevelAccordion = ({ levels, associationId }: Props) => {
   const { mutate: deleteSubject } = useDeleteSubjectLevel(
     isValidAssociationId ? associationId : 0
   )
-  
+
   const handleEditLevel = (levelId: number, currentSubjects: any[], levelName?: string) => {
     const subjectIds = currentSubjects.map(subject => subject.id)
     
@@ -62,9 +65,7 @@ export const SubjectLevelAccordion = ({ levels, associationId }: Props) => {
 
   const toggleEditModal = () => {
     setEditModalOpen(!editModalOpen)
-    if (!editModalOpen) {
-      setSelectedLevel(null)
-    }
+    if (!editModalOpen) setSelectedLevel(null)
   }
 
   const handleDeleteSubject = async (subjectId: number, levelId?: number) => {
@@ -82,43 +83,31 @@ export const SubjectLevelAccordion = ({ levels, associationId }: Props) => {
     })
   }
 
-  const createSubjectCard = (subject: Subject, levelId: number) => {
-    return (
-      <BaseCard
-        key={subject.id}
-        item={subject}
-        deleteConfig={{
-          onDelete: (subjectId) => handleDeleteSubject(subjectId, levelId),
-          deleteTitle: "Delete subject",
-          deleteMessage: (name: string) => `Are you sure you want to remove "${name}" from this level?`,
-          confirmText: "Yes, delete",
-          cancelText: "Cancel",
-          canDelete: isValidAssociationId,
-        }}
-        cardConfig={{
-          color: "blue",
-          showCode: true,
-        }}
-      />
-    )
-  }
+  const createSubjectCard = (subject: Subject, levelId: number) => (
+    <BaseCard
+      key={subject.id}
+      item={subject}
+      deleteConfig={{
+        onDelete: (subjectId) => handleDeleteSubject(subjectId, levelId),
+        deleteTitle: "Delete subject",
+        deleteMessage: (name: string) => `Are you sure you want to remove "${name}" from this level?`,
+        confirmText: "Yes, delete",
+        cancelText: "Cancel",
+        canDelete: isValidAssociationId,
+      }}
+      cardConfig={{
+        color: "blue",
+        showCode: true,
+      }}
+    />
+  )
 
   return (
     <Container maxW="full" p={0}>
       <VStack spacing={4} align="stretch">
-        <Accordion 
-          allowMultiple 
-          defaultIndex={[0]}
-        >
+        <Accordion allowMultiple defaultIndex={[0]}>
           {levels.map((level, index) => {
-            // REMOVED: The duplicate filtering logic that was causing the issue
-            // const filteredSubjects = level.subjects.filter(subject =>
-            //   subject.name.toLowerCase().includes(filterText.toLowerCase())
-            // )
-            
-            // Now we just use the subjects that were already filtered in the presenter
             const filteredSubjects = level.subjects
-
             if (filteredSubjects.length === 0) return null
 
             return (
@@ -126,12 +115,11 @@ export const SubjectLevelAccordion = ({ levels, associationId }: Props) => {
                 key={index}
                 border="1px solid"
                 borderColor={borderColor}
-                borderRadius="xl"
-                overflow="hidden"
+                borderRadius="lg"
                 shadow="sm"
-                _hover={{ shadow: 'md' }}
+                _hover={{ borderColor: hoverBorderColor, shadow: 'md' }}
                 transition="all 0.2s"
-                mb={4}
+                mb={3}
               >
                 {({ isExpanded }) => (
                   <>
@@ -147,39 +135,58 @@ export const SubjectLevelAccordion = ({ levels, associationId }: Props) => {
                         px={4}
                         transition="all 0.2s"
                       >
-                        <Flex w="full" align="center">
+                        <Flex w="full" align="center" justify="space-between">
                           <BaseHeader 
                             title={level.level.name}
                             icon={FaGraduationCap}
-                            size="sm"
-                          />
-
-                          <Box
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              handleEditLevel(level.level.id, level.subjects, level.level.name)
-                            }}
-                            title="Modify Level"
-                            cursor="pointer"
-                            _hover={{ transform: 'scale(1.1)' }}
-                            transition="all 0.2s"
-                            p={2}
-                            borderRadius="md"
+                            size="md"
+                            iconColor={iconColor}
                           >
-                            <Icon as={MdEdit} boxSize={4} color="gray.500" />
-                          </Box>
+                            <Badge
+                              bg={useColorModeValue('blue.100', 'blue.700')}
+                              color={useColorModeValue('blue.700', 'blue.200')}
+                              borderRadius="full"
+                              px={3}
+                              py={1}
+                              fontSize="xs"
+                              ml={2}
+                            >
+                              {filteredSubjects.length}
+                            </Badge>
+                          </BaseHeader>
 
-                          <Icon 
-                            as={isExpanded ? ChevronUpIcon : ChevronDownIcon} 
-                            boxSize={5}
-                            color={isExpanded ? 'blue.500' : 'gray.400'}
-                            transition="all 0.2s"
-                            _hover={{ color: 'blue.500' }}
-                            ml={2}
-                          />
+                          <Flex align="center" gap={2}>
+                            <Tooltip label="Edit level">
+                              <Box
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleEditLevel(level.level.id, level.subjects, level.level.name)
+                                }}
+                                cursor="pointer"
+                                _hover={{ transform: 'scale(1.1)' }}
+                                transition="all 0.2s"
+                                p={2}
+                                borderRadius="md"
+                              >
+                                <Icon as={MdEdit} boxSize={4} color={useColorModeValue('gray.600', 'gray.300')} />
+                              </Box>
+                            </Tooltip>
+
+                            <Tooltip label={isExpanded ? "Collapse" : "Expand"}>
+                              <Box>
+                                <Icon 
+                                  as={isExpanded ? ChevronUpIcon : ChevronDownIcon} 
+                                  boxSize={5}
+                                  color={iconColor}
+                                  _hover={{ color: useColorModeValue('blue.700', 'blue.200') }}
+                                />
+                              </Box>
+                            </Tooltip>
+                          </Flex>
                         </Flex>
                       </AccordionButton>
                     </h2>
+
                     <AccordionPanel pb={6} pt={4} px={6}>
                       <SimpleGrid 
                         columns={{ base: 1, md: 2, lg: 4, xl: 5 }} 
@@ -199,7 +206,7 @@ export const SubjectLevelAccordion = ({ levels, associationId }: Props) => {
         </Accordion>
       </VStack>
 
-      {/* Edit Subject Level Modal */}
+      {/* Edit Modal */}
       <GenericModal
         isOpen={editModalOpen}
         onClose={toggleEditModal}
