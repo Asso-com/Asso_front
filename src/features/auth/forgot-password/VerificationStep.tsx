@@ -30,7 +30,6 @@ const VerificationStep: React.FC<VerificationStepProps> = ({
   handlePinSubmit,
   maskedPhone,
   timeLeft,
-  resetTimer,
   handleResendOtp,
 }) => {
   const { t } = useTranslation();
@@ -43,7 +42,6 @@ const VerificationStep: React.FC<VerificationStepProps> = ({
 
   const onResend = () => {
     handleResendOtp();
-    resetTimer();
   };
 
   return (
@@ -67,6 +65,7 @@ const VerificationStep: React.FC<VerificationStepProps> = ({
             )}
           </HStack>
         </VStack>
+        
         <FormControl>
           <HStack justify="center">
             <PinInput value={pin} onChange={setPin} size="md" placeholder="0">
@@ -79,6 +78,7 @@ const VerificationStep: React.FC<VerificationStepProps> = ({
             </PinInput>
           </HStack>
         </FormControl>
+        
         <VStack spacing={3} width="100%">
           <AuthButton
             type="submit"
@@ -92,7 +92,13 @@ const VerificationStep: React.FC<VerificationStepProps> = ({
 
           <Text fontSize="xs" color="gray.500" textAlign="center">
             {t("Didn't receive the code?")} {" "}
-            <Button variant="link" size="sm" color="brand.500" onClick={onResend} isDisabled={timeLeft > 0}>
+            <Button 
+              variant="link" 
+              size="sm" 
+              color="brand.500" 
+              onClick={onResend} 
+              isDisabled={timeLeft > 0}
+            >
               {t("Resend Code")}
             </Button>
           </Text>
