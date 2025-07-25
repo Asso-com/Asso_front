@@ -22,6 +22,7 @@ import {
   FaBookReader,
   FaRegIdCard,
   FaCog,
+  FaChalkboardTeacher,
 } from "react-icons/fa";
 import {
   FiBell,
@@ -35,6 +36,8 @@ import { AiOutlineAppstore } from "react-icons/ai";
 
 const GetIconComponent = (iconName: string) => {
   switch (iconName) {
+    case "FaChalkboardTeacher":
+      return FaChalkboardTeacher;
     case "FaBox":
       return FaBox;
     case "FaProductHunt":

@@ -40,7 +40,7 @@ const ModuleListScroller: React.FC = () => {
     TIMETABLE: FaCalendarAlt,
     EDUCATION: FaBookOpen,
     GRADES: FaClipboardList,
-    LIBRARY: FaBookOpen,
+    LEARNING_HUB: FaBookOpen,
     FINANCE: FaMoneyCheckAlt,
     TRANSPORT: FaBusAlt,
     NOTIFICATIONS: FaBell,

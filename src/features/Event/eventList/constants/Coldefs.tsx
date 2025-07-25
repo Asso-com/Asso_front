@@ -1,4 +1,4 @@
-import StandardColumnCellRender from "@components/shared/shared-columns/StandardColumnCellRender";
+import { convertUTCToLocalDisplay } from "@utils/timeUtils";
 import ColorSquareCellRenderer from "../components/column-actions/ColorSquareCellRenderer";
 import { type ColDef } from "ag-grid-community";
 
@@ -29,6 +29,12 @@ const EventColumnDefs: ColDef[] = [
     resizable: true,
     flex: 0.6,
     cellStyle: { textAlign: "left" },
+    valueFormatter: (params) => {
+      if (!params.value) return "";
+      return convertUTCToLocalDisplay(params.value, {
+        format: "medium",
+      });
+    },
   },
   {
     headerName: "End Date",
@@ -38,15 +44,12 @@ const EventColumnDefs: ColDef[] = [
     resizable: true,
     flex: 0.6,
     cellStyle: { textAlign: "left" },
-  },
-  {
-    headerName: "Event For",
-    field: "eventFor",
-    sortable: true,
-    filter: "agTextColumnFilter",
-    resizable: true,
-    flex: 0.5,
-    cellStyle: { textAlign: "left" },
+    valueFormatter: (params) => {
+      if (!params.value) return "";
+      return convertUTCToLocalDisplay(params.value, {
+        format: "medium",
+      });
+    },
   },
   {
     headerName: "Event Type",
@@ -71,20 +74,20 @@ const EventColumnDefs: ColDef[] = [
       alignItems: "center",
     },
   },
-  {
-    headerName: "Active",
-    field: "active",
-    sortable: true,
-    resizable: true,
-    minWidth: 120,
-    maxWidth: 120,
-    cellRenderer: StandardColumnCellRender,
-    cellStyle: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-  },
+  // {
+  //   headerName: "Active",
+  //   field: "active",
+  //   sortable: true,
+  //   resizable: true,
+  //   minWidth: 120,
+  //   maxWidth: 120,
+  //   cellRenderer: StandardColumnCellRender,
+  //   cellStyle: {
+  //     display: "flex",
+  //     justifyContent: "center",
+  //     alignItems: "center",
+  //   },
+  // },
 ];
 
 export default EventColumnDefs;

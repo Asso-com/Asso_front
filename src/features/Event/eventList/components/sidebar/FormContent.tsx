@@ -31,7 +31,6 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
     startDate: "",
     endDate: "",
     eventType: "TASK",
-    eventFor: "STUDENTS",
     eventColor: "#3182ce",
     sessionId: undefined,
     eventPoster: undefined,
@@ -82,7 +81,5 @@ const FormContent = forwardRef<FormContentRef>((_, ref) => {
     </Formik>
   );
 });
-
-FormContent.displayName = "FormContent";
 
 export default FormContent;

@@ -33,7 +33,7 @@ export interface EventFormValues {
   startDate: string;
   endDate: string;
   eventType: 'TASK' | 'PUBLIC' | 'SESSION';
-  eventFor?: 'ALL' | 'STUDENTS' | 'TEACHERS';
+
   eventColor?: string;
   sessionId?: number;
   eventPoster?: File;

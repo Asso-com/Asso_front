@@ -10,9 +10,7 @@ import useDeleteVerficationCode from "../../hooks/useDeleteVerificationCode";
 
 const ColumnAction: React.FC<ICellRendererParams> = (params) => {
 
-  const associationId = useSelector(
-    (state: RootState) => state.authSlice.associationId
-  );
+
 
   const { mutateAsync: deleteVerificationCode } = useDeleteVerficationCode();
 

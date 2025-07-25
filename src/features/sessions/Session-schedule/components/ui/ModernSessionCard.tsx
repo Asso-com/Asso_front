@@ -227,18 +227,16 @@ const ModernSessionCard: React.FC<{
             </VStack>
           </SimpleGrid>
 
-          {session.quizNumber !== 0 && (
-            <>
-              <Divider />
-              <HStack color="blue.600" bg="blue.50" p={3} borderRadius="md">
-                <Icon as={FiBookOpen} />
-                <Text fontSize="sm" fontWeight="medium">
-                  {session.quizNumber} quiz scheduled
-                  {session.quizNumber > 1 ? "s" : ""}
-                </Text>
-              </HStack>
-            </>
-          )}
+          <>
+            <Divider />
+            <HStack color="blue.600" bg="blue.50" p={3} borderRadius="md">
+              <Icon as={FiBookOpen} />
+              <Text fontSize="sm" fontWeight="medium">
+                {session.quizNumber} quiz scheduled
+                {session.quizNumber > 1 ? "s" : ""}
+              </Text>
+            </HStack>
+          </>
         </VStack>
       </CardBody>
     </Card>

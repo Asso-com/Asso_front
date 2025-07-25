@@ -335,10 +335,10 @@ const fakeMenuItems: MenuItem[] = [
   },
   {
     menu_id: 13,
-    menu_description: "Library",
-    icon: "FaBookReader",
+    menu_description: "Learning Hub",
+    icon: "FaChalkboardTeacher",
     navLink: "",
-    module_code: "LIBRARY",
+    module_code: "LEARNING_HUB",
     children: [
       {
         menu_id: 131,
@@ -347,34 +347,40 @@ const fakeMenuItems: MenuItem[] = [
         icon: "FaAngleDoubleRight",
       },
       {
-        menu_id: 132,
-        menu_description: "Add a Book",
-        navLink: "/Library/addBook",
-        icon: "FaAngleDoubleRight",
-      },
-    ],
-  },
-  {
-    menu_id: 14,
-    menu_description: "Events",
-    icon: "FaRegCalendarCheck",
-    navLink: "",
-    module_code: "COMMUNICATION",
-    children: [
-      {
-        menu_id: 141,
-        menu_description: "Add Event",
-        navLink: "/Events/AddEvent",
-        icon: "FaAngleDoubleRight",
-      },
-      {
         menu_id: 142,
         menu_description: "Events List",
         navLink: "/Events/EventList",
         icon: "FaAngleDoubleRight",
       },
+      // {
+      //   menu_id: 132,
+      //   menu_description: "Add a Book",
+      //   navLink: "/Library/addBook",
+      //   icon: "FaAngleDoubleRight",
+      // },
     ],
   },
+  // {
+  //   menu_id: 14,
+  //   menu_description: "Events",
+  //   icon: "FaRegCalendarCheck",
+  //   navLink: "",
+  //   module_code: "COMMUNICATION",
+  //   children: [
+  //     {
+  //       menu_id: 141,
+  //       menu_description: "Add Event",
+  //       navLink: "/Events/AddEvent",
+  //       icon: "FaAngleDoubleRight",
+  //     },
+  //     {
+  //       menu_id: 142,
+  //       menu_description: "Events List",
+  //       navLink: "/Events/EventList",
+  //       icon: "FaAngleDoubleRight",
+  //     },
+  //   ],
+  // },
   {
     menu_id: 15,
     menu_description: "System Settings",
@@ -406,7 +412,7 @@ const fakeMenuItems: MenuItem[] = [
         navLink: "/Settings/EmailSettings",
         icon: "FaAngleDoubleRight",
       },
-            {
+      {
         menu_id: 155,
         menu_description: "Verification Codes",
         navLink: "/Settings/VerificationCodes",

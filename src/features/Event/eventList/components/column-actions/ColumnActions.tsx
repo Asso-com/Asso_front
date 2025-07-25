@@ -16,7 +16,6 @@ const ColumnAction: React.FC<ICellRendererParams> = ({ data }) => {
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const { t } = useTranslation();
 
-  const isStandard = data?.standard;
   const { mutateAsync: deleteEvent } = useDeleteEvent(data?.id);
 
   const toggleEditModal = () => setEditModalOpen((prev) => !prev);
@@ -30,7 +29,6 @@ const ColumnAction: React.FC<ICellRendererParams> = ({ data }) => {
 
     if (!isConfirmed) return;
     await deleteEvent(data.id);
-
   };
   return (
     <Flex align="center" justify="center" gap={2} height="100%">
@@ -42,7 +40,6 @@ const ColumnAction: React.FC<ICellRendererParams> = ({ data }) => {
         colorScheme="green"
         size="sm"
         onClick={toggleEditModal}
-        disabled={isStandard}
       />
       <GenericModal
         isOpen={editModalOpen}
@@ -60,7 +57,6 @@ const ColumnAction: React.FC<ICellRendererParams> = ({ data }) => {
         variant="ghost"
         colorScheme="red"
         size="sm"
-        disabled={isStandard}
       />
 
       {/* View Button */}
@@ -72,7 +68,6 @@ const ColumnAction: React.FC<ICellRendererParams> = ({ data }) => {
         colorScheme="blue"
         size="sm"
         onClick={toggleViewModal}
-        disabled={isStandard}
       />
       <GenericModal
         isOpen={viewModalOpen}

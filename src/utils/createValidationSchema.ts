@@ -12,9 +12,9 @@ const transformNumber = (originalValue: any) => {
 
 export const AddSessionValidationSchema = (academicPeriods: any[] = []) =>
   Yup.object({
-categoryId: Yup.number()
-  .min(1, "Category is required")
-  .required("Category is required"),
+    categoryId: Yup.number()
+      .min(1, "Category is required")
+      .required("Category is required"),
 
     levelSubjectId: Yup.number()
       .transform(transformNumber)
@@ -137,9 +137,8 @@ categoryId: Yup.number()
             if (start1 < end2 && start2 < end1) {
               return this.createError({
                 path: this.path,
-                message: `Sessions ${i + 1} and ${j + 1} on the same day (${
-                  s1.day
-                }) have overlapping times.`,
+                message: `Sessions ${i + 1} and ${j + 1} on the same day (${s1.day
+                  }) have overlapping times.`,
               });
             }
           }
@@ -161,197 +160,182 @@ categoryId: Yup.number()
       ),
   });
 
-export const EventFieldValidations: Record<string, Yup.AnySchema> = {
-  title: Yup.string()
-    .required("Event title is required")
-    .max(255, "Title must be less than 255 characters"),
-
-  description: Yup.string()
-    .required("Event description is required")
-    .max(1000, "Description must be less than 1000 characters"),
-
-  eventColor: Yup.string().required("Event color is required"),
-
-  eventFor: Yup.string().required("Target audience is required"),
-
-  eventPoster: Yup.mixed().nullable(),
-};
 // Core function to generate Yup validation schema
 const createValidationSchema = (fields: Field[]) => {
-    const shape: Record<string, Yup.AnySchema> = {};
+  const shape: Record<string, Yup.AnySchema> = {};
 
-    fields.forEach((field) => {
-        const rules = field.validationRules;
-        let validator: Yup.AnySchema;
+  fields.forEach((field) => {
+    const rules = field.validationRules;
+    let validator: Yup.AnySchema;
 
-        switch (field.type) {
-            case 'number':
-                let numberValidator = Yup.number().typeError('Must be a number');
-                if (rules?.min !== undefined) {
-                    numberValidator = numberValidator.min(rules.min, `Minimum value is ${rules.min}`);
-                }
-                if (rules?.max !== undefined) {
-                    numberValidator = numberValidator.max(rules.max, `Maximum value is ${rules.max}`);
-                }
-                validator = numberValidator;
-                break;
+    switch (field.type) {
+      case 'number':
+        let numberValidator = Yup.number().typeError('Must be a number');
+        if (rules?.min !== undefined) {
+          numberValidator = numberValidator.min(rules.min, `Minimum value is ${rules.min}`);
+        }
+        if (rules?.max !== undefined) {
+          numberValidator = numberValidator.max(rules.max, `Maximum value is ${rules.max}`);
+        }
+        validator = numberValidator;
+        break;
 
-            case 'email':
-                validator = Yup.string().email('Must be a valid email');
-                break;
+      case 'email':
+        validator = Yup.string().email('Must be a valid email');
+        break;
 
-            case 'phone':
-                validator = Yup.string().test(
-                    'isValidPhone',
-                    'Please enter a valid phone number with the correct country code.',
-                    (value) => !value || isValidPhoneNumber(value)
-                );
-                break;
+      case 'phone':
+        validator = Yup.string().test(
+          'isValidPhone',
+          'Please enter a valid phone number with the correct country code.',
+          (value) => !value || isValidPhoneNumber(value)
+        );
+        break;
 
-            case 'file':
-                let fileValidator = Yup.mixed<File>();
-                if (rules?.maxSize) {
-                    fileValidator = fileValidator.test(
-                        'fileSize',
-                        `File size must be less than ${rules.maxSize / 1024 / 1024}MB`,
-                        (file) => !file || file.size <= rules.maxSize!
-                    );
-                }
-
-                if (rules?.allowedExtensions?.length) {
-                    fileValidator = fileValidator.test(
-                        'fileType',
-                        `Invalid file type. Allowed types: ${rules.allowedExtensions.join(', ')}`,
-                        (file) =>
-                            !file ||
-                            rules.allowedExtensions!.includes(file.name.split('.').pop()?.toLowerCase() || '')
-                    );
-                }
-                validator = fileValidator;
-                break;
-
-            case 'date':
-                validator = Yup.date().typeError('Must be a valid date');
-                break;
-
-            case 'multi-select-checkbox':
-                let arrayValidator = Yup.array()
-                    .of(Yup.string().required("Each selection is required"));
-
-                if (rules?.minItems) {
-                    arrayValidator = arrayValidator.min(rules.minItems, `Select at least ${rules.minItems} items`);
-                }
-
-                if (rules?.required) {
-                    arrayValidator = arrayValidator.required("This field is required");
-                }
-
-                validator = arrayValidator;
-                break;
-            case 'string-array':
-                let itemValidator = Yup.string();
-
-                if (rules?.minLength !== undefined) {
-                    itemValidator = itemValidator.min(rules.minLength, `Each item must be at least ${rules.minLength} characters`);
-                }
-
-                if (rules?.maxLength !== undefined) {
-                    itemValidator = itemValidator.max(rules.maxLength, `Each item must be at most ${rules.maxLength} characters`);
-                }
-
-                itemValidator = itemValidator.required("Each item is required");
-
-                let stringArrayValidator = Yup.array().of(itemValidator);
-
-                if (rules?.minItems !== undefined) {
-                    stringArrayValidator = stringArrayValidator.min(rules.minItems, `At least ${rules.minItems} items required`);
-                }
-
-                if (rules?.maxItems !== undefined) {
-                    stringArrayValidator = stringArrayValidator.max(rules.maxItems, `At most ${rules.maxItems} items allowed`);
-                }
-
-                if (rules?.required) {
-                    stringArrayValidator = stringArrayValidator.required("This field is required");
-                }
-
-                validator = stringArrayValidator;
-                break;
-
-            default:
-                let stringValidator = Yup.string();
-                if (rules?.minLength !== undefined) {
-                    stringValidator = stringValidator.min(rules.minLength, `Minimum length is ${rules.minLength}`);
-                }
-                if (rules?.maxLength !== undefined) {
-                    stringValidator = stringValidator.max(rules.maxLength, `Maximum length is ${rules.maxLength}`);
-                }
-                validator = stringValidator;
-                break;
+      case 'file':
+        let fileValidator = Yup.mixed<File>();
+        if (rules?.maxSize) {
+          fileValidator = fileValidator.test(
+            'fileSize',
+            `File size must be less than ${rules.maxSize / 1024 / 1024}MB`,
+            (file) => !file || file.size <= rules.maxSize!
+          );
         }
 
-        // Apply common rules
+        if (rules?.allowedExtensions?.length) {
+          fileValidator = fileValidator.test(
+            'fileType',
+            `Invalid file type. Allowed types: ${rules.allowedExtensions.join(', ')}`,
+            (file) =>
+              !file ||
+              rules.allowedExtensions!.includes(file.name.split('.').pop()?.toLowerCase() || '')
+          );
+        }
+        validator = fileValidator;
+        break;
+
+      case 'date':
+        validator = Yup.date().typeError('Must be a valid date');
+        break;
+
+      case 'multi-select-checkbox':
+        let arrayValidator = Yup.array()
+          .of(Yup.string().required("Each selection is required"));
+
+        if (rules?.minItems) {
+          arrayValidator = arrayValidator.min(rules.minItems, `Select at least ${rules.minItems} items`);
+        }
+
         if (rules?.required) {
-            validator = validator.required('This field is required');
+          arrayValidator = arrayValidator.required("This field is required");
         }
 
-        // Handle patterns only for string validators
-        if (rules?.patterns?.length) {
-            if (validator instanceof Yup.string) {
-                rules.patterns.forEach((patternRule) => {
-                    validator = (validator as Yup.StringSchema).matches(
-                        new RegExp(patternRule.regex),
-                        patternRule.message || 'Invalid format'
-                    );
-                });
-            }
+        validator = arrayValidator;
+        break;
+      case 'string-array':
+        let itemValidator = Yup.string();
+
+        if (rules?.minLength !== undefined) {
+          itemValidator = itemValidator.min(rules.minLength, `Each item must be at least ${rules.minLength} characters`);
         }
 
-        if (rules?.matchesField) {
-            validator = validator.oneOf(
-                [Yup.ref(rules.matchesField.field)],
-                rules.matchesField.message || 'Fields must match'
-            );
-        }
-        if (rules?.isAfter?.field && field.type === 'date') {
-            validator = (validator as Yup.DateSchema).test(
-                'isAfter',
-                rules.isAfter.message || `${field.name} must be after ${rules.isAfter.field}`,
-                function (value) {
-                    const refValue = this.resolve(Yup.ref(rules.isAfter!.field));
-
-                    if (!value || !refValue) return true;
-
-                    const current = new Date(value);
-                    const compareTo = new Date(refValue as string | number | Date);
-
-                    return current > compareTo;
-                }
-            );
+        if (rules?.maxLength !== undefined) {
+          itemValidator = itemValidator.max(rules.maxLength, `Each item must be at most ${rules.maxLength} characters`);
         }
 
-        if (rules?.isBefore?.field && field.type === 'date') {
-            validator = (validator as Yup.DateSchema).test(
-                'isBefore',
-                rules.isBefore.message || `${field.name} must be before ${rules.isBefore.field}`,
-                function (value) {
-                    const refValue = this.resolve(Yup.ref(rules.isBefore!.field));
+        itemValidator = itemValidator.required("Each item is required");
 
-                    // Ensure both values are valid dates
-                    if (!value || !refValue) return true;
+        let stringArrayValidator = Yup.array().of(itemValidator);
 
-                    const current = new Date(value);
-                    const compareTo = new Date(refValue as string | number | Date);
-
-                    return current < compareTo;
-                }
-            );
+        if (rules?.minItems !== undefined) {
+          stringArrayValidator = stringArrayValidator.min(rules.minItems, `At least ${rules.minItems} items required`);
         }
 
-        shape[field.name] = validator;
-    });
+        if (rules?.maxItems !== undefined) {
+          stringArrayValidator = stringArrayValidator.max(rules.maxItems, `At most ${rules.maxItems} items allowed`);
+        }
 
-    return Yup.object().shape(shape);
+        if (rules?.required) {
+          stringArrayValidator = stringArrayValidator.required("This field is required");
+        }
+
+        validator = stringArrayValidator;
+        break;
+
+      default:
+        let stringValidator = Yup.string();
+        if (rules?.minLength !== undefined) {
+          stringValidator = stringValidator.min(rules.minLength, `Minimum length is ${rules.minLength}`);
+        }
+        if (rules?.maxLength !== undefined) {
+          stringValidator = stringValidator.max(rules.maxLength, `Maximum length is ${rules.maxLength}`);
+        }
+        validator = stringValidator;
+        break;
+    }
+
+    // Apply common rules
+    if (rules?.required) {
+      validator = validator.required('This field is required');
+    }
+
+    // Handle patterns only for string validators
+    if (rules?.patterns?.length) {
+      if (validator instanceof Yup.string) {
+        rules.patterns.forEach((patternRule) => {
+          validator = (validator as Yup.StringSchema).matches(
+            new RegExp(patternRule.regex),
+            patternRule.message || 'Invalid format'
+          );
+        });
+      }
+    }
+
+    if (rules?.matchesField) {
+      validator = validator.oneOf(
+        [Yup.ref(rules.matchesField.field)],
+        rules.matchesField.message || 'Fields must match'
+      );
+    }
+    if (rules?.isAfter?.field && field.type === 'date') {
+      validator = (validator as Yup.DateSchema).test(
+        'isAfter',
+        rules.isAfter.message || `${field.name} must be after ${rules.isAfter.field}`,
+        function (value) {
+          const refValue = this.resolve(Yup.ref(rules.isAfter!.field));
+
+          if (!value || !refValue) return true;
+
+          const current = new Date(value);
+          const compareTo = new Date(refValue as string | number | Date);
+
+          return current > compareTo;
+        }
+      );
+    }
+
+    if (rules?.isBefore?.field && field.type === 'date') {
+      validator = (validator as Yup.DateSchema).test(
+        'isBefore',
+        rules.isBefore.message || `${field.name} must be before ${rules.isBefore.field}`,
+        function (value) {
+          const refValue = this.resolve(Yup.ref(rules.isBefore!.field));
+
+          // Ensure both values are valid dates
+          if (!value || !refValue) return true;
+
+          const current = new Date(value);
+          const compareTo = new Date(refValue as string | number | Date);
+
+          return current < compareTo;
+        }
+      );
+    }
+
+    shape[field.name] = validator;
+  });
+
+  return Yup.object().shape(shape);
 };
 
 export default createValidationSchema;

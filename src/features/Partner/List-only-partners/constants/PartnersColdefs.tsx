@@ -1,38 +1,8 @@
 import type { ColDef } from "ag-grid-community";
 import ToggelActive from "../components/ToggelActive";
 import { convertUTCToLocalDisplay } from "@utils/timeUtils";
-import { Image } from "@chakra-ui/react";
-import React from "react";
 
 const PartnersColdefs: ColDef[] = [
-  {
-    headerName: "Cover",
-    field: "logoUrl",
-    sortable: false,
-    filter: false,
-    width: 100,
-    minWidth: 100,
-    cellRenderer: (params: { value: any }) => {
-      const logoUrl = params.value;
-      const defaultImage =
-        "https://dummyimage.com/50x70/cccccc/000000&text=No+Logo";
-
-      return React.createElement(Image, {
-        src: logoUrl || defaultImage,
-        alt: "Partner Logo",
-        width: "50px",
-        height: "70px",
-        objectFit: "cover",
-        borderRadius: "4px",
-        cursor: "pointer",
-        title: "Click to view larger image",
-        onError: (event: any) => {
-          event.target.onerror = null;
-          event.target.src = defaultImage;
-        },
-      });
-    },
-  },
   {
     field: "name",
     headerName: "Name",

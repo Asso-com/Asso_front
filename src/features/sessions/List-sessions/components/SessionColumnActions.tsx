@@ -1,10 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import {
-  ViewIcon,
-  InfoIcon,
-  BellIcon,
-  EditIcon,
-} from "@chakra-ui/icons";
+import { ViewIcon, InfoIcon, BellIcon, EditIcon } from "@chakra-ui/icons";
 import type { ICellRendererParams } from "ag-grid-community";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
 import { useState } from "react";
@@ -122,7 +117,7 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
         onClose={() => toggleModal("viewSession")}
         title={`Session Information - ${sessionData.code}`}
         size="4xl"
-                modalContentProps={{
+        modalContentProps={{
           height: "700px",
         }}
       >
@@ -134,7 +129,7 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
         onClose={() => toggleModal("editSession")}
         title={`Edit Session`}
         size="6xl"
-                        modalContentProps={{
+        modalContentProps={{
           height: "700px",
         }}
       >

@@ -10,6 +10,7 @@ import useCreateEvent from "../../hooks/useCreateEvent";
 
 import { useSelector } from "react-redux";
 import type { RootState } from "@store/index";
+import { FiPlus } from "react-icons/fi";
 
 const EventSidebar = () => {
   const { t } = useTranslation();
@@ -61,7 +62,14 @@ const EventSidebar = () => {
 
   return (
     <>
-      <Button colorScheme="blue" onClick={handleOpenSidebar} size="sm">
+      <Button
+        size="md"
+        fontSize="sm"
+        variant="outline"
+        colorScheme="primary"
+        onClick={handleOpenSidebar}
+        leftIcon={<FiPlus />}
+      >
         {t("Add Event")}
       </Button>
 

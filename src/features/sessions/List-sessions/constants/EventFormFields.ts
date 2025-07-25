@@ -7,7 +7,7 @@ export const eventFormFields: Field[] = [
     label: "Event Title",
     type: "text",
     validationRules: {
-      required: true, 
+      required: true,
       maxLength: 255,
     },
     placeholder: "Enter event title",
@@ -16,24 +16,13 @@ export const eventFormFields: Field[] = [
     name: "description",
     label: "Event Description",
     type: "textarea",
-    validationRules: { required: true },
+    validationRules: { required: true, maxLength: 1000 },
     placeholder: "Enter event description",
   },
   {
     name: "eventColor",
     label: "Event Color",
     type: "color",
-    validationRules: { required: true },
-  },
-  {
-    name: "eventFor",
-    label: "Event For",
-    type: "select",
-    options: [
-      { label: "All", value: "ALL" },
-      { label: "Students", value: "STUDENTS" },
-      { label: "Teachers", value: "TEACHERS" },
-    ],
     validationRules: { required: true },
   },
   {

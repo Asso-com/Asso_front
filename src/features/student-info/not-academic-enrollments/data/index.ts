@@ -1,4 +1,4 @@
-import type { StudentEnrollmentDetails } from "../../not-academic-enrollments/types";
+import type { StudentEnrollmentDetails } from "../types";
 
 const mockStudents: StudentEnrollmentDetails[] = [
     {

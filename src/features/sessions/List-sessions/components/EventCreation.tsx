@@ -14,7 +14,7 @@ import { eventFormFields } from "../constants/EventFormFields";
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import useCreateEvent from "../../../Event/eventList/hooks/useCreateEvent";
 import FooterActions from "@components/shared/FooterActions";
-import EventFieldValidations from "@utils/createValidationSchema";
+import createValidationSchema from "@utils/createValidationSchema";
 
 interface EventCreationProps {
   sessionData: Session;
@@ -26,8 +26,7 @@ const EventCreation = ({ sessionData, onClose }: EventCreationProps) => {
     title: "",
     description: "",
     eventColor: "#3182ce",
-    eventFor: "",
-    eventPoster: null as File | null,
+    eventPoster: "",
   };
 
   const associationId = useSelector(
@@ -50,16 +49,16 @@ const EventCreation = ({ sessionData, onClose }: EventCreationProps) => {
       formData.append("endDate", sessionData.endDate);
       formData.append("eventType", "SESSION");
       formData.append("eventColor", values.eventColor);
-      if (values.eventFor) formData.append("eventFor", values.eventFor);
-      if (values.eventPoster) formData.append("eventPoster", values.eventPoster);
+      if (values.eventPoster)
+        formData.append("eventPoster", values.eventPoster);
 
-      await createEvent(formData);
+      createEvent(formData);
       onClose();
     } catch (error) {
       console.error("Error creating event:", error);
     }
   };
-const validationSchema = EventFieldValidations(eventFormFields);
+  const validationSchema = createValidationSchema(eventFormFields);
 
   return (
     <Formik
@@ -67,7 +66,7 @@ const validationSchema = EventFieldValidations(eventFormFields);
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {() => (
+      {({ isSubmitting}) => (
         <Form>
           <Card
             bg={cardBg}
@@ -79,7 +78,10 @@ const validationSchema = EventFieldValidations(eventFormFields);
             h="100%"
           >
             <CardBody p={4}>
-              <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={4}>
+              <Grid
+                templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
+                gap={4}
+              >
                 {eventFormFields.map((field) => (
                   <GridItem
                     key={field.name}
@@ -95,12 +97,8 @@ const validationSchema = EventFieldValidations(eventFormFields);
               <Flex w="100%" justify="flex-end" mt={4}>
                 <FooterActions
                   onClose={onClose}
-                  handleSave={() => {
-                    document.querySelector<HTMLFormElement>('form')?.dispatchEvent(
-                      new Event("submit", { cancelable: true, bubbles: true })
-                    );
-                  }}
-                  isSaving={isPending}
+                  handleSave={() => {}}
+                  isSaving={isPending || isSubmitting}
                   cancelText="Close"
                   saveText="Create Event"
                 />

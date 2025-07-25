@@ -8,7 +8,7 @@ import type { ModuleItem } from "@/types/menuItem";
 //     TIMETABLE: FaCalendarAlt,
 //     EDUCATION: FaBookOpen,
 //     GRADES: FaClipboardList,
-//     LIBRARY: FaBookOpen,
+//     LEARNING_HUB: FaBookOpen,
 //     FINANCE: FaMoneyCheckAlt,
 //     TRANSPORT: FaBusAlt,
 //     NOTIFICATIONS: FaBell,
@@ -26,7 +26,7 @@ export const fakeModules: ModuleItem[] = [
     { id: 4, module_code: "HUMAN_RESOURCES", module_name: "Human resources", module_icon: "FaChalkboardTeacher" },
     { id: 5, module_code: "COMMUNICATION", module_name: "Communication", module_icon: "FaComments" },
     { id: 6, module_code: "PARTNER", module_name: "Partner", module_icon: "FaHandshake" },
-    { id: 7, module_code: "LIBRARY", module_name: "Library", module_icon: "FaBookOpen" },
+    { id: 7, module_code: "LEARNING_HUB", module_name: "Library", module_icon: "FaBookOpen" },
     { id: 8, module_code: "SETTINGS", module_name: "Settings", module_icon: "FaCogs" },
 ];
 

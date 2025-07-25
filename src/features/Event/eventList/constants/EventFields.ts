@@ -36,18 +36,7 @@ const EventFormFields: Field[] = [
     options: [
       { label: "Task", value: "TASK" },
       { label: "Public", value: "PUBLIC" },
-      { label: "Session", value: "SESSION" },
-    ],
-    validationRules: { required: true },
-  },
-  {
-    name: "eventFor",
-    label: "Event For",
-    type: "select",
-    options: [
-      { label: "All", value: "ALL" },
-      { label: "Students", value: "STUDENTS" },
-      { label: "Teachers", value: "TEACHERS" },
+     // { label: "Session", value: "SESSION" },
     ],
     validationRules: { required: true },
   },
