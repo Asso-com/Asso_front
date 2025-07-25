@@ -11,9 +11,9 @@ import { Formik, type FormikProps } from "formik";
 import RenderFormBuilder from "@components/shared/form-builder/RenderFormBuilder";
 import createValidationSchema from "@utils/createValidationSchema";
 import { getDefaultFormValues } from "@utils/getDefaultValueByType";
-import useFetchLevel from "../../../list-level/hooks/useFetchListLevel";
 import useFetchSubjects from "../../../Subject/hooks/useFetchSubjects";
-
+import useFetchCategories from "@features/Academics/Categories-levels/hooks/useFetchCategories";
+import useFetchLevelsByCategory from "@features/Academics/list-level/hooks/useFetchLevelsByCategory";
 import type { Field } from "@/types/formTypes";
 
 type FormValues = {
@@ -34,30 +34,54 @@ const FormContent = forwardRef<FormContentRef, FormContentProps>(
     // États pour champs dynamiques et valeurs initiales
     const [fields, setFields] = useState<Field[]>([]);
     const [initialValues, setInitialValues] = useState<FormValues>({});
+    const [selectedCategoryId, setSelectedCategoryId] = useState<number>(1); // Default to category 1
+
+    const {
+      data: Categories,
+      isLoading: loadingCategories,
+      isError: errorCategories,
+    } = useFetchCategories(associationId);
+
     const {
       data: levels,
       isLoading: loadingLevels,
-      isError: errorLevels,
-    } = useFetchLevel(associationId);
+    } = useFetchLevelsByCategory(associationId, selectedCategoryId);
 
     const {
       data: subjects,
       isLoading: loadingSubjects,
       isError: errorSubjects,
     } = useFetchSubjects(associationId);
+
+    const formikRef = useRef<FormikProps<FormValues>>(null);
+
     useEffect(() => {
-      if (!levels || !subjects) return;
-      const levelOptions = levels.map((lvl: any) => ({
-        label: lvl.name,
-        value: lvl.id,
-      }));
+      if (!Categories || !subjects) return;
+
+      const CategoriesOptions = Categories
+        .filter((cat: { name: string; id: number; active: boolean }) => cat.active)
+        .map((cat: any) => ({
+          label: cat.name,
+          value: cat.id,
+        }));
 
       const subjectOptions = subjects.map((subj: any) => ({
         label: subj.name,
         value: subj.id,
       }));
-      // Construction dynamique du tableau des champs
+
+      const levelOptions = levels ? levels.map((lvl: any) => ({
+        label: lvl.name,
+        value: lvl.id,
+      })) : [];
+
       const dynamicFields: Field[] = [
+        {
+          name: "categoryId",
+          label: "Category",
+          type: "radio",
+          options: CategoriesOptions,
+        },
         {
           name: "levelId",
           label: "Level",
@@ -78,13 +102,12 @@ const FormContent = forwardRef<FormContentRef, FormContentProps>(
       const defaultValues = getDefaultFormValues(dynamicFields);
       setInitialValues({
         ...defaultValues,
+        categoryId: 1, // Set default category to 1
         active: true,
       });
-    }, [levels, subjects]);
+    }, [levels, subjects, Categories, loadingLevels]);
 
     const validationSchema = createValidationSchema(fields);
-
-    const formikRef = useRef<FormikProps<FormValues>>(null);
 
     useImperativeHandle(ref, () => ({
       submitForm: async () => {
@@ -107,20 +130,23 @@ const FormContent = forwardRef<FormContentRef, FormContentProps>(
         }
       },
     }));
-    if (loadingLevels || loadingSubjects) {
+
+    if (loadingCategories || loadingSubjects) {
       return (
         <Flex justify="center" align="center" height="200px">
           <Spinner size="lg" />
         </Flex>
       );
     }
-    if (errorLevels || errorSubjects) {
+
+    if (errorCategories || errorSubjects) {
       return (
         <Text color="red.500">
-        Error loading levels or subjects. Please try again.
+          Error loading categories or subjects. Please try again.
         </Text>
       );
     }
+
     return (
       <Formik
         innerRef={formikRef}
@@ -129,11 +155,31 @@ const FormContent = forwardRef<FormContentRef, FormContentProps>(
         enableReinitialize
         onSubmit={() => {}}
       >
-        <Flex direction="column" gap={4}>
-          {fields.map((field: Field) => (
-            <RenderFormBuilder key={field.name} field={field} />
-          ))}
-        </Flex>
+        {({ setFieldValue }) => {
+          // Update the onChange handler to use Formik's setFieldValue
+          const enhancedFields = fields.map(field => {
+            if (field.name === "categoryId") {
+              return {
+                ...field,
+                onChange: (value: any) => {
+                  const categoryId = Number(value);
+                  setFieldValue("categoryId", categoryId);
+                  setSelectedCategoryId(categoryId);
+                  setFieldValue("levelId", ""); // Reset level selection
+                },
+              };
+            }
+            return field;
+          });
+
+          return (
+            <Flex direction="column" gap={4}>
+              {enhancedFields.map((field: Field) => (
+                <RenderFormBuilder key={field.name} field={field} />
+              ))}
+            </Flex>
+          );
+        }}
       </Formik>
     );
   }

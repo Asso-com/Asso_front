@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 import {
   Box,
   SimpleGrid,
@@ -7,20 +7,23 @@ import {
   Center,
   Spinner,
   useColorModeValue,
-  Icon
-} from '@chakra-ui/react';
-import { HiOutlineOfficeBuilding } from 'react-icons/hi';
-import { FaGraduationCap } from 'react-icons/fa';
-import { MdBlock } from 'react-icons/md';
-import StatsHorizontal from '@components/shared/StatsHorizontal';
+  Icon,
+} from "@chakra-ui/react";
+import { HiOutlineOfficeBuilding } from "react-icons/hi";
+import { FaGraduationCap } from "react-icons/fa";
+import { MdBlock } from "react-icons/md";
+import StatsHorizontal from "@components/shared/StatsHorizontal";
 import HeaderActions from "./components/HeaderActions";
-import { SubjectLevelAccordion } from './components/column-actions/SubjectLevelAccordion';
-import type { SubjectLevelItem, LevelWithSubjects } from './types/subject.types.ts';
-import { useSelector } from 'react-redux';
-import type { RootState } from '@store/index';
+import { SubjectLevelAccordion } from "./components/column-actions/SubjectLevelAccordion";
+import type {
+  SubjectLevelItem,
+  LevelWithSubjects,
+} from "./types/subject.types.ts";
+import { useSelector } from "react-redux";
+import type { RootState } from "@store/index";
 
 interface SubjectLevelPresenterProps {
-  rows: SubjectLevelItem[] | LevelWithSubjects[]; 
+  rows: SubjectLevelItem[] | LevelWithSubjects[];
   total: number;
   isLoading: boolean;
   isError: boolean;
@@ -34,20 +37,33 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
   isError,
   error,
 }) => {
-  const [filterText, setFilterText] = useState('');
-  const associationId = useSelector((state: RootState) => state.authSlice.associationId);
+  const [filterText, setFilterText] = useState("");
+  const associationId = useSelector(
+    (state: RootState) => state.authSlice.associationId
+  );
 
   const bgGradient = useColorModeValue(
-    'linear(to-br, gray.50, white)',
-    'linear(to-br, gray.800, gray.900)'
+    "linear(to-br, gray.50, white)",
+    "linear(to-br, gray.800, gray.900)"
   );
 
   const isLevelWithSubjects = (item: any): item is LevelWithSubjects => {
-    return item && typeof item === 'object' && item.level && Array.isArray(item.subjects);
+    return (
+      item &&
+      typeof item === "object" &&
+      item.level &&
+      Array.isArray(item.subjects)
+    );
   };
 
   const isSubjectLevelItem = (item: any): item is SubjectLevelItem => {
-    return item && typeof item === 'object' && item.level && item.subject && !Array.isArray(item.subjects);
+    return (
+      item &&
+      typeof item === "object" &&
+      item.level &&
+      item.subject &&
+      !Array.isArray(item.subjects)
+    );
   };
 
   const filteredRows = useMemo(() => {
@@ -55,7 +71,11 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
 
     const firstItem = rows[0];
     const normalize = (str: string) =>
-      str.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().trim();
+      str
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .toLowerCase()
+        .trim();
 
     const normalizedFilter = normalize(filterText);
 
@@ -64,17 +84,21 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
 
       return (rows as LevelWithSubjects[])
         .map((levelItem) => {
-          const levelName = levelItem.level.name || '';
-          const filteredSubjects = levelItem.subjects.filter(subject =>
-            normalize(subject.name || '').includes(normalizedFilter)
+          const levelName = levelItem.level.name || "";
+          const filteredSubjects = levelItem.subjects.filter((subject) =>
+            normalize(subject.name || "").includes(normalizedFilter)
           );
           const levelMatches = normalize(levelName).includes(normalizedFilter);
 
           if (levelMatches) return { ...levelItem };
-          if (filteredSubjects.length > 0) return { ...levelItem, subjects: filteredSubjects };
+          if (filteredSubjects.length > 0)
+            return { ...levelItem, subjects: filteredSubjects };
           return null;
         })
-        .filter((item): item is LevelWithSubjects => !!item && item.subjects.length > 0);
+        .filter(
+          (item): item is LevelWithSubjects =>
+            !!item && item.subjects.length > 0
+        );
     }
 
     if (isSubjectLevelItem(firstItem)) {
@@ -82,39 +106,39 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
 
       (rows as SubjectLevelItem[]).forEach((item) => {
         const levelId = item.level.id;
-         if (!levelMap.has(levelId)) {
+        if (!levelMap.has(levelId)) {
           levelMap.set(levelId, {
             id: levelId,
             level: {
               id: item.level.id,
-              name: item.level.name || 'Unknown Level',
-              code: '',
+              name: item.level.name || "Unknown Level",
+              code: "",
               order: 0,
               active: true,
               categoryId: 0,
-              categoryName: '',
-              standard: true
+              categoryName: "",
+              standard: true,
             },
-            subjects: []
+            subjects: [],
           });
         }
         const levelEntry = levelMap.get(levelId)!;
-        if (!levelEntry.subjects.find(s => s.id === item.subject.id)) {
+        if (!levelEntry.subjects.find((s) => s.id === item.subject.id)) {
           levelEntry.subjects.push({
             id: item.subject.id,
-            code: '',
-            name: item.subject.title || 'Unknown Subject',
+            code: "",
+            name: item.subject.title || "Unknown Subject",
             departmentId: 0,
-            departmentName: '',
-            standard: true
+            departmentName: "",
+            standard: true,
           });
         }
       });
 
-      return Array.from(levelMap.values()).filter(levelItem => {
-        const levelName = levelItem.level.name || '';
-        const filteredSubjects = levelItem.subjects.filter(subject =>
-          normalize(subject.name || '').includes(normalizedFilter)
+      return Array.from(levelMap.values()).filter((levelItem) => {
+        const levelName = levelItem.level.name || "";
+        const filteredSubjects = levelItem.subjects.filter((subject) =>
+          normalize(subject.name || "").includes(normalizedFilter)
         );
         const levelMatches = normalize(levelName).includes(normalizedFilter);
         return levelMatches || filteredSubjects.length > 0;
@@ -131,7 +155,7 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
           <VStack spacing={4}>
             <Spinner size="xl" color="blue.500" thickness="4px" />
             <Text fontSize="lg" color="gray.600">
-              Chargement du programme académique...
+              Loading academic program...
             </Text>
           </VStack>
         </Center>
@@ -146,7 +170,7 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
           <VStack spacing={4}>
             <Icon as={MdBlock} boxSize={12} color="red.400" />
             <Text color="red.500" fontSize="lg" textAlign="center">
-              Erreur : {error?.message ?? 'Erreur inconnue'}
+              Erreur : {error?.message ?? "Unknown problem"}
             </Text>
           </VStack>
         </Center>
@@ -162,7 +186,7 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
         py={1}
         px={1}
         boxShadow="sm"
-        _dark={{ bg: 'gray.900' }}
+        _dark={{ bg: "gray.900" }}
       >
         <SimpleGrid columns={{ base: 1 }} spacing={4}>
           <StatsHorizontal
@@ -174,7 +198,7 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
             borderColor="blue.500"
             bg="white"
             boxShadow="lg"
-            _dark={{ bg: 'gray.800' }}
+            _dark={{ bg: "gray.800" }}
           />
         </SimpleGrid>
       </Box>
@@ -185,7 +209,7 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
         py={1}
         px={1}
         boxShadow="sm"
-        _dark={{ bg: 'gray.900' }}
+        _dark={{ bg: "gray.900" }}
       >
         <HeaderActions onFilterChange={setFilterText} />
       </Box>
@@ -202,7 +226,7 @@ const SubjectLevelPresenter: React.FC<SubjectLevelPresenterProps> = ({
             <VStack spacing={4}>
               <Icon as={FaGraduationCap} boxSize={16} color="gray.400" />
               <Text fontSize="xl" color="gray.500" textAlign="center">
-                Aucun programme disponible pour le moment
+                No programs available at the moment{" "}
                 {filterText && ` (filtre: "${filterText}")`}
               </Text>
             </VStack>

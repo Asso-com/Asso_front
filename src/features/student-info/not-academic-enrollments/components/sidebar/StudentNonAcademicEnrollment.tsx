@@ -55,7 +55,7 @@ const StudentNonAcademicEnrollment = () => {
       </Button>
       <RigthSidebar
         isOpen={sidebarOpen}
-        title={t("Add Subject Level")}
+        title={t("Add Enrollement")}
         onClose={handleCloseSidebar}
         footer={
           <SidebarButtonsActions

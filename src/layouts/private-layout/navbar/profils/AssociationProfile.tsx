@@ -4,7 +4,7 @@ import {
   Flex,
   Box,
   SimpleGrid,
-  Spinner,
+  Spinner
 } from "@chakra-ui/react";
 import type { RootState } from "@store/index";
 import type { Field } from "@/types/formTypes";

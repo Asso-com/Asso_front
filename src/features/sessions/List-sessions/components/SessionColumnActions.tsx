@@ -1,5 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { ViewIcon, InfoIcon, BellIcon, EditIcon } from "@chakra-ui/icons";
+import { MdDelete } from "react-icons/md";
 import type { ICellRendererParams } from "ag-grid-community";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
 import { useState } from "react";
@@ -11,6 +12,8 @@ import StudentEnrollment from "./StudentEnrollment";
 import EventCreation from "./EventCreation";
 import EditSessionModal from "./EditSessionModal";
 import { FaUsers } from "react-icons/fa";
+import useDeleteSession from "../hooks/useDeleteSession";
+import { confirmAlert } from "@components/shared/confirmAlert";
 
 interface SessionCellRendererParams extends ICellRendererParams {
   associationId: number;
@@ -19,7 +22,7 @@ interface SessionCellRendererParams extends ICellRendererParams {
 const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
   const sessionData: Session = params.data;
   const associationId = params.associationId;
-
+  const { mutateAsync: deleteSession } = useDeleteSession(associationId);
   const [modalState, setModalState] = useState({
     viewSession: false,
     enrollment: false,
@@ -33,6 +36,19 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
       ...prev,
       [modalName]: !prev[modalName],
     }));
+  };
+  const handleDelete = async () => {
+    const isConfirmed = await confirmAlert({
+      title: "Delete Confirmation",
+      text: "You won't be able to revert this!",
+    });
+    if (isConfirmed) {
+      try {
+        await deleteSession(sessionData.id);
+      } catch (error) {
+        console.error("Failed to delete category:", error);
+      }
+    }
   };
 
   const handleViewDetails = () => {
@@ -108,6 +124,14 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
           variant="ghost"
           colorScheme="pink"
           onClick={handleCreateEvent}
+        />
+        <GenericIconButtonWithTooltip
+          aria-label="Delete Session"
+          icon={<MdDelete color="red" size={22} />}
+          label="Delete Session"
+          size={{ base: "sm", md: "md" }}
+          variant="ghost"
+          onClick={handleDelete}
         />
       </Flex>
 
