@@ -1,4 +1,3 @@
-import { ListOnlyPartenersPage } from '@features/Partner/List-only-partners/ListOnlyPartenersPage';
 export interface PatternRule {
   regex: RegExp;
   message?: string;

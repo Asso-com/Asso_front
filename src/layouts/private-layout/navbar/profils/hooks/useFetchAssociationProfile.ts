@@ -1,4 +1,4 @@
-import { Image } from '@chakra-ui/react';
+
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import UserServiceApi from "../services/userServiceApi";
 

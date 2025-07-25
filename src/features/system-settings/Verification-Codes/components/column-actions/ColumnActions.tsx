@@ -2,14 +2,11 @@ import { Flex } from "@chakra-ui/react";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
 import { MdDelete } from "react-icons/md";
 import type { ICellRendererParams } from "ag-grid-community";
-import type { RootState } from "@store/index";
 import { confirmAlert } from "@components/shared/confirmAlert";
-import { useSelector } from "react-redux";
 import useDeleteVerficationCode from "../../hooks/useDeleteVerificationCode";
 
 
 const ColumnAction: React.FC<ICellRendererParams> = (params) => {
-
 
 
   const { mutateAsync: deleteVerificationCode } = useDeleteVerficationCode();
