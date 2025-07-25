@@ -1,5 +1,6 @@
 import type { ColDef } from "ag-grid-community";
 import { Image } from "@chakra-ui/react";
+import StandardColumnCellRender from "@components/shared/shared-columns/StandardColumnCellRender";
 import React from "react";
 
 const BookColDefs: ColDef[] = [
@@ -113,15 +114,14 @@ const BookColDefs: ColDef[] = [
     field: "available",
     sortable: true,
     filter: true,
-    cellRenderer: (params: { value: any }) => (params.value ? "Yes" : "No"),
+    cellRenderer: StandardColumnCellRender,
   },
   {
     headerName: "Active",
     field: "isActive",
     sortable: true,
     filter: true,
-    cellRenderer: (params: { value: any }) =>
-      params.value ? "Active" : "Inactive",
+     cellRenderer: StandardColumnCellRender,
   },
 ];
 

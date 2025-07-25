@@ -78,7 +78,21 @@ const BookFormFields: Field[] = [
     type: "textarea",
     placeholder: "Enter book description",
     validationRules: { required: true, maxLength: 1000 },
-  }
+  },
+  {
+  name: "available",
+  label: "Available",
+  type: "checkbox",
+  placeholder: "",
+  validationRules: { required: false },
+},
+{
+  name: "isActive",
+  label: "Active",
+  type: "checkbox",
+  placeholder: "",
+  validationRules: { required: false },
+},
 ];
 
 export default BookFormFields;
