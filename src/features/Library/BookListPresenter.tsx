@@ -52,7 +52,7 @@ const BookListPresenter: React.FC<BookListPresenterProps> = ({
             cellRenderer: ColumnAction,
             filter: false,
             sortable: false,
-            width: 100,
+            width: 150,
             pinned: "right",
           },
         ]}

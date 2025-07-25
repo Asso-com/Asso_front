@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import ClearFilter from "@components/shared/ClearFilter";
 import QuickFilter from "@components/shared/QuickFilter";
 import { FcBookmark } from "react-icons/fc";
+import Booksidebar from "./sidebar/BookSidebar";
 
 const HeaderActions = ({ gridRef }: any) => {
   const { t } = useTranslation();
@@ -36,6 +37,7 @@ const HeaderActions = ({ gridRef }: any) => {
         <Flex alignItems="center" gap={2}>
           <ClearFilter gridRef={gridRef} />
           <QuickFilter gridRef={gridRef} />
+          <Booksidebar/>
         </Flex>
       </Flex>
     </Box>
