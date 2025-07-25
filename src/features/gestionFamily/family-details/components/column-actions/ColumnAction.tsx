@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import { MdEdit } from "react-icons/md";
+import { FiEdit } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import type { ICellRendererParams } from "ag-grid-community";
 
@@ -22,7 +22,7 @@ const ColumnAction = ({ data }: ICellRendererParams) => {
   return (
     <Flex align="center" justify="center" gap={2}>
       <GenericIconButtonWithTooltip
-        icon={<MdEdit size={22} />}
+        icon={<FiEdit size={18} />}
         label={t("Edit")}
         ariaLabel="edit_btn"
         variant="ghost"

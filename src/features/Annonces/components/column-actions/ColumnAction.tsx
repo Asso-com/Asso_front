@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
-import { MdDelete, MdEdit } from "react-icons/md";
+import { FiTrash, FiEdit } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "@store/toastSlice";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,9 @@ import EditAnnonce from "./EditAnnonce";
 const ColumnAction: React.FC<ICellRendererParams> = ({ data }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const associationId = useSelector((state: any) => state.authSlice.associationId);
+  const associationId = useSelector(
+    (state: any) => state.authSlice.associationId
+  );
   const { mutateAsync: deleteAnnonce } = useDeleteAnnonce(associationId);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -44,7 +46,7 @@ const ColumnAction: React.FC<ICellRendererParams> = ({ data }) => {
   return (
     <Flex align="center" justify="center" gap={2} height="100%">
       <GenericIconButtonWithTooltip
-        icon={<MdEdit size={22} />}
+        icon={<FiEdit size={18} />}
         label={t("Edit")}
         ariaLabel="edit_btn"
         variant="ghost"
@@ -53,7 +55,7 @@ const ColumnAction: React.FC<ICellRendererParams> = ({ data }) => {
         onClick={toggleEditModal}
       />
       <GenericIconButtonWithTooltip
-        icon={<MdDelete size={22} />}
+        icon={<FiTrash size={18} />}
         label={t("Delete")}
         ariaLabel="delete_btn"
         variant="ghost"

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 import {
   Box,
   VStack,
@@ -19,15 +19,22 @@ import {
   Tooltip,
   Flex,
   useDisclosure,
-} from '@chakra-ui/react';
-import { FaChevronUp, FaChevronDown, FaBook, FaGraduationCap, FaBookOpen, FaPlus } from 'react-icons/fa';
-import { MdEdit } from 'react-icons/md';
+} from "@chakra-ui/react";
+import {
+  FaChevronUp,
+  FaChevronDown,
+  FaBook,
+  FaGraduationCap,
+  FaBookOpen,
+  FaPlus,
+} from "react-icons/fa";
+import { FiEdit } from "react-icons/fi";
 import GenericModal from "@components/ui/GenericModal";
-import EditTopics from './EditTopics';
-import AddTopics from './AddNewTopic'; 
-import { BaseCard } from '@components/shared/Cards/BaseCard';
-import useDeleteTopicById from '../../hooks/useDeleteTopicById';
-import { BaseHeader } from '@components/shared/Cards/BaseHeader';
+import EditTopics from "./EditTopics";
+import AddTopics from "./AddNewTopic";
+import { BaseCard } from "@components/shared/Cards/BaseCard";
+import useDeleteTopicById from "../../hooks/useDeleteTopicById";
+import { BaseHeader } from "@components/shared/Cards/BaseHeader";
 
 interface Topic {
   id: number;
@@ -50,7 +57,7 @@ interface Props {
 
 const TopicAccordion = ({ associationId, data, searchTerm }: Props) => {
   const { mutate: deleteTopic } = useDeleteTopicById();
-  
+
   // Edit modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedTopicGroup, setSelectedTopicGroup] = useState<{
@@ -68,17 +75,26 @@ const TopicAccordion = ({ associationId, data, searchTerm }: Props) => {
     levelSubject?: string;
   } | null>(null);
 
-  const handleEditTopics = (lessonId: number, currentTopics: Topic[], lessonName: string, levelSubject?: string) => {
+  const handleEditTopics = (
+    lessonId: number,
+    currentTopics: Topic[],
+    lessonName: string,
+    levelSubject?: string
+  ) => {
     setSelectedTopicGroup({
       lessonId,
-      topics: currentTopics.map(topic => ({ ...topic })),
+      topics: currentTopics.map((topic) => ({ ...topic })),
       lessonName,
       levelSubject,
     });
     setEditModalOpen(true);
   };
 
-  const handleAddTopics = (lessonId: number, lessonName: string, levelSubject?: string) => {
+  const handleAddTopics = (
+    lessonId: number,
+    lessonName: string,
+    levelSubject?: string
+  ) => {
     setSelectedLessonForAdd({
       lessonId,
       lessonName,
@@ -102,28 +118,37 @@ const TopicAccordion = ({ associationId, data, searchTerm }: Props) => {
   };
 
   const normalize = (str: string) =>
-    str.toLowerCase().trim().normalize('NFD').replace(/\u0300-\u036f/g, '');
+    str
+      .toLowerCase()
+      .trim()
+      .normalize("NFD")
+      .replace(/\u0300-\u036f/g, "");
 
   const filteredGroups = useMemo(() => {
     if (!searchTerm.trim()) {
       return data
-        .filter(lesson => lesson.topics?.length > 0)
-        .map(lesson => ({
+        .filter((lesson) => lesson.topics?.length > 0)
+        .map((lesson) => ({
           ...lesson,
-          topics: [...lesson.topics].sort((a, b) => a.sortedOrder - b.sortedOrder),
+          topics: [...lesson.topics].sort(
+            (a, b) => a.sortedOrder - b.sortedOrder
+          ),
         }));
     }
 
     const normalizedSearch = normalize(searchTerm);
     return data
-      .filter(lesson => lesson.topics?.length > 0)
-      .filter(lesson =>
-        normalize(lesson.lessonName).includes(normalizedSearch) ||
-        normalize(lesson.levelSubject).includes(normalizedSearch)
+      .filter((lesson) => lesson.topics?.length > 0)
+      .filter(
+        (lesson) =>
+          normalize(lesson.lessonName).includes(normalizedSearch) ||
+          normalize(lesson.levelSubject).includes(normalizedSearch)
       )
-      .map(lesson => ({
+      .map((lesson) => ({
         ...lesson,
-        topics: [...lesson.topics].sort((a, b) => a.sortedOrder - b.sortedOrder),
+        topics: [...lesson.topics].sort(
+          (a, b) => a.sortedOrder - b.sortedOrder
+        ),
       }));
   }, [data, searchTerm]);
 
@@ -140,39 +165,44 @@ const TopicAccordion = ({ associationId, data, searchTerm }: Props) => {
   return (
     <Container maxW="full" p={0}>
       <VStack spacing={8} align="stretch">
-        {Object.entries(groupedByLevelSubject).map(([levelSubject, lessons]) => {
-          const totalTopics = lessons.reduce((sum, lesson) => sum + lesson.topics.length, 0);
-          return (
-            <HStack key={levelSubject} align="stretch" spacing={6}>
-              <LevelSidebar
-                levelSubject={levelSubject}
-                totalLessons={lessons.length}
-                totalTopics={totalTopics}
-              />
-              <Box flex={1}>
-                <VStack spacing={3} align="stretch">
-                  {lessons.map(lesson => (
-                    <LessonSection
-                      key={lesson.lessonId}
-                      lesson={lesson}
-                      onEditTopics={handleEditTopics}
-                      onAddTopics={handleAddTopics}
-                      onDeleteTopic={handleDeleteTopic}
-                      searchTerm={searchTerm}
-                    />
-                  ))}
-                </VStack>
-              </Box>
-            </HStack>
-          );
-        })}
+        {Object.entries(groupedByLevelSubject).map(
+          ([levelSubject, lessons]) => {
+            const totalTopics = lessons.reduce(
+              (sum, lesson) => sum + lesson.topics.length,
+              0
+            );
+            return (
+              <HStack key={levelSubject} align="stretch" spacing={6}>
+                <LevelSidebar
+                  levelSubject={levelSubject}
+                  totalLessons={lessons.length}
+                  totalTopics={totalTopics}
+                />
+                <Box flex={1}>
+                  <VStack spacing={3} align="stretch">
+                    {lessons.map((lesson) => (
+                      <LessonSection
+                        key={lesson.lessonId}
+                        lesson={lesson}
+                        onEditTopics={handleEditTopics}
+                        onAddTopics={handleAddTopics}
+                        onDeleteTopic={handleDeleteTopic}
+                        searchTerm={searchTerm}
+                      />
+                    ))}
+                  </VStack>
+                </Box>
+              </HStack>
+            );
+          }
+        )}
       </VStack>
 
       {/* Edit Topics Modal */}
       <GenericModal
         isOpen={editModalOpen}
         onClose={toggleEditModal}
-        title={`Edit Topics - ${selectedTopicGroup?.lessonName ?? ''}`}
+        title={`Edit Topics - ${selectedTopicGroup?.lessonName ?? ""}`}
         size="lg"
       >
         {selectedTopicGroup && (
@@ -181,8 +211,8 @@ const TopicAccordion = ({ associationId, data, searchTerm }: Props) => {
               lessonId: selectedTopicGroup.lessonId,
               topics: selectedTopicGroup.topics,
               lessonName: selectedTopicGroup.lessonName,
-              subjectName: selectedTopicGroup.levelSubject?.split(' - ')[1],
-              levelName: selectedTopicGroup.levelSubject?.split(' - ')[0],
+              subjectName: selectedTopicGroup.levelSubject?.split(" - ")[1],
+              levelName: selectedTopicGroup.levelSubject?.split(" - ")[0],
             }}
             associationId={associationId}
             onClose={toggleEditModal}
@@ -195,7 +225,7 @@ const TopicAccordion = ({ associationId, data, searchTerm }: Props) => {
       <GenericModal
         isOpen={addModalOpen}
         onClose={toggleAddModal}
-        title={`Add Topics - ${selectedLessonForAdd?.lessonName ?? ''}`}
+        title={`Add Topics - ${selectedLessonForAdd?.lessonName ?? ""}`}
         size="lg"
       >
         {selectedLessonForAdd && (
@@ -203,8 +233,8 @@ const TopicAccordion = ({ associationId, data, searchTerm }: Props) => {
             details={{
               lessonId: selectedLessonForAdd.lessonId,
               lessonName: selectedLessonForAdd.lessonName,
-              subjectName: selectedLessonForAdd.levelSubject?.split(' - ')[1],
-              levelName: selectedLessonForAdd.levelSubject?.split(' - ')[0],
+              subjectName: selectedLessonForAdd.levelSubject?.split(" - ")[1],
+              levelName: selectedLessonForAdd.levelSubject?.split(" - ")[0],
             }}
             associationId={associationId}
             onClose={toggleAddModal}
@@ -224,20 +254,34 @@ const LessonSection = ({
   searchTerm,
 }: {
   lesson: LessonItem;
-  onEditTopics: (lessonId: number, currentTopics: Topic[], lessonName: string, levelSubject?: string) => void;
-  onAddTopics: (lessonId: number, lessonName: string, levelSubject?: string) => void;
+  onEditTopics: (
+    lessonId: number,
+    currentTopics: Topic[],
+    lessonName: string,
+    levelSubject?: string
+  ) => void;
+  onAddTopics: (
+    lessonId: number,
+    lessonName: string,
+    levelSubject?: string
+  ) => void;
   onDeleteTopic: (topicId: number) => void;
   searchTerm: string;
 }) => {
   const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.600');
-  const hoverBorderColor = useColorModeValue('blue.300', 'blue.500');
-  const iconColor = useColorModeValue('blue.600', 'blue.300');
+  const bgColor = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const hoverBorderColor = useColorModeValue("blue.300", "blue.500");
+  const iconColor = useColorModeValue("blue.600", "blue.300");
 
   const handleEditTopicsClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onEditTopics(lesson.lessonId, lesson.topics, lesson.lessonName, lesson.levelSubject);
+    onEditTopics(
+      lesson.lessonId,
+      lesson.topics,
+      lesson.lessonName,
+      lesson.levelSubject
+    );
   };
 
   const handleAddTopicsClick = (e: React.MouseEvent) => {
@@ -245,10 +289,16 @@ const LessonSection = ({
     onAddTopics(lesson.lessonId, lesson.lessonName, lesson.levelSubject);
   };
 
-  const normalize = (str: string) => str.toLowerCase().trim().normalize('NFD').replace(/\u0300-\u036f/g, '');
-  const isHighlighted = searchTerm.trim() &&
+  const normalize = (str: string) =>
+    str
+      .toLowerCase()
+      .trim()
+      .normalize("NFD")
+      .replace(/\u0300-\u036f/g, "");
+  const isHighlighted =
+    searchTerm.trim() &&
     (normalize(lesson.lessonName).includes(normalize(searchTerm)) ||
-     normalize(lesson.levelSubject).includes(normalize(searchTerm)));
+      normalize(lesson.levelSubject).includes(normalize(searchTerm)));
 
   return (
     <Card
@@ -256,16 +306,21 @@ const LessonSection = ({
       borderColor={isHighlighted ? hoverBorderColor : borderColor}
       borderWidth={isHighlighted ? "2px" : "1px"}
       shadow="sm"
-      _hover={{ borderColor: hoverBorderColor, shadow: 'md' }}
+      _hover={{ borderColor: hoverBorderColor, shadow: "md" }}
       mb={3}
       borderRadius="lg"
     >
       <CardHeader>
         <Flex align="center" justify="space-between">
-          <BaseHeader title={lesson.lessonName} icon={FaBook} iconColor={iconColor} size="md">
+          <BaseHeader
+            title={lesson.lessonName}
+            icon={FaBook}
+            iconColor={iconColor}
+            size="md"
+          >
             <Badge
-              bg={useColorModeValue('blue.100', 'blue.700')}
-              color={useColorModeValue('blue.700', 'blue.200')}
+              bg={useColorModeValue("blue.100", "blue.700")}
+              color={useColorModeValue("blue.700", "blue.200")}
               borderRadius="full"
               px={3}
               py={1}
@@ -282,10 +337,10 @@ const LessonSection = ({
                 icon={<FaPlus />}
                 size="sm"
                 variant="ghost"
-                color={useColorModeValue('green.600', 'green.300')}
-                _hover={{ 
-                  bg: useColorModeValue('green.50', 'green.800'),
-                  color: useColorModeValue('green.700', 'green.200')
+                color={useColorModeValue("green.600", "green.300")}
+                _hover={{
+                  bg: useColorModeValue("green.50", "green.800"),
+                  color: useColorModeValue("green.700", "green.200"),
                 }}
                 onClick={handleAddTopicsClick}
               />
@@ -293,13 +348,13 @@ const LessonSection = ({
             <Tooltip label="Edit topics">
               <IconButton
                 aria-label="Edit topics"
-                icon={<MdEdit />}
+                icon={<FiEdit />}
                 size="sm"
                 variant="ghost"
-                color={useColorModeValue('gray.600', 'gray.300')}
-                _hover={{ 
-                  bg: useColorModeValue('gray.50', 'gray.700'),
-                  color: useColorModeValue('gray.700', 'gray.200')
+                color={useColorModeValue("gray.600", "gray.300")}
+                _hover={{
+                  bg: useColorModeValue("gray.50", "gray.700"),
+                  color: useColorModeValue("gray.700", "gray.200"),
                 }}
                 onClick={handleEditTopicsClick}
               />
@@ -331,13 +386,14 @@ const LessonSection = ({
                 deleteConfig={{
                   onDelete: () => onDeleteTopic(topic.id),
                   deleteTitle: "Delete topic",
-                  deleteMessage: (name: string) => `Are you sure you want to delete "${name}"?`,
+                  deleteMessage: (name: string) =>
+                    `Are you sure you want to delete "${name}"?`,
                   confirmText: "Yes, delete",
                   cancelText: "Cancel",
                   canDelete: true,
                 }}
                 cardConfig={{
-                  color: 'green',
+                  color: "green",
                   showCode: false,
                 }}
               />
@@ -349,14 +405,18 @@ const LessonSection = ({
   );
 };
 
-const LevelSidebar = ({ levelSubject, totalLessons, totalTopics }: {
+const LevelSidebar = ({
+  levelSubject,
+  totalLessons,
+  totalTopics,
+}: {
   levelSubject: string;
   totalLessons: number;
   totalTopics: number;
 }) => {
-  const borderColor = useColorModeValue('blue.200', 'blue.600');
-  const textColor = useColorModeValue('gray.700', 'gray.200');
-  const statsBg = useColorModeValue('white', 'gray.700');
+  const borderColor = useColorModeValue("blue.200", "blue.600");
+  const textColor = useColorModeValue("gray.700", "gray.200");
+  const statsBg = useColorModeValue("white", "gray.700");
 
   return (
     <Box
@@ -375,13 +435,18 @@ const LevelSidebar = ({ levelSubject, totalLessons, totalTopics }: {
           <Center
             w={14}
             h={14}
-            bg={useColorModeValue('blue.100', 'blue.700')}
+            bg={useColorModeValue("blue.100", "blue.700")}
             borderRadius="full"
-            color={useColorModeValue('blue.600', 'blue.300')}
+            color={useColorModeValue("blue.600", "blue.300")}
           >
             <FaGraduationCap size={24} />
           </Center>
-          <Text fontSize="sm" fontWeight="700" color={textColor} textAlign="center">
+          <Text
+            fontSize="sm"
+            fontWeight="700"
+            color={textColor}
+            textAlign="center"
+          >
             {levelSubject}
           </Text>
         </VStack>
@@ -396,22 +461,36 @@ const LevelSidebar = ({ levelSubject, totalLessons, totalTopics }: {
         >
           <VStack spacing={3}>
             <VStack spacing={1}>
-              <Text fontSize="2xl" fontWeight="700" color={useColorModeValue('blue.600', 'blue.400')}>
+              <Text
+                fontSize="2xl"
+                fontWeight="700"
+                color={useColorModeValue("blue.600", "blue.400")}
+              >
                 {totalLessons}
               </Text>
-              <Text fontSize="xs" color={useColorModeValue('gray.500', 'gray.400')}>
-                Lesson{totalLessons > 1 ? 's' : ''}
+              <Text
+                fontSize="xs"
+                color={useColorModeValue("gray.500", "gray.400")}
+              >
+                Lesson{totalLessons > 1 ? "s" : ""}
               </Text>
             </VStack>
 
             <Divider borderColor={borderColor} />
 
             <VStack spacing={1}>
-              <Text fontSize="2xl" fontWeight="700" color={useColorModeValue('blue.600', 'blue.400')}>
+              <Text
+                fontSize="2xl"
+                fontWeight="700"
+                color={useColorModeValue("blue.600", "blue.400")}
+              >
                 {totalTopics}
               </Text>
-              <Text fontSize="xs" color={useColorModeValue('gray.500', 'gray.400')}>
-                Topic{totalTopics > 1 ? 's' : ''}
+              <Text
+                fontSize="xs"
+                color={useColorModeValue("gray.500", "gray.400")}
+              >
+                Topic{totalTopics > 1 ? "s" : ""}
               </Text>
             </VStack>
           </VStack>
@@ -437,7 +516,7 @@ const EmptyState = () => (
       <Text fontSize="lg" fontWeight="600" mb={2}>
         No topics available
       </Text>
-      <Text color={useColorModeValue('blue.600', 'blue.400')}>
+      <Text color={useColorModeValue("blue.600", "blue.400")}>
         No content available for this association.
       </Text>
     </Alert>

@@ -2,7 +2,7 @@ import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/Gener
 import GenericModal from "@components/ui/GenericModal";
 import type { ICellRendererParams } from "node_modules/ag-grid-community/dist/types/core/main";
 import { useState } from "react";
-import { MdEdit } from "react-icons/md";
+import { FiEdit } from "react-icons/fi";
 import { GrFormNextLink } from "react-icons/gr";
 import AttandanceSessionDate from "./attandance-session-date";
 import EditSessionSchedule from "./attandance-session-date/updateSessionSchedule/EditSessionSchedule";
@@ -41,7 +41,7 @@ const ColumnAction: React.FC<ICellRendererParams<SessionSchuduleDate>> = (
 
       {/* Update Modal */}
       <GenericIconButtonWithTooltip
-        icon={<MdEdit size={22} />}
+        icon={<FiEdit size={18} />}
         size={{ base: "sm", md: "md" }}
         variant="ghost"
         colorScheme={"green"}

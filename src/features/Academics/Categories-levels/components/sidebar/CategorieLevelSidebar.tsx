@@ -9,6 +9,7 @@ import type { FormContentRef } from "./FormContent"
 import type { RootState } from "@store/index"
 import { useSelector } from "react-redux"
 import useCreateCategoriesLevels from "../../hooks/useCreateCategoriesLevels"
+import { FiPlus } from "react-icons/fi"
 
 const CategorieLevelSidebar = () => {
   const { t } = useTranslation()
@@ -43,6 +44,7 @@ const CategorieLevelSidebar = () => {
         variant="outline"
         colorScheme="primary"
         onClick={handleOpenSidebar}
+        leftIcon={<FiPlus />}
       >
         {t("Add CategorieLevel")}
       </Button>

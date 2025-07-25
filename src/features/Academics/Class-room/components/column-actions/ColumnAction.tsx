@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
-import { MdDelete, MdEdit } from "react-icons/md";
+import { FiTrash, FiEdit } from "react-icons/fi";
 import type { ICellRendererParams } from "ag-grid-community";
 import { confirmAlert } from "@components/shared/confirmAlert";
 import GenericModal from "@components/ui/GenericModal";
@@ -26,9 +26,7 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
     if (isConfirmed) {
       try {
         await deleteClassRoom(params.data.id);
-      } catch (error) {
-
-      }
+      } catch (error) {}
     }
   };
 
@@ -39,7 +37,7 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
   return (
     <Flex align="center" justify="center" gap={2} height="100%">
       <GenericIconButtonWithTooltip
-        icon={<MdEdit size={22} />}
+        icon={<FiEdit size={18} />}
         label="Edit"
         ariaLabel="edit_btn"
         variant="ghost"
@@ -49,7 +47,7 @@ const ColumnAction: React.FC<ICellRendererParams> = (params) => {
         disabled={params.data.standard}
       />
       <GenericIconButtonWithTooltip
-        icon={<MdDelete size={22} />}
+        icon={<FiTrash size={18} />}
         label="Delete"
         ariaLabel="delete_btn"
         variant="ghost"

@@ -11,7 +11,7 @@ import {
   Box,
   Spinner,
 } from "@chakra-ui/react";
-import { MdDelete } from "react-icons/md";
+import { FiTrash } from "react-icons/fi";
 import { confirmAlert } from "@components/shared/confirmAlert";
 
 // Inline type definitions
@@ -191,7 +191,7 @@ export const BaseCard: React.FC<BaseCardProps> = ({
                   {isDeleting ? (
                     <Spinner size="xs" color="red.500" />
                   ) : (
-                    <Icon as={MdDelete} boxSize={4} color="red.500" />
+                    <Icon as={FiTrash} boxSize={4} color="red.500" />
                   )}
                 </Box>
               )}

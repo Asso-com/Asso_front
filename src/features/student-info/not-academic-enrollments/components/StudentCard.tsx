@@ -16,7 +16,7 @@ import {
   TagLeftIcon,
 } from "@chakra-ui/react";
 import { FiUser, FiMail, FiBook, FiGlobe } from "react-icons/fi";
-import { MdEdit } from "react-icons/md";
+import { FiEdit } from "react-icons/fi";
 import { useState } from "react";
 import type {
   EnrolledSubject,
@@ -127,10 +127,9 @@ const StudentCard: FC<StudentCardProps> = ({ studentData }) => {
             >
               {studentData.levelSubjects.length} {t("subjects")}
             </Badge>
-            <Box
-            >
+            <Box>
               <GenericIconButtonWithTooltip
-                icon={<MdEdit size={19} />}
+                icon={<FiEdit size={19} />}
                 label={t("Edit Enrollment")}
                 ariaLabel="edit_enrollment_btn"
                 variant="ghost"

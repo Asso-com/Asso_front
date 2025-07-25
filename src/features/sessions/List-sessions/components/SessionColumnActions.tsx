@@ -1,6 +1,7 @@
 import { Flex } from "@chakra-ui/react";
-import { ViewIcon, InfoIcon, BellIcon, EditIcon } from "@chakra-ui/icons";
-import { MdDelete } from "react-icons/md";
+import {InfoIcon, BellIcon, EditIcon } from "@chakra-ui/icons";
+import { FiEye } from "react-icons/fi";
+import { FiTrash } from "react-icons/fi";
 import type { ICellRendererParams } from "ag-grid-community";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
 import { useState } from "react";
@@ -98,7 +99,7 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
 
         <GenericIconButtonWithTooltip
           aria-label="View lesson plan"
-          icon={<ViewIcon />}
+          icon={<FiEye size={22} />}
           label="View Lesson Plan"
           size={{ base: "sm", md: "md" }}
           variant="ghost"
@@ -127,7 +128,7 @@ const SessionColumnActions: React.FC<SessionCellRendererParams> = (params) => {
         />
         <GenericIconButtonWithTooltip
           aria-label="Delete Session"
-          icon={<MdDelete color="red" size={22} />}
+          icon={<FiTrash color="red" size={22} />}
           label="Delete Session"
           size={{ base: "sm", md: "md" }}
           variant="ghost"

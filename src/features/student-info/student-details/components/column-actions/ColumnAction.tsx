@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Flex, Tooltip } from "@chakra-ui/react";
-import { MdDelete, MdPersonAdd, MdPersonRemove } from "react-icons/md";
+import { MdPersonAdd, MdPersonRemove } from "react-icons/md";
+import { FiTrash } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import type { ICellRendererParams } from "ag-grid-community";
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
@@ -43,7 +44,7 @@ const ColumnAction: React.FC<ICellRendererParams<StudentDetails>> = (
   };
 
   const handleEnrollmentToggle = async () => {
-    if (isEnrolled) return 
+    if (isEnrolled) return;
     openEnrollmentModal();
   };
 
@@ -81,7 +82,7 @@ const ColumnAction: React.FC<ICellRendererParams<StudentDetails>> = (
       <EditStudent studentDetails={student} />
 
       <GenericIconButtonWithTooltip
-        icon={<MdDelete size={22} />}
+        icon={<FiTrash size={18} />}
         label={"Delete"}
         ariaLabel="delete_btn"
         variant="ghost"
