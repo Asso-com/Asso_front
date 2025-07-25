@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { Spinner } from "@chakra-ui/react";
-import { MdEdit } from "react-icons/md";
+import { FiEdit } from "react-icons/fi";
 
 import GenericIconButtonWithTooltip from "@components/shared/icons-buttons/GenericIconButtonWithTooltip";
 import RightSidebar from "@components/shared/RigthSidebar";
@@ -63,7 +63,7 @@ const EditStudent: React.FC<EnrollementProps> = ({ studentDetails }) => {
   return (
     <>
       <GenericIconButtonWithTooltip
-        icon={<MdEdit size={22} />}
+        icon={<FiEdit size={18} />}
         label={t("Edit")}
         ariaLabel="edit_btn"
         variant="ghost"

@@ -9,6 +9,7 @@ import FormContent from "./FormContent"
 import type { FormContentRef } from "./FormContent"
 import type { RootState } from "@store/index"
 import { useSelector } from "react-redux"
+import { FiPlus } from "react-icons/fi"
 
 const PeriodSidebar = () => {
   const { t } = useTranslation()
@@ -43,6 +44,7 @@ const PeriodSidebar = () => {
         variant="outline"
         colorScheme="primary"
         onClick={handleOpenSidebar}
+        leftIcon={<FiPlus />}
       >
         {t("Add school year")}
       </Button>

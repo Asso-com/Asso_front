@@ -8,6 +8,7 @@ import type { FormContentRef } from "./FormContent";
 import type { RootState } from "@store/index";
 import { useSelector } from "react-redux";
 import useCreateSubjectLevel from "../../hooks/useCreateSubjectLevel";
+import { FiPlus } from "react-icons/fi";
 
 const SubjectLevelSidebar = () => {
   const { t } = useTranslation();
@@ -46,12 +47,13 @@ const SubjectLevelSidebar = () => {
   return (
     <>
       <Button
-        px={6}
+        px={8}
         py={3}
         fontSize="sm"
         variant="outline"
         colorScheme="primary"
         onClick={handleOpenSidebar}
+        leftIcon={<FiPlus />}
       >
         {t("Add Subject Level")}
       </Button>

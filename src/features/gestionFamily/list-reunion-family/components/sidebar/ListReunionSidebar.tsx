@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import FormContent from "./FormContent";
 import { useCreateReunion } from "../../hooks/useCreateReunion";
 import type { FormContentRef } from "@features/system-settings/school-year-settings/components/sidebar/FormContent";
+import { FiPlus } from "react-icons/fi";
 
 const ListReunionSidebar = () => {
   const { t } = useTranslation();
@@ -38,8 +39,9 @@ const ListReunionSidebar = () => {
         variant="outline"
         colorScheme="primary"
         onClick={handleOpenSidebar}
+        leftIcon={<FiPlus />}
       >
-        {t("+ Add Meetings")}
+        {t(" Add Meetings")}
       </Button>
 
       <RigthSidebar

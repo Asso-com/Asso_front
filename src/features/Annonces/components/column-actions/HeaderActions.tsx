@@ -9,6 +9,7 @@ import useCreateAnnonce from "../../hooks/useCreateAnnonce";
 import FormContent from "../forms/FormContent";
 import { FaBullhorn } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import { FiPlus } from "react-icons/fi";
 
 interface HeaderActionsProps {
   gridRef: any;
@@ -78,6 +79,7 @@ const HeaderActions = ({ gridRef }: HeaderActionsProps) => {
             variant="outline"
             colorScheme="primary"
             onClick={handleOpenSidebar}
+            leftIcon={<FiPlus />}
           >
             {t("Add Annonce")}
           </Button>

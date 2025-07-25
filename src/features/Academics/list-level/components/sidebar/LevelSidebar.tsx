@@ -10,6 +10,7 @@ import type { RootState } from "@store/index";
 import { useSelector } from "react-redux";
 import useCreateLevel from "../../hooks/useCreateLevel";
 import type { NewLevel } from "../../types";
+import { FiPlus } from "react-icons/fi";
 
 const LevelSidebar = () => {
   const { t } = useTranslation();
@@ -51,6 +52,7 @@ const LevelSidebar = () => {
         variant="outline"
         colorScheme="primary"
         onClick={handleOpenSidebar}
+        leftIcon={<FiPlus />}
       >
         {t("Add Level")}
       </Button>

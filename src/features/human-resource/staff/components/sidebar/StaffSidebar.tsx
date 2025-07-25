@@ -9,6 +9,7 @@ import type { FormContentRef } from "./FormContent";
 import type { RootState } from "@store/index";
 import { useSelector } from "react-redux";
 import useCreateStaff from "../../hooks/useCreateStaff";
+import { FiPlus } from "react-icons/fi";
 
 const StaffSidebar = () => {
   const { t } = useTranslation();
@@ -42,6 +43,7 @@ const StaffSidebar = () => {
         variant="outline"
         colorScheme="primary"
         onClick={handleOpenSidebar}
+        leftIcon={<FiPlus />}
       >
         {t("Add Staff")}
       </Button>

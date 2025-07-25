@@ -9,6 +9,7 @@ import type { FormContentRef } from "./FormContent"
 import type { RootState } from "@store/index"
 import { useSelector } from "react-redux"
 import useCreateSubject from "../../hooks/useCreateSubject"
+import { FiPlus } from "react-icons/fi"
 
 const SubjectSidebar = () => {
   const { t } = useTranslation()
@@ -50,6 +51,7 @@ const SubjectSidebar = () => {
         variant="outline"
         colorScheme="primary"
         onClick={handleOpenSidebar}
+        leftIcon={<FiPlus />}
       >
         {t("Create Subject")}
       </Button>

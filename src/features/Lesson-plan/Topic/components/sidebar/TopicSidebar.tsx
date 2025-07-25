@@ -8,6 +8,7 @@ import type { FormContentRef } from "./FormContent";
 import useCreateTopics from "../../hooks/useCreateTopics";
 import { useSelector } from "react-redux";
 import type { RootState } from "@store/index";
+import { FiPlus } from "react-icons/fi";
 
 const TopicSidebar = () => {
   const { t } = useTranslation();
@@ -46,6 +47,7 @@ const TopicSidebar = () => {
         variant="outline"
         colorScheme="primary"
         onClick={handleOpenSidebar}
+        leftIcon={<FiPlus />}
       >
         {t("Add Topic")}
       </Button>

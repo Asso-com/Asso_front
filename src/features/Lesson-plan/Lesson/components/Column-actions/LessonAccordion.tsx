@@ -28,7 +28,7 @@ import {
   FaBookOpen,
   FaPlus,
 } from "react-icons/fa";
-import { MdEdit } from "react-icons/md";
+import { FiEdit } from "react-icons/fi";
 import GenericModal from "@components/ui/GenericModal";
 import AddLessons from "./AddLessons";
 import EditLessons from "./EditLessons";
@@ -67,7 +67,9 @@ const LessonAccordion = ({ associationId, data, searchTerm }: Props) => {
   const { mutate: deleteLesson } = useDeleteLessonById(associationId);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
-  const [selectedLevelSubjectId, setSelectedLevelSubjectId] = useState<number | null>(null);
+  const [selectedLevelSubjectId, setSelectedLevelSubjectId] = useState<
+    number | null
+  >(null);
   const [selectedLessonGroup, setSelectedLessonGroup] = useState<{
     levelSubjectId: number;
     lessons: Lesson[];
@@ -145,12 +147,16 @@ const LessonAccordion = ({ associationId, data, searchTerm }: Props) => {
   const renderAddModal = () => {
     if (!selectedLevelSubjectId) return null;
 
-    const selectedData = data.find((d) => d.levelSubjectId === selectedLevelSubjectId);
-    
+    const selectedData = data.find(
+      (d) => d.levelSubjectId === selectedLevelSubjectId
+    );
+
     if (!selectedData) {
       return (
         <Box p={4}>
-          <Text color="red.500">Error: Could not find data for the selected level-subject.</Text>
+          <Text color="red.500">
+            Error: Could not find data for the selected level-subject.
+          </Text>
         </Box>
       );
     }
@@ -319,7 +325,7 @@ const SubjectSection = ({
             <Tooltip label="Edit lessons">
               <IconButton
                 aria-label="Edit lessons"
-                icon={<MdEdit />}
+                icon={<FiEdit />}
                 size="sm"
                 variant="ghost"
                 color={useColorModeValue("gray.600", "gray.300")}

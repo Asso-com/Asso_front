@@ -9,6 +9,7 @@ import type { FormContentRef } from "./FormContent"
 import type { RootState } from "@store/index"
 import { useSelector } from "react-redux"
 import useCreateDepartment from "../../hooks/useCreateDepartment"
+import { FiPlus } from "react-icons/fi"
 
 const DepartmentSidebar = () => {
   const { t } = useTranslation()
@@ -42,6 +43,7 @@ const DepartmentSidebar = () => {
         variant="outline"
         colorScheme="primary"
         onClick={handleOpenSidebar}
+        leftIcon={<FiPlus />}
       >
         {t("Add Department")}
       </Button>
