@@ -1,3 +1,18 @@
 {
-    
+  "Delete Confirmation": "Delete Confirmation",
+  "Cancel": "Cancel",
+  "Yes, proceed": "Yes, proceed",
+  "Enrollment": "Enrollment",
+  "Enrolled": "Enrolled",
+  "Not Enrolled": "Not Enrolled",
+  "Registration ID": "Registration ID",
+  "First name": "First name",
+  "Last name": "Last name",
+  "Date of birth": "Date of birth",
+  "Email": "Email",
+  "Phone": "Phone",
+  "School": "School",
+  "Admission Date": "Admission Date",
+  "Gender": "Gender",
+  "City": "City"
 }

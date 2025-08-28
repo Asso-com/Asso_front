@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Text, HStack, Icon } from "@chakra-ui/react";
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 import { motion } from "framer-motion";
@@ -8,81 +8,28 @@ import NavItem from "./NavItem";
 import "./menus_styles.css";
 
 import type { MenuItem } from "../../../types/menuItem";
-
-// export interface MenuItem {
-//   MENU_ID: number;
-//   MENU_DESCRIPTION: string;
-//   NAVLINK?: string;
-//   icon: string;
-//   children?: MenuItem[];
-//   EDITABLE?: number;
-// }
-
-const fakeMenuItems: MenuItem[] = [
-  {
-    MENU_ID: 1,
-    MENU_DESCRIPTION: "Dashboard",
-    NAVLINK: "/dashboard",
-    icon: "FaBox",
-    children: [],
-  },
-  {
-    MENU_ID: 2,
-    MENU_DESCRIPTION: "Management",
-    icon: "FaTachometerAlt",
-    NAVLINK: "",
-    children: [
-      {
-        MENU_ID: 21,
-        MENU_DESCRIPTION: "Users",
-        NAVLINK: "/management/users",
-        icon: "MdPerson",
-      },
-      {
-        MENU_ID: 22,
-        MENU_DESCRIPTION: "Roles",
-        NAVLINK: "/management/roles",
-        icon: "MdSecurity",
-      },
-    ],
-  },
-  {
-    MENU_ID: 3,
-    MENU_DESCRIPTION: "Reports",
-    icon: "FaChartBar",
-    NAVLINK: "",
-    children: [
-      {
-        MENU_ID: 31,
-        MENU_DESCRIPTION: "Sales Report",
-        NAVLINK: "/reports/sales",
-        icon: "MdBarChart",
-      },
-      {
-        MENU_ID: 32,
-        MENU_DESCRIPTION: "Finance Report",
-        NAVLINK: "/reports/finance",
-        icon: "MdPieChart",
-      },
-    ],
-  },
-];
+import { useSelector } from "react-redux";
+import type { RootState } from "@store/index";
+import { useDirection } from "@hooks/useDirection";
 
 const MotionBox = motion(Box);
 
 const SidebarContent: React.FC = () => {
-  const menuItems = fakeMenuItems;
+  const navigate = useNavigate();
+  const menuItems = useSelector(
+    (state: RootState) => state.menuSlice.menuDataFilter
+  );
   const [activeGroup, setActiveGroup] = useState<number | null>(null);
   const location = useLocation();
 
-  // Assume these come from context or i18n hooks
-  const isRTL = false;
+  const { isRTL } = useDirection();
+
   const t = (text: string) => text;
 
   useEffect(() => {
     menuItems.forEach((item) => {
       if (item.children && isGroupActive(item.children)) {
-        setActiveGroup(item.MENU_ID);
+        setActiveGroup(item.menu_id);
       }
     });
   }, [location.pathname]);
@@ -92,7 +39,11 @@ const SidebarContent: React.FC = () => {
   };
 
   const isGroupActive = (children: MenuItem[]) => {
-    return children.some((child) => location.pathname === child.NAVLINK);
+    return children.some((child) => location.pathname === child.navLink);
+  };
+
+  const handleNavigate = (link: string) => {
+    navigate(link);
   };
 
   return (
@@ -100,17 +51,24 @@ const SidebarContent: React.FC = () => {
       {menuItems.map((item, index) => {
         const IconComponent = GetIconComponent(item.icon);
         const hasChildren = item.children && item.children.length > 0;
-        const isActiveGroup = item.MENU_ID === activeGroup;
+        const isActiveGroup = item.menu_id === activeGroup;
 
         return (
-          <Box key={item.MENU_ID} mb={2}>
+          <Box key={index} mb={2}>
             <Box
-              onClick={() => hasChildren && handleGroupClick(item.MENU_ID)}
+              //onClick={() => hasChildren && handleGroupClick(item.menu_id)}
+              onClick={() => {
+                if (hasChildren) {
+                  handleGroupClick(item.menu_id);
+                } else {
+                  handleNavigate(item.navLink);
+                }
+              }}
               display="flex"
               alignItems="center"
               justifyContent="space-between"
               p={3}
-              cursor={hasChildren ? "pointer" : "default"}
+              cursor={"pointer"}
               borderRadius="lg"
               transition="all 0.2s"
               _hover={{
@@ -128,9 +86,7 @@ const SidebarContent: React.FC = () => {
                   <Icon
                     as={IconComponent}
                     boxSize={5}
-                    color={
-                      "secondary.500"
-                    }
+                    color={"secondary.500"}
                   />
                 )}
 
@@ -150,7 +106,7 @@ const SidebarContent: React.FC = () => {
                     }
                     transition="color 0.2s"
                   >
-                    {t(item.MENU_DESCRIPTION)}
+                    {t(item.menu_description)}
                   </Text>
                 </Box>
               </HStack>
@@ -188,8 +144,8 @@ const SidebarContent: React.FC = () => {
                 }}
                 className="collapsible-group"
               >
-                {item.children?.map((subItem: MenuItem) => (
-                  <NavItem key={subItem.MENU_ID} item={subItem} withoutIcons />
+                {item.children?.map((subItem: MenuItem, index) => (
+                  <NavItem key={index} item={subItem} withoutIcons />
                 ))}
               </motion.div>
             )}

@@ -1,0 +1,95 @@
+import { axiosInstance } from "../../../../services/api-services/axiosInstance";
+import handleAxiosError from "@utils/handleAxiosError";
+import type { LessonWithTopicsDto, SessionSchedulesResponse, StudentEnrollmentResponse, StudentsEnrollmentRequest} from "../types/session.types";
+import type { EventRequest, EventResponse } from "@features/Event/eventList/types/event.types";
+import type { SessionResponse } from "@features/sessions/Add-session/services/SessionServiceApi";
+
+const SessionServiceApi = {
+  getAllByAssociation: async (associationId: number): Promise<SessionResponse[]> => {
+    try {
+      const response = await axiosInstance.get<SessionResponse[]>(
+        `/api/v1/sessions/associations/${associationId}/sessions`
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+      throw error;
+    }
+  },
+
+  getLessonTopicsDetails: async (sessionId: number): Promise<LessonWithTopicsDto[]> => {
+    try {
+      const response = await axiosInstance.get<LessonWithTopicsDto[]>(
+        `/api/v1/sessions/${sessionId}/lesson-topics-details`
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+      throw error;
+    }
+  },
+
+  getSessionSchedules: async (sessionId: number): Promise<SessionSchedulesResponse[]> => {
+    try {
+      const response = await axiosInstance.get<SessionSchedulesResponse[]>(
+        `/api/v1/sessions/${sessionId}/schedules`
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+      throw error;
+    }
+  },
+
+  getSessionEnrollmentStatus: async (sessionId: number, associationId: number): Promise<StudentEnrollmentResponse[]> => {
+    try {
+      const response = await axiosInstance.get<StudentEnrollmentResponse[]>(
+        `/api/v1/sessions/${sessionId}/enrollment-status/association/${associationId}`
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+      throw error;
+    }
+  },
+
+  assignStudentToSession: async (request: StudentsEnrollmentRequest): Promise<void> => {
+    try {
+      await axiosInstance.post<void>(
+        `/api/v1/sessions/assign-students`,
+        request
+      );
+    } catch (error) {
+      handleAxiosError(error);
+      throw error;
+    }
+  },
+  create: async (payload: EventRequest): Promise<void> => {
+    try {
+      await axiosInstance.post("/api/v1/events", payload);
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  },
+
+  getAllByAssociationId: async (associationId: number): Promise<EventResponse[]> => {
+    try {
+      const response = await axiosInstance.get<EventResponse[]>(
+        `/api/v1/events/association/${associationId}`
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  },
+   delete: async (id: number): Promise<void> => {
+    try {
+      await axiosInstance.delete(`/api/v1/sessions/${id}`);
+    } catch (error) {
+      handleAxiosError(error);
+      throw error;
+    }
+  },
+};
+
+export default SessionServiceApi;

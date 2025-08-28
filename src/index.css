@@ -5,33 +5,31 @@
   user-select: none;
 }
 
-#navbar {
-  transition: opacity 0.3s ease, max-height 0.3s ease;
-  opacity: 1;
-  max-height: 100px;
+
+div:where(.swal2-container) h2:where(.swal2-title) {
+  font-size: 1.5rem !important;
+}
+div:where(.swal2-container) .swal2-html-container {
+  font-size: 1rem !important;
+}
+div:where(.swal2-container) .swal2-actions button {
+  font-size: 0.9rem !important;
 }
 
-#navbar.hidden {
-  opacity: 0;
-  max-height: 0;
-  height: 0;
-  pointer-events: none;
+
+::-webkit-scrollbar {
+  width: 5px !important;
+  border-right: 5px;
+  cursor: pointer;
 }
 
-#module_list {
-  transition: max-width 0.3s ease;
-  max-width: 150px;
+::-webkit-scrollbar-thumb {
+  background: gray;
+  z-index: 99999999999 !important;
+  cursor: pointer;
 }
 
-#module_list.hidden_module {
-  max-width: 0;
-  display: none;
-}
-
-#sidebar_menus {
-  transition: width 0.3s ease;
-}
-
-#sidebar_menus.hidden_sidebar {
-  width: 0;
+::-webkit-scrollbar-track {
+  background: transparent;
+  z-index: 99999999999 !important;
 }

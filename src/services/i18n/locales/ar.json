@@ -1,3 +1,18 @@
 {
-    
+  "Delete Confirmation": "تأكيد الحذف",
+  "Cancel": "إلغاء",
+  "Yes, proceed": "نعم، تابع",
+  "Enrollment": "التسجيل",
+  "Enrolled": "مسجل",
+  "Not Enrolled": "غير مسجل",
+  "Registration ID": "معرف التسجيل",
+  "First name": "الاسم الأول",
+  "Last name": "اسم العائلة",
+  "Date of birth": "تاريخ الميلاد",
+  "Email": "البريد الإلكتروني",
+  "Phone": "رقم الهاتف",
+  "School": "المدرسة",
+  "Admission Date": "تاريخ القبول",
+  "Gender": "الجنس",
+  "City": "المدينة"
 }

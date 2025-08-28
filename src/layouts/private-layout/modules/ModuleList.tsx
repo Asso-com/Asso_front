@@ -1,6 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Flex, Box, useColorModeValue, Divider } from "@chakra-ui/react";
-
+import { Flex, Box, IconButton, Tooltip } from "@chakra-ui/react"
 import {
   FaUserGraduate,
   FaChalkboardTeacher,
@@ -12,142 +10,149 @@ import {
   FaBell,
   FaCogs,
   FaLaptop,
+  FaComments,
+  FaHandshake,
   FaThLarge,
-} from "react-icons/fa";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
-
-import GenericIconButtonWithTooltip from "../../../components/shared/icons-buttons/GenericIconButtonWithTooltip";
-import type { ModuleItem } from "./types/Module";
-import { fakeModules } from "./data/fakeModules";
+} from "react-icons/fa"
+import { useDispatch, useSelector } from "react-redux"
+import { setFilterData } from "@store/menuSlice"
+import type { RootState } from "@store/index"
+import type { ModuleItem } from "@/types/menuItem"
+import { useDirection } from "@hooks/useDirection"
 
 const ModuleListScroller: React.FC = () => {
-  const navigate = useNavigate();
-  const modules: ModuleItem[] = fakeModules;
+  const dispatch = useDispatch()
+  const { isRTL } = useDirection()
 
-  const [currentModule, setCurrentModule] = useState<string>("DASHBOARD");
+  const { modulesList: modules = [], currentModule } = useSelector(
+    (state: RootState) => state.menuSlice
+  )
 
   const handleChangeModule = (module: ModuleItem) => {
-    setCurrentModule(module.MODULE);
-    // Optional: navigate(`/modules/${module.MODULE.toLowerCase()}`);
-  };
+    dispatch(setFilterData(module.module_code))
+  }
 
-  // Updated icons based on Smart School App modules
   const moduleIcons: Record<string, React.ElementType> = {
-    DASHBOARD: FaThLarge,
-    STUDENT_MANAGEMENT: FaUserGraduate,
-    TEACHER_MANAGEMENT: FaChalkboardTeacher,
+    ALL: FaThLarge,
+    ENROLLMENT: FaUserGraduate,
+    HUMAN_RESOURCES: FaChalkboardTeacher,
     ATTENDANCE: FaClipboardList,
     TIMETABLE: FaCalendarAlt,
-    EXAMS: FaBookOpen,
+    EDUCATION: FaBookOpen,
     GRADES: FaClipboardList,
-    LIBRARY: FaBookOpen,
-    FEE_MANAGEMENT: FaMoneyCheckAlt,
+    LEARNING_HUB: FaBookOpen,
+    FINANCE: FaMoneyCheckAlt,
     TRANSPORT: FaBusAlt,
     NOTIFICATIONS: FaBell,
-    PARENTS_PORTAL: FaUserGraduate,
-    EVENTS_CALENDAR: FaCalendarAlt,
+    PARTNER: FaHandshake,
+    EVENTS: FaCalendarAlt,
     ONLINE_CLASSES: FaLaptop,
+    COMMUNICATION: FaComments,
     SETTINGS: FaCogs,
-  };
+  }
 
   const getModuleIcon = (moduleName: string) => {
-    return moduleIcons[moduleName] || FaThLarge;
-  };
-
-  const inactiveColor = useColorModeValue("gray.500", "gray.300");
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [showVerticalButtons, setShowVerticalButtons] = useState(false);
-
-  const scrollUp = () => {
-    if (containerRef.current) {
-      containerRef.current.scrollBy({
-        top: -200,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  const scrollDown = () => {
-    if (containerRef.current) {
-      containerRef.current.scrollBy({
-        top: 250,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  useEffect(() => {
-    const updateScrollButtons = () => {
-      if (containerRef.current) {
-        const { scrollHeight, clientHeight } = containerRef.current;
-        setShowVerticalButtons(scrollHeight > clientHeight);
-      }
-    };
-
-    updateScrollButtons();
-    window.addEventListener("resize", updateScrollButtons);
-    return () => window.removeEventListener("resize", updateScrollButtons);
-  }, []);
+    return moduleIcons[moduleName] || FaThLarge
+  }
 
   return (
-    <Flex height="100%" direction="column" gap={2} overflow="auto" p={2}>
-      {showVerticalButtons && (
-        <Box textAlign="center" mt={2}>
-          <GenericIconButtonWithTooltip
-            icon={<IoIosArrowUp />}
-            label="Scroll Up"
-            size="md"
-            onClick={scrollUp}
-          />
-          <Divider my={2} />
-        </Box>
-      )}
-
+    <Flex
+      height="100%"
+      direction="column"
+      gap={2}
+      overflow="auto"
+      py={4}
+      pl={isRTL ? 0 : 3}
+      pr={isRTL ? 3 : 0}
+    >
       <Flex
         direction="column"
         align="start"
         gap={2}
         overflow="hidden"
-        ref={containerRef}
         scrollBehavior="smooth"
       >
         {modules.map((module, index) => {
-          const Icon = getModuleIcon(module.MODULE);
-          const isActive = module.MODULE === currentModule;
+          const Icon = getModuleIcon(module.module_code)
+          const isActive = module.module_code === currentModule
 
           return (
-            <Box key={index}>
-              <GenericIconButtonWithTooltip
-                icon={<Icon />}
-                placement="top"
-                ariaLabel={module.MODULE}
-                label={module.MENU_DESCRIPTION}
-                size="md"
-                variant={isActive ? "solid" : "outline"}
-                onClick={() => handleChangeModule(module)}
-                bgColor={isActive ? "secondary.400" : "white"}
-                color={isActive ? "white" : inactiveColor}
-              />
+            <Box
+              key={index}
+              p={2}
+              bg={isActive ? "white" : "secondary.500"}
+              borderLeftRadius={isRTL ? "none" : "full"}
+              borderRightRadius={isRTL ? "full" : "none"}
+              position="relative"
+              onClick={() => handleChangeModule(module)}
+              _before={
+                isActive
+                  ? {
+                      content: '""',
+                      position: "absolute",
+                      height: "35px",
+                      width: "35px",
+                      backgroundColor: "transparent",
+                      [isRTL ? "left" : "right"]: "0px",
+                      top: "-35px",
+                      borderRadius: "50%",
+                      boxShadow: isRTL
+                        ? "-20px 20px 0 0 white"
+                        : "20px 20px 0 0 white",
+                      zIndex: "2",
+                      pointerEvents: "none",
+                    }
+                  : {}
+              }
+              _after={
+                isActive
+                  ? {
+                      content: '""',
+                      position: "absolute",
+                      height: "35px",
+                      width: "35px",
+                      background: "transparent",
+                      [isRTL ? "left" : "right"]: "0px",
+                      bottom: "-35px",
+                      borderRadius: "50%",
+                      boxShadow: isRTL
+                        ? "-20px -20px 0 0 white"
+                        : "20px -20px 0 0 white",
+                      zIndex: "2",
+                      pointerEvents: "none",
+                    }
+                  : {}
+              }
+            >
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                bg="secondary.500"
+                borderRadius="50%"
+                zIndex="99999"
+              >
+                <Tooltip
+                  label={module.module_name}
+                  placement={isRTL ? "left" : "right"}
+                >
+                  <IconButton
+                    icon={<Icon size={18} />}
+                    aria-label={module.module_code}
+                    variant="none"
+                    size="md"
+                    color="white"
+                    _hover={{}}
+                    _focus={{ boxShadow: "none" }}
+                  />
+                </Tooltip>
+              </Box>
             </Box>
-          );
+          )
         })}
       </Flex>
-
-      {showVerticalButtons && (
-        <Box textAlign="center" mt={2}>
-          <Divider my={2} />
-          <GenericIconButtonWithTooltip
-            icon={<IoIosArrowDown />}
-            label="Scroll Down"
-            ariaLabel="scroll_down"
-            size="md"
-            onClick={scrollDown}
-          />
-        </Box>
-      )}
     </Flex>
-  );
-};
+  )
+}
 
-export default ModuleListScroller;
+export default ModuleListScroller

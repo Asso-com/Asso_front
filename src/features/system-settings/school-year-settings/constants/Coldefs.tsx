@@ -1,0 +1,84 @@
+import { type ColDef } from "ag-grid-community";
+import ToggelStatus from "../components/column-actions/ToggelStatus";
+import { formatDateOnly } from "@utils/timeUtils";
+
+const academicYearColumnDefs: ColDef[] = [
+  {
+    headerName: "Code",
+    field: "code",
+    sortable: true,
+    filter: "agTextColumnFilter",
+    resizable: true,
+    minWidth: 120,
+    flex: 1,
+    cellStyle: { textAlign: "left" },
+  },
+  {
+    headerName: "Description",
+    field: "description",
+    sortable: true,
+    filter: "agTextColumnFilter",
+    resizable: true,
+    minWidth: 250,
+    flex: 2,
+    cellStyle: { textAlign: "left" },
+  },
+  {
+    headerName: "Active",
+    field: "active",
+    sortable: true,
+    resizable: true,
+    minWidth: 100,
+    maxWidth: 120,
+    cellRenderer: ToggelStatus,
+    cellStyle: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+  },
+  {
+    headerName: "Day of Week",
+    field: "dayOfWeek",
+    sortable: true,
+    filter: "agTextColumnFilter",
+    resizable: true,
+    minWidth: 150,
+    flex: 1,
+    cellStyle: { textAlign: "left" },
+  },
+  {
+    headerName: "Start Date",
+    field: "startDate",
+    sortable: true,
+    filter: "agDateColumnFilter",
+    resizable: true,
+    minWidth: 150,
+    flex: 1,
+    valueFormatter: (params) => {
+      if (!params.value) return "";
+      return formatDateOnly(params.value, {
+        format: "medium",
+      });
+    },
+    cellStyle: { textAlign: "center" },
+  },
+  {
+    headerName: "End Date",
+    field: "endDate",
+    sortable: true,
+    filter: "agDateColumnFilter",
+    resizable: true,
+    minWidth: 150,
+    flex: 1,
+      valueFormatter: (params) => {
+      if (!params.value) return "";
+      return formatDateOnly(params.value, {
+        format: "medium",
+      });
+    },
+    cellStyle: { textAlign: "center" },
+  },
+];
+
+export default academicYearColumnDefs;

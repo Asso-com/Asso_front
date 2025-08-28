@@ -1,3 +1,18 @@
 {
-    
+  "Delete Confirmation": "Confirmation de suppression",
+  "Cancel": "Annuler",
+  "Yes, proceed": "Oui, continuer",
+  "Enrollment": "Inscription",
+  "Enrolled": "Inscrit",
+  "Not Enrolled": "Non inscrit",
+  "Registration ID": "ID d'inscription",
+  "First name": "Prénom",
+  "Last name": "Nom de famille",
+  "Date of birth": "Date de naissance",
+  "Email": "Email",
+  "Phone": "Téléphone",
+  "School": "École",
+  "Admission Date": "Date d'admission",
+  "Gender": "Genre",
+  "City": "Ville"
 }
